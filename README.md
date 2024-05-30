@@ -14,16 +14,18 @@ IMMAGINE SCHEMA RELAZIONALE!!!
 
 ## Running the project
 
-Launch the database, this is a MySQL server, that create a database called amusamentpark, and it will automatically populate and create some tables. 
+Run the database, is a MySQL server, that create a database called amusamentpark, and it will automatically  create and populate some tables. 
 
+#### Run db
 ```console
-docker compose up db
+docker compose up --build db
 ```
 
 After the db finished to start up, run the backend. 
 
+#### Run backend
 ```console
-docker compose up backend
+docker compose up --build backend
 ```
 
 now, you will be able to connect to [`http://localhost:4000`](http://localhost:4000)
