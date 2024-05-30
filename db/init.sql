@@ -1,0 +1,144 @@
+
+CREATE TABLE IF NOT EXISTS `VISITATORI` ( 
+    `CodiceFiscale` VARCHAR(16) PRIMARY KEY,
+    `Nome` VARCHAR(50) NOT NULL,
+    `Cognome` VARCHAR(50) NOT NULL,
+    `DataDiNascita` DATE NOT NULL,
+    `Altezza` INTEGER NOT NULL,
+    `Peso` FLOAT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS `DURATE` (
+    `Giorni` INTEGER UNSIGNED PRIMARY KEY,
+    `Sconto` FLOAT NOT NULL,
+    `Descrizione` VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS `TARIFFE` (
+    `IdTariffa` INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `Nome` VARCHAR(50) UNIQUE,
+    `CostoGiornaliero` FLOAT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS `ABBONAMENTI` (
+    `CodiceFiscale` VARCHAR(16),
+    `DataInizio` DATE,
+    `Costo` FLOAT NOT NULL, -- ha senso avere questa ridondanza ????
+    `Nome` VARCHAR(50) NOT NULL,
+    `Giorni` INTEGER UNSIGNED NOT NULL,
+    PRIMARY KEY (`CodiceFiscale`, `DataInizio`),
+    FOREIGN KEY (`CodiceFiscale`) REFERENCES `VISITATORI`(`CodiceFiscale`),
+    FOREIGN KEY (`Nome`) REFERENCES `TARIFFE`(`Nome`),
+    FOREIGN KEY (`Giorni`) REFERENCES `DURATE`(`Giorni`)
+);
+
+CREATE TABLE IF NOT EXISTS `INGRESSI` ( 
+    `IdIngresso` INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `CodiceFiscale` VARCHAR(16),
+    `Data` DATE,
+    UNIQUE (`CodiceFiscale`, `Data`),
+    FOREIGN KEY (`CodiceFiscale`) REFERENCES `VISITATORI`(`CodiceFiscale`)
+);
+
+CREATE TABLE IF NOT EXISTS `LIMITI` (
+    `IdLimite` INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `Attributo` VARCHAR(50) NOT NULL,
+    `Condizione` CHAR(2) NOT NULL,
+    `Valore` VARCHAR(50) NOT NULL,
+    `Descrizione` VARCHAR(255) NOT NULL 
+);
+
+CREATE TABLE IF NOT EXISTS `CATEGORIE` (
+    `IdCategoria` INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `Nome` VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS `ATTIVITA` (
+    `IdAttivita` INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `Nome` VARCHAR(50) NOT NULL,
+    `Descrizione` VARCHAR(255) NOT NULL,
+    `Posti` INTEGER UNSIGNED NOT NULL,
+    `IsEvent` BIT NOT NULL,
+    `IdCategoria` INTEGER UNSIGNED,
+    FOREIGN KEY (`IdCategoria`) REFERENCES `CATEGORIE`(`IdCategoria`)
+);
+
+CREATE TABLE IF NOT EXISTS `VINCOLA` (
+    `IdAttivita` INTEGER UNSIGNED NOT NULL,
+    `IdLimite` INTEGER UNSIGNED NOT NULL,
+    PRIMARY KEY (`IdAttivita`, `IdLimite`),
+    FOREIGN KEY (`IdAttivita`) REFERENCES `ATTIVITA`(`IdAttivita`),
+    FOREIGN KEY (`IdLimite`) REFERENCES `LIMITI`(`IdLimite`)
+);
+
+CREATE TABLE IF NOT EXISTS `PROGRAMMAZIONI` (
+    `IdProgrammazione` INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `IdAttivita` INTEGER UNSIGNED NOT NULL,
+    `Data` DATE NOT NULL,
+    `Inizio` TIME NOT NULL,
+    `Fine` TIME NOT NULL,
+    UNIQUE (`IdAttivita`, `Data`, `Inizio`, `Fine`),
+    FOREIGN KEY (`IdAttivita`) REFERENCES `ATTIVITA`(`IdAttivita`)
+);
+
+CREATE TABLE IF NOT EXISTS `PARTECIPA` ( 
+    `IdIngresso` INTEGER UNSIGNED NOT NULL,
+    `Ora` TIME NOT NULL,
+    `IdAttivita` INTEGER UNSIGNED NOT NULL,
+    PRIMARY KEY (`IdIngresso`, `Ora`),
+    FOREIGN KEY (`IdIngresso`) REFERENCES `INGRESSI`(`IdIngresso`),
+    FOREIGN KEY (`IdAttivita`) REFERENCES `ATTIVITA`(`IdAttivita`)
+);
+
+CREATE TABLE IF NOT EXISTS `INCLUDE` (
+    `IdTariffa` INTEGER UNSIGNED NOT NULL,
+    `IdCategoria` INTEGER UNSIGNED NOT NULL,
+    PRIMARY KEY (`IdTariffa`, `IdCategoria`),
+    FOREIGN KEY (`IdTariffa`) REFERENCES `TARIFFE`(`IdTariffa`),
+    FOREIGN KEY (`IdCategoria`) REFERENCES `CATEGORIE`(`IdCategoria`)
+);
+
+CREATE TABLE IF NOT EXISTS `RUOLI` (
+    `IdRuolo` INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `Nome` VARCHAR(50) NOT NULL,
+    `Stipendio` FLOAT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS `ORARI` (
+    `IdOrario` INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `Lunedi` VARCHAR(10), 
+    `Martedi` VARCHAR(10), 
+    `Mercoledi` VARCHAR(10), 
+    `Giovedi` VARCHAR(10), 
+    `Venerdi` VARCHAR(10), 
+    `Sabato` VARCHAR(10), 
+    `Domenica` VARCHAR(10)
+);
+
+CREATE TABLE IF NOT EXISTS `SERVIZI` (
+    `IdServizio` INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `Nome` VARCHAR(50) NOT NULL,
+    `Stipendio` FLOAT NOT NULL,
+    `IdOrario` INTEGER UNSIGNED NOT NULL,
+    FOREIGN KEY (`IdOrario`) REFERENCES `ORARI`(`IdOrario`)
+);
+
+CREATE TABLE IF NOT EXISTS `PERSONALE` (
+    `CodiceFiscale` VARCHAR(16) PRIMARY KEY,
+    `Nome` VARCHAR(50) NOT NULL,
+    `Cognome` VARCHAR(50) NOT NULL,
+    `DataDiNascita` DATE NOT NULL,
+    `IdRuolo` INTEGER UNSIGNED NOT NULL,
+    `IdServizio` INTEGER UNSIGNED NOT NULL,
+    FOREIGN KEY (`IdRuolo`) REFERENCES `RUOLI`(`IdRuolo`),
+    FOREIGN KEY (`IdServizio`) REFERENCES `SERVIZI`(`IdServizio`)
+);
+
+CREATE TABLE IF NOT EXISTS `NECESSITA` (
+    `IdCategoria` INTEGER UNSIGNED NOT NULL,
+    `IdRuolo` INTEGER UNSIGNED NOT NULL,
+    `Quantita` INTEGER UNSIGNED NOT NULL,
+    PRIMARY KEY (`IdCategoria`, `IdRuolo`),
+    FOREIGN KEY (`IdCategoria`) REFERENCES `CATEGORIE`(`IdCategoria`),
+    FOREIGN KEY (`IdRuolo`) REFERENCES `RUOLI`(`IdRuolo`)
+);

@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+{% block title %} Abbonamenti {% endblock title %}
+
+{% block content %}
+    <h1>Abbonamenti</h1>
+    <p>Abbonamenti possibili:</p>
+
+    <div class="tariffs">
+        {% for tariff in tariffs %}
+            <div class="tariff">
+                <div class="name">{{ tariff.Nome }}</div>
+                <div class="price">{{ tariff.CostoGiornaliero }}</div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="durations">
+        {% for duration in durations %}
+            <div class="duration">
+                <div class="days">{{ duration.Giorni }}</div>
+                <div class="discount">{{ duration.Sconto }}</div>
+                <div class="description">{{ duration.Descrizione }}</div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}
