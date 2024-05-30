@@ -1,12 +1,12 @@
 services:
-  backend:
-    container_name: backend
+  app:
+    container_name: app
     image: alex.mazzoni3/flask_amusamentpark_app:1.0.0
-    build: ./backend/
+    build: ./app/
     ports:
       - "4000:4000"
     volumes:
-      - ./backend:/app
+      - ./app:/app
     environment:
       - FLASK_ENV=development
       - URL= http://localhost:4000

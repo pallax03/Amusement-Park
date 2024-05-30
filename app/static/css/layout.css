@@ -22,16 +22,16 @@ a {
   text-decoration: none;
 }
 
-nav.vertical ul {
+nav ul {
   list-style-type: none;
   padding: 0;
   margin: 0;
 }
-nav.vertical ul li {
+nav ul li {
   display: block;
   width: 100%;
 }
-nav.vertical ul li a {
+nav ul li a {
   display: block;
   width: 100%;
   padding: 10px;
@@ -39,13 +39,13 @@ nav.vertical ul li a {
   color: #333;
   text-decoration: none;
 }
-nav.vertical ul li a:hover {
+nav ul li a:hover {
   background-color: #ddd;
 }
-nav.vertical ul li ul {
+nav ul li ul {
   display: none;
 }
-nav.vertical ul li ul li a {
+nav ul li ul li a {
   padding-left: 30px;
 }
 

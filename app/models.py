@@ -35,13 +35,13 @@ class Duration(db.Model):
 
 @dataclass
 class Tariff(db.Model):
-    Nome: str
+    NomeTariffa: str
     CostoGiornaliero: float
 
     __tablename__ = 'TARIFFE'
 
     IdTariffa = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    Nome = db.Column(db.String(50), unique=True)
+    NomeTariffa = db.Column(db.String(50), unique=True)
     CostoGiornaliero = db.Column(db.Float, nullable=False)
 
 @dataclass
@@ -57,10 +57,12 @@ class Subscription(db.Model):
     CodiceFiscale = db.Column(db.String(16), db.ForeignKey('VISITATORI.CodiceFiscale'), primary_key=True)
     DataInizio = db.Column(db.Date, primary_key=True)
     Costo = db.Column(db.Float, nullable=False)
-    Nome = db.Column(db.String(50), db.ForeignKey('TARIFFE.Nome') , nullable=False)
+    NomeTariffa = db.Column(db.String(50), db.ForeignKey('TARIFFE.NomeTariffa') , nullable=False)
     Giorni = db.Column(db.Integer, db.ForeignKey('DURATE.Giorni'), nullable=False)
 
+@dataclass
 class Entry(db.Model):
+
     __tablename__ = 'INGRESSI'
 
     IdIngresso = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -68,7 +70,9 @@ class Entry(db.Model):
     Data = db.Column(db.Date, nullable=False)
     UniqueConstraint('CodiceFiscale', 'Data')
 
+@dataclass
 class Limit(db.Model):
+
     __tablename__ = 'LIMITI'
 
     IdLimite = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -77,13 +81,17 @@ class Limit(db.Model):
     Valore = db.Column(db.String(50), nullable=False)
     Descrizione = db.Column(db.String(255), nullable=False)
 
+@dataclass
 class Category(db.Model):
+
     __tablename__ = 'CATEGORIE'
 
     IdCategoria = db.Column(db.Integer, primary_key=True, autoincrement=True)
     Nome = db.Column(db.String(50), nullable=False)
 
+@dataclass
 class Activity(db.Model):
+
     __tablename__ = 'ATTIVITA'
 
     IdAttivita = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -93,13 +101,17 @@ class Activity(db.Model):
     IsEvent = db.Column(db.Boolean, nullable=False)
     IdCategoria = db.Column(db.Integer, db.ForeignKey('CATEGORIE.IdCategoria'), nullable=True)
 
+@dataclass
 class Constraint(db.Model):
+
     __tablename__ = 'VINCOLI'
 
     IdAttivita = db.Column(db.Integer, db.ForeignKey('ATTIVITA.IdAttivita'), primary_key=True)
     IdLimite = db.Column(db.Integer, db.ForeignKey('LIMITI.IdLimite'), primary_key=True)
 
+@dataclass
 class Schedule(db.Model):
+
     __tablename__ = 'PROGRAMMAZIONI'
 
     IdProgrammazione = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -109,27 +121,35 @@ class Schedule(db.Model):
     Fine = db.Column(db.Time, nullable=False)
     UniqueConstraint('IdAttivita', 'Data', 'Inizio', 'Fine')
 
+@dataclass
 class Participate(db.Model):
+    
     __tablename__ = 'PARTECIPA'
 
     IdIngresso = db.Column(db.Integer, db.ForeignKey('INGRESSI.IdIngresso'), primary_key=True)
     Ora = db.Column(db.Time, primary_key=True)
     IdAttivita = db.Column(db.Integer, db.ForeignKey('ATTIVITA.IdAttivita'), nullable=False)
 
+@dataclass
 class Include(db.Model):
+
     __tablename__ = 'INCLUDE'
 
     IdTariffa = db.Column(db.Integer, db.ForeignKey('TARIFFE.IdTariffa'), primary_key=True)
     IdCategoria = db.Column(db.Integer, db.ForeignKey('CATEGORIE.IdCategoria'), primary_key=True)
 
+@dataclass
 class Role(db.Model):
+
     __tablename__ = 'RUOLI'
 
     IdRuolo = db.Column(db.Integer, primary_key=True, autoincrement=True)
     Nome = db.Column(db.String(50), nullable=False)
     Stipendio = db.Column(db.Float, nullable=False)
 
+@dataclass
 class Timetable(db.Model):
+
     __tablename__ = 'ORARI'
 
     IdOrario = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -141,7 +161,9 @@ class Timetable(db.Model):
     Saturday = db.Column(db.String(11), nullable=True)
     Sunday = db.Column(db.String(11), nullable=True)
 
+@dataclass
 class Service(db.Model):
+
     __tablename__ = 'SERVIZI'
 
     IdServizio = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -149,7 +171,9 @@ class Service(db.Model):
     Tipo = db.Column(db.String(50), nullable=False)
     IdOrario = db.Column(db.Integer, db.ForeignKey('ORARI.IdOrario'), nullable=False)
 
+@dataclass
 class Employee(db.Model):
+
     __tablename__ = 'PERSONALE'
 
     CodiceFiscale = db.Column(db.String(16), primary_key=True)
@@ -158,7 +182,12 @@ class Employee(db.Model):
     IdRuolo = db.Column(db.Integer, db.ForeignKey('RUOLI.IdRuolo'), nullable=False)
     IdServizio = db.Column(db.Integer, db.ForeignKey('SERVIZI.IdServizio'), nullable=False)
 
+@dataclass
 class Require(db.Model):
+    IdCategoria = int
+    IdRuolo = int
+    Quantita = int
+
     __tablename__ = 'NECESSITA'
 
     IdCategoria = db.Column(db.Integer, db.ForeignKey('CATEGORIE.IdCategoria'), primary_key=True)

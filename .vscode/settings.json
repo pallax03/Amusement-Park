@@ -23,7 +23,7 @@
         {
             "format": "expanded",
             "extensionName": ".css",
-            "savePath": "/backend/static/css",
+            "savePath": "/app/static/css",
             "savePathReplacementPairs": null
         }
     ]

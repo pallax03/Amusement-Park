@@ -4,9 +4,13 @@ from models import *
 
 def visitor(app, db):
     @app.route('/visitor', methods=['GET'])
-    def get_visitors():
-        return render_template('visitors.html', visitors=Visitor.query.all())
-    
+    def get_visitor():
+        try:
+            visitor = Visitor.query.filter_by(CodiceFiscale=request.args.get('CodiceFiscale')).first()
+            return make_response(jsonify(visitor), 200)
+        except Exception as e:
+            return make_response(jsonify({'error': str(e)}), 400)
+
     @app.route('/visitor', methods=['POST'])
     def add_visitor():
         try:
@@ -25,6 +29,11 @@ def visitor(app, db):
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
         
+    @app.route('/visitors', methods=['GET'])
+    def get_visitors():
+        return render_template('visitors.html', visitors=Visitor.query.all())
+    
+
 def subscription(app, db):
     @app.route('/subscription', methods=['GET'])
     def get_avaible_subscriptions():
