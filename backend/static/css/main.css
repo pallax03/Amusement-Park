@@ -1,0 +1,70 @@
+@font-face {
+  font-family: "Consolas", monospace;
+  src: url("/fonts/Consolas.ttf") format("truetype");
+}
+* {
+  font-family: Consolas;
+  scroll-behavior: smooth;
+}
+
+body {
+  position: relative;
+  z-index: 1;
+  background: #18181b;
+  overflow-x: hidden;
+  overflow-y: auto;
+  white-space: nowrap;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+nav.vertical ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+nav.vertical ul li {
+  display: block;
+  width: 100%;
+}
+nav.vertical ul li a {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #f1f1f1;
+  color: #333;
+  text-decoration: none;
+}
+nav.vertical ul li a:hover {
+  background-color: #ddd;
+}
+nav.vertical ul li ul {
+  display: none;
+}
+nav.vertical ul li ul li a {
+  padding-left: 30px;
+}
+
+footer {
+  background-color: black;
+  width: 100%;
+}
+footer #github {
+  color: white;
+  text-align: center;
+  padding: 1em;
+  font-size: 3em;
+}
+@media screen and (max-width: 600px) {
+  footer #github {
+    font-size: 1.2em;
+  }
+}
+footer #github a {
+  color: white;
+  text-decoration: none;
+}

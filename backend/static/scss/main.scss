@@ -1,0 +1,99 @@
+$font: 'Consolas', monospace;
+$curve: 25;
+
+// COLORS
+$background-color:#18181b;
+$constrast-color: #4ADE80;
+
+$text-color:#FAF5FF;
+$disable_text-color:#7E22CE;
+$text2-color:#F3E8FF;
+$highlight-color:#C084FC;
+
+$border_box-color:#E9D5FF;
+$background_box-color:#581C87;
+
+$undefined1:#D8B4FE;
+$undefined2:#A855F7;
+
+$background_button-color:#9333EA;
+$border-color:#6B21A8;
+$disable_border-color10:#581C87;
+
+@font-face {
+    font-family: $font;
+    src: url('/fonts/Consolas.ttf') format('truetype');
+}
+
+* {
+    font-family: Consolas;
+    scroll-behavior: smooth;
+}
+
+body {
+    position: relative; 
+    z-index: 1;
+    background: $background-color;
+    overflow-x: hidden;
+    overflow-y: auto;
+    white-space: nowrap;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+
+
+nav.vertical {
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        li {
+            display: block;
+            width: 100%;
+            a {
+                display: block;
+                width: 100%;
+                padding: 10px;
+                background-color: #f1f1f1;
+                color: #333;
+                text-decoration: none;
+                &:hover {
+                    background-color: #ddd;
+                }
+            }
+        }
+        li {
+            ul {
+                display: none;
+                li {
+                    a {
+                        padding-left: 30px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+footer {
+    background-color: black;
+    width: 100%;
+    #github {
+        color: white;
+        text-align: center;
+        padding: 1em;
+        font-size: 3em;
+        @media screen and (max-width: 600px){
+            font-size: 1.2em;
+        }
+        a {
+            color: white;
+            text-decoration: none;
+        }
+    }
+}
