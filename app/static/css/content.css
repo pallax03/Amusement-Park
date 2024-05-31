@@ -1,0 +1,127 @@
+@font-face {
+  font-family: "Consolas", monospace;
+  src: url("/fonts/Consolas.ttf") format("truetype");
+}
+* {
+  font-family: Consolas;
+  scroll-behavior: smooth;
+}
+
+body {
+  position: relative;
+  z-index: 1;
+  background: #18181b;
+  overflow-x: hidden;
+  overflow-y: auto;
+  white-space: nowrap;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+nav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+nav ul li {
+  display: block;
+  width: 100%;
+}
+nav ul li a {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #f1f1f1;
+  color: #333;
+  text-decoration: none;
+}
+nav ul li a:hover {
+  background-color: #ddd;
+}
+nav ul li ul {
+  display: none;
+}
+nav ul li ul li a {
+  padding-left: 30px;
+}
+
+footer {
+  background-color: black;
+  width: 100%;
+}
+footer #github {
+  color: white;
+  text-align: center;
+  padding: 1em;
+  font-size: 3em;
+}
+@media screen and (max-width: 600px) {
+  footer #github {
+    font-size: 1.2em;
+  }
+}
+footer #github a {
+  color: white;
+  text-decoration: none;
+}
+
+.container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+.container .center {
+  max-width: 800px;
+  margin-top: 50px;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  color: #fff;
+}
+
+table {
+  border: 0;
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+table thead {
+  background-color: #581C87;
+}
+table thead th {
+  padding: 10px;
+  text-align: left;
+  color: #FAF5FF;
+  border-bottom: 1px solid #6B21A8;
+  font-size: 0.5em;
+}
+table tbody {
+  height: 300px;
+  overflow-y: auto;
+}
+table tbody tr {
+  background-color: #581C87;
+}
+table tbody tr td {
+  padding: 10px;
+  text-align: left;
+  color: #FAF5FF;
+  border-bottom: 1px solid #6B21A8;
+  font-size: 0.5em;
+}

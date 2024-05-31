@@ -49,7 +49,7 @@ class Subscription(db.Model):
     CodiceFiscale: str
     DataInizio: str
     Costo: float
-    Nome: str
+    NomeTariffa: str
     Giorni: int
     
     __tablename__ = 'ABBONAMENTI'

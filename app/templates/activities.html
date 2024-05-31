@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+
+{% block title %} Attività {% endblock title %}
+
+{% block links_css %}
+    <link rel="stylesheet" href="css/content.css">
+{% endblock links_css %}
+
+{% block content %}
+    <div class="container">
+        <h1>Attività</h1>
+
+        <div href="/rides.html" class="box">
+            rides
+        </div>
+        <div href="/events.html" class="box">
+            events
+        </div>
+
+    </div>
+{% endblock content %}

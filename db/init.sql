@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `DURATE` (
 
 CREATE TABLE IF NOT EXISTS `TARIFFE` (
     `IdTariffa` INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `Nome` VARCHAR(50) UNIQUE,
+    `NomeTariffa` VARCHAR(50) UNIQUE,
     `CostoGiornaliero` FLOAT NOT NULL
 );
 
@@ -24,11 +24,11 @@ CREATE TABLE IF NOT EXISTS `ABBONAMENTI` (
     `CodiceFiscale` VARCHAR(16),
     `DataInizio` DATE,
     `Costo` FLOAT NOT NULL, -- ha senso avere questa ridondanza ????
-    `Nome` VARCHAR(50) NOT NULL,
+    `NomeTariffa` VARCHAR(50) NOT NULL,
     `Giorni` INTEGER UNSIGNED NOT NULL,
     PRIMARY KEY (`CodiceFiscale`, `DataInizio`),
     FOREIGN KEY (`CodiceFiscale`) REFERENCES `VISITATORI`(`CodiceFiscale`),
-    FOREIGN KEY (`Nome`) REFERENCES `TARIFFE`(`Nome`),
+    FOREIGN KEY (`NomeTariffa`) REFERENCES `TARIFFE`(`NomeTariffa`),
     FOREIGN KEY (`Giorni`) REFERENCES `DURATE`(`Giorni`)
 );
 
@@ -106,19 +106,19 @@ CREATE TABLE IF NOT EXISTS `RUOLI` (
 
 CREATE TABLE IF NOT EXISTS `ORARI` (
     `IdOrario` INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `Lunedi` VARCHAR(10), 
-    `Martedi` VARCHAR(10), 
-    `Mercoledi` VARCHAR(10), 
-    `Giovedi` VARCHAR(10), 
-    `Venerdi` VARCHAR(10), 
-    `Sabato` VARCHAR(10), 
-    `Domenica` VARCHAR(10)
+    `Lunedi` VARCHAR(11), 
+    `Martedi` VARCHAR(11), 
+    `Mercoledi` VARCHAR(11), 
+    `Giovedi` VARCHAR(11), 
+    `Venerdi` VARCHAR(11), 
+    `Sabato` VARCHAR(11), 
+    `Domenica` VARCHAR(11)
 );
 
 CREATE TABLE IF NOT EXISTS `SERVIZI` (
     `IdServizio` INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `Nome` VARCHAR(50) NOT NULL,
-    `Stipendio` FLOAT NOT NULL,
+    `Tipo` VARCHAR(50) NOT NULL,
     `IdOrario` INTEGER UNSIGNED NOT NULL,
     FOREIGN KEY (`IdOrario`) REFERENCES `ORARI`(`IdOrario`)
 );

@@ -1,8 +1,23 @@
 from flask import render_template, url_for, flash, redirect, request, jsonify, make_response, session, Blueprint
 from models import *
+from datetime import datetime, timedelta
 
+# from queries import *
 
 def visitor(app, db):
+    @app.route('/visitors', methods=['GET'])
+    def get_visitors():
+        visitors = Visitor.query.all()
+        for visitor in visitors: #take all the active subscription per visitor
+            subscriptions = Subscription.query.filter_by(CodiceFiscale=visitor.CodiceFiscale).all()
+            for subscription in subscriptions:
+                active = Subscription.query.filter_by(CodiceFiscale=subscription.CodiceFiscale).filter(datetime.strptime(str(subscription.DataInizio),'%Y-%m-%d') + timedelta(days=float(subscription.Giorni)) > datetime.now()).first()
+            visitor.subscription = active
+            
+        
+        return render_template('visitors.html', visitors=Visitor.query.all())
+    
+
     @app.route('/visitor', methods=['GET'])
     def get_visitor():
         try:
@@ -29,24 +44,49 @@ def visitor(app, db):
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
         
-    @app.route('/visitors', methods=['GET'])
-    def get_visitors():
-        return render_template('visitors.html', visitors=Visitor.query.all())
-    
+
 
 def subscription(app, db):
-    @app.route('/subscription', methods=['GET'])
+    @app.route('/subscriptions', methods=['GET'])
     def get_avaible_subscriptions():
         return render_template('subscriptions.html', durations=Duration.query.all(), tariffs=Tariff.query.all())
 
-    @app.route('/subscription/cost', methods=['GET'])
-    def get_subscription_cost():
-        duration = request.args.get('Duration')
-        tariff = request.args.get('Tariff')
-        duration = Duration.query.filter_by(Giorni=duration).first()
-        tariff = Tariff.query.filter_by(Nome=tariff).first()
-        return make_response(jsonify({'Costo': duration.Giorni * tariff.CostoGiornaliero * duration.Sconto}), 200)
 
+    # @app.route('/subscription/cost', methods=['GET'])
+    # def get_subscription_cost():
+    #     duration = request.args.get('Duration')
+    #     tariff = request.args.get('Tariff')
+    #     duration = Duration.query.filter_by(Giorni=duration).first()
+    #     tariff = Tariff.query.filter_by(Nome=tariff).first()
+    #     return make_response(jsonify({'Costo': duration.Giorni * tariff.CostoGiornaliero * duration.Sconto}), 200)
+
+
+    @app.route('/subscription', methods=['GET'])
+    def get_active_subscription():
+        try:
+            subscriptions = Subscription.query.filter_by(CodiceFiscale=request.args.get('CodiceFiscale')).all()
+            for subscription in subscriptions:
+                active = Subscription.query.filter_by(CodiceFiscale=subscription.CodiceFiscale).filter(datetime.strptime(str(subscription.DataInizio),'%Y-%m-%d') + timedelta(days=float(subscription.Giorni)) > datetime.now()).first()
+            return make_response(jsonify(active), 200)
+        except Exception as e:
+            return make_response(jsonify({'error': str(e)}), 400)
+
+    @app.route('/subscription', methods=['POST'])
+    def add_subscription():
+        try:
+            data = request.get_json()
+            subscription = Subscription(
+                CodiceFiscale=data['CodiceFiscale'],
+                DataInizio=data['DataInizio'],
+                Costo=data['Costo'],
+                Nome=data['Nome'],
+                Giorni=data['Giorni']
+            )
+            db.session.add(subscription)
+            db.session.commit()
+            return make_response(jsonify({'message': 'Abbonamento creato'}), 201)
+        except Exception as e:
+            return make_response(jsonify({'error': str(e)}), 400)
 
     @app.route('/subscription/duration', methods=['GET'])
     def get_durations():

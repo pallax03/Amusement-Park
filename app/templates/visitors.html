@@ -2,23 +2,44 @@
 
 {% block title %} Visitors {% endblock title %}
 
+{% block links_css %}
+    <link rel="stylesheet" href="css/content.css">
+{% endblock links_css %}
+
 {% block content %}
-    <h1>Visitors</h1>
-    <p>Here are the visitors to the site:</p>
-    <div class="table">
-        <div class="head">
-            <div class="th">Codice Fiscale</div>
-            <div class="th">Nome</div>
-            <div class="th">Data Di Nascita</div>
-            <div class="th">Altezza</div>
-            <div class="th">Peso</div>
+    <div class="container">
+        <div class="center">
+            <h1>Visitors</h1>
+            <p>Here are the visitors to the site:</p>
+    
+            <table>
+                <thead>
+                    <tr>
+                        <th>Codice Fiscale</th>
+                        <th>Nome Cognome</th>
+                        <th>Data Di Nascita</th>
+                        <th>Altezza</th>
+                        <th>Peso</th>
+                        <th>Abbonamento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for visitor in visitors %}
+                        <tr>
+                            <td>{{ visitor.CodiceFiscale }}</td>
+                            <td>{{ visitor.Nome }} {{ visitor.Cognome }}</td>
+                            <td>{{ visitor.DataDiNascita }}</td>
+                            <td>{{ visitor.Altezza }}</td>
+                            <td>{{ visitor.Peso }}</td>
+                            {% if visitor.subscription == None %}
+                                <td><button>+</button></td>    
+                            {% else %}
+                                <td>Active</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-        {% for visitor in visitors %}
-            {{ visitor.CodiceFiscale }}
-            {{ visitor.Nome }} {{ visitor.Cognome }}
-            {{ visitor.DataDiNascita }}
-            {{ visitor.Altezza }}
-            {{ visitor.Peso }}
-        {% endfor %}
     </div>
 {% endblock content %}

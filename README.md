@@ -24,16 +24,8 @@ IMMAGINE SCHEMA RELAZIONALE!!!
 
 Run the database, is a MySQL server, that create a database called amusamentpark, and it will automatically  create and populate some tables. 
 
-#### Run db
 ```console
-docker compose up --build db
-```
-
-After the db finished to start up, run the backend. 
-
-#### Run backend
-```console
-docker compose up --build backend
+docker compose up --build
 ```
 
 now, you will be able to connect to [`http://localhost:4000`](http://localhost:4000)
@@ -66,7 +58,7 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
 ```
 
 ### Subscription
-- /subscription [GET] + "?CodiceFiscale=`codicefiscale`" -> return [json](#subscription-json)
+- /subscription [GET] + "?CodiceFiscale=`codicefiscale`" -> return the active [json](#subscription-json)
 - /subscription [POST] -> given a [json](#subscription-json) add the subscription.
 
 #### Subscription Json
