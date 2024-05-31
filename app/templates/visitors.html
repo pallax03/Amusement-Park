@@ -7,10 +7,34 @@
 {% endblock links_css %}
 
 {% block content %}
+    <script>
+    function deleteSubscription(codicefiscale) {
+            document.getElementById('codicefiscale').value = codicefiscale;
+            document.querySelector('form').method = 'DELETE';
+            document.querySelector('#subscription').style.display = 'block';
+        }
+
+        function addSubscription(codicefiscale) {
+            document.getElementById('codicefiscale').value = codicefiscale;
+            document.querySelector('form').method = 'POST';
+            document.querySelector('#subscription').style.display = 'block';
+        }
+    </script>
+
+    <div class="modal" id="subscription" style="display:none">
+        <form action="{{ url_add_subscription }}" method="post">
+            <input type="text" name="CodiceFiscale" id="codicefiscale" disabled>
+            <input type="date" name="DataInizio" id="datainizio">
+            <input type="text" name="Costo" id="cost" disabled>
+            <input type="text" name="NomeTariffa" id="tariffa" disabled>
+            <input type="text" name="Giorni" id="durata" hidden>
+            <input type="submit" value="Add Subscription">
+        </form>
+    </div>
+
     <div class="container">
         <div class="center">
             <h1>Visitors</h1>
-            <p>Here are the visitors to the site:</p>
     
             <table>
                 <thead>
@@ -32,9 +56,9 @@
                             <td>{{ visitor.Altezza }}</td>
                             <td>{{ visitor.Peso }}</td>
                             {% if visitor.subscription == None %}
-                                <td><button>+</button></td>    
+                                <td><button onclick='addSubscription("{{ visitor.CodiceFiscale }}")'>+</button></td>    
                             {% else %}
-                                <td>Active</td>
+                                <td>Active | <button onclick='deleteSubscription("{{ visitor.CodiceFiscale }}")'>-</button></td>
                             {% endif %}
                         </tr>
                     {% endfor %}

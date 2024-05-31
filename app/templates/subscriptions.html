@@ -1,26 +1,38 @@
 {% extends 'layout.html' %}
 
+{% block links_css %}
+    <link rel="stylesheet" href="css/content.css">
+{% endblock links_css %}
+
 {% block title %} Abbonamenti {% endblock title %}
 
 {% block content %}
     <h1>Abbonamenti</h1>
     <p>Abbonamenti possibili:</p>
 
-    <div class="tariffs">
-        {% for tariff in tariffs %}
-            <div class="tariff">
-                <div class="name">{{ tariff.Nome }}</div>
-                <div class="price">{{ tariff.CostoGiornaliero }}</div>
-            </div>
-        {% endfor %}
-    </div>
-    <div class="durations">
-        {% for duration in durations %}
-            <div class="duration">
-                <div class="days">{{ duration.Giorni }}</div>
-                <div class="discount">{{ duration.Sconto }}</div>
-                <div class="description">{{ duration.Descrizione }}</div>
-            </div>
-        {% endfor %}
+    <div class="choices">
+        <div class="tariffs">
+            {% for tariff in tariffs %}
+                <input type="radio" name="tariff" id="{{ tariff.NomeTariffa }}">
+                <label for="{{ tariff.NomeTariffa }}">
+                    <p>{{ tariff.NomeTariffa }}</p>
+                    <p>{{ tariff.CostoGiornaliero }}€ / Giorno</p>
+                </label>
+            {% endfor %}
+            <div class="add"><button>+</button></div>
+        </div>
+        <div class="cost">
+            <label>xxx€</label>
+        </div>
+        <div class="durations">
+            {% for duration in durations %}
+                <input type="radio" name="duration" id="{{ duration.Giorni }}">    
+                <label for="{{ duration.Giorni }}">
+                    <p>{{ duration.Descrizione }}: {{ duration.Giorni }}</p>
+                    <p>{{ duration.Sconto }}%</p>
+                </label>
+            {% endfor %}
+            <div class="add"><button>+</button></div>
+        </div>
     </div>
 {% endblock content %}

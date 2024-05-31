@@ -14,8 +14,7 @@ def visitor(app, db):
                 active = Subscription.query.filter_by(CodiceFiscale=subscription.CodiceFiscale).filter(datetime.strptime(str(subscription.DataInizio),'%Y-%m-%d') + timedelta(days=float(subscription.Giorni)) > datetime.now()).first()
             visitor.subscription = active
             
-        
-        return render_template('visitors.html', visitors=Visitor.query.all())
+        return render_template('visitors.html', visitors=Visitor.query.all(), url_add_subscription=url_for('add_subscription'))
     
 
     @app.route('/visitor', methods=['GET'])
@@ -79,7 +78,7 @@ def subscription(app, db):
                 CodiceFiscale=data['CodiceFiscale'],
                 DataInizio=data['DataInizio'],
                 Costo=data['Costo'],
-                Nome=data['Nome'],
+                NomeTariffa=data['NomeTariffa'],
                 Giorni=data['Giorni']
             )
             db.session.add(subscription)
@@ -116,7 +115,7 @@ def subscription(app, db):
         try:
             data = request.get_json()
             tariff = Tariff(
-                Nome=data['Nome'],
+                NomeTariffa=data['NomeTariffa'],
                 CostoGiornaliero=data['CostoGiornaliero']
             )
             db.session.add(tariff)

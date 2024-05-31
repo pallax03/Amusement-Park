@@ -125,3 +125,117 @@ table tbody tr td {
   border-bottom: 1px solid #6B21A8;
   font-size: 0.5em;
 }
+.choices {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  width: 100%;
+  -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.choices .tariffs {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.choices .tariffs input[type=radio] {
+  display: none;
+}
+.choices .tariffs input[type=radio] + label {
+  border: 2px solid white;
+  padding: 10px;
+  margin: 10px;
+}
+.choices .tariffs input[type=radio]:checked + label {
+  background-color: #4ADE80;
+  color: #FAF5FF;
+}
+.choices .tariffs button {
+  border-radius: 25px;
+  width: 50px;
+  height: 50px;
+  font-size: 1.5em;
+  margin: 10px;
+  background-color: #581C87;
+  color: #4ADE80;
+  border: 2px solid #4ADE80;
+  cursor: pointer;
+}
+.choices .tariffs button:hover {
+  border-color: #581C87;
+  background-color: #4ADE80;
+  color: #581C87;
+}
+.choices .durations {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.choices .durations input[type=radio] {
+  display: none;
+}
+.choices .durations input[type=radio] + label {
+  border: 2px solid white;
+  padding: 10px;
+  margin: 10px;
+}
+.choices .durations input[type=radio]:checked + label {
+  background-color: #4ADE80;
+  color: #FAF5FF;
+}
+.choices .durations button {
+  border-radius: 25px;
+  width: 50px;
+  height: 50px;
+  font-size: 1.5em;
+  margin: 10px;
+  background-color: #581C87;
+  color: #4ADE80;
+  border: 2px solid #4ADE80;
+  cursor: pointer;
+}
+.choices .durations button:hover {
+  border-color: #581C87;
+  background-color: #4ADE80;
+  color: #581C87;
+}
