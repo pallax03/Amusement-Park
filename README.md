@@ -1,4 +1,4 @@
-# Amusament-Park
+# Amusement-Park
 Progetto finale per il corso (8615) in Basi Di Dati.
 
 L'obiettivo del progetto è quello di realizzare un sistema per la gestione di un parco divertimenti.
