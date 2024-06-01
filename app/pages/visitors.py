@@ -15,7 +15,7 @@ def visitor(app, db):
                 active = Subscription.query.filter_by(CodiceFiscale=subscription.CodiceFiscale).filter(datetime.strptime(str(subscription.DataInizio),'%Y-%m-%d') + timedelta(days=float(subscription.Giorni)) > datetime.now()).first()
             
             visitor.subscription = active if active is not None else Subscription()
-        return render_template('visitors.html', visitors=visitors, url_for_add_visitor=url_for('add_visitor'),
+        return render_template('visitors.j2', visitors=visitors, url_for_add_visitor=url_for('add_visitor'),
                                 url_add_subscription=url_for('add_subscription'), url_for_get_durations=url_for('get_durations'), url_for_get_tariffs=url_for('get_tariffs'), url_for_get_subscription_cost=url_for('get_subscription_cost'))
 
 

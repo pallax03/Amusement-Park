@@ -11,7 +11,7 @@ from pages.subscriptions import subscription
 def routes(app, db):
     @app.route('/')
     def index():
-        return render_template('index.html')
+        return render_template('index.j2')
     
     #models routes
     visitor(app, db)

@@ -35,6 +35,7 @@ class Duration(db.Model):
 
 @dataclass
 class Tariff(db.Model):
+    IdTariffa: int
     NomeTariffa: str
     CostoGiornaliero: float
 
@@ -62,6 +63,9 @@ class Subscription(db.Model):
 
 @dataclass
 class Entry(db.Model):
+    IdIngresso: int
+    CodiceFiscale: str
+    Data: str
 
     __tablename__ = 'INGRESSI'
 
@@ -72,6 +76,11 @@ class Entry(db.Model):
 
 @dataclass
 class Limit(db.Model):
+    IdLimite: int
+    Attributo: str
+    Condizione: str
+    Valore: str
+    Descrizione: str
 
     __tablename__ = 'LIMITI'
 
@@ -83,6 +92,8 @@ class Limit(db.Model):
 
 @dataclass
 class Category(db.Model):
+    IdCategoria: int
+    Nome: str
 
     __tablename__ = 'CATEGORIE'
 
@@ -91,6 +102,12 @@ class Category(db.Model):
 
 @dataclass
 class Activity(db.Model):
+    IdAttivita: int
+    Nome: str
+    Descrizione: str
+    Posti: int
+    IsEvent: bool
+    IdCategoria: int
 
     __tablename__ = 'ATTIVITA'
 
@@ -103,6 +120,8 @@ class Activity(db.Model):
 
 @dataclass
 class Constraint(db.Model):
+    IdAttivita: int
+    IdLimite: int
 
     __tablename__ = 'VINCOLI'
 
@@ -111,6 +130,11 @@ class Constraint(db.Model):
 
 @dataclass
 class Schedule(db.Model):
+    IdProgrammazione: int
+    IdAttivita: int
+    Data: str
+    Inizio: str
+    Fine: str
 
     __tablename__ = 'PROGRAMMAZIONI'
 
@@ -123,7 +147,10 @@ class Schedule(db.Model):
 
 @dataclass
 class Participate(db.Model):
-    
+    IdIngresso: int
+    Ora: str
+    IdAttivita: int
+
     __tablename__ = 'PARTECIPA'
 
     IdIngresso = db.Column(db.Integer, db.ForeignKey('INGRESSI.IdIngresso'), primary_key=True)
@@ -132,6 +159,8 @@ class Participate(db.Model):
 
 @dataclass
 class Include(db.Model):
+    IdTariffa = int
+    IdCategoria = int
 
     __tablename__ = 'INCLUDE'
 
@@ -140,6 +169,9 @@ class Include(db.Model):
 
 @dataclass
 class Role(db.Model):
+    IdRuolo: int
+    Nome: str
+    Stipendio: float
 
     __tablename__ = 'RUOLI'
 
@@ -149,6 +181,14 @@ class Role(db.Model):
 
 @dataclass
 class Timetable(db.Model):
+    IdOrario: int
+    Monday: str
+    Tuesday: str
+    Wednesday: str
+    Thursday: str
+    Friday: str
+    Saturday: str
+    Sunday: str
 
     __tablename__ = 'ORARI'
 
@@ -163,6 +203,10 @@ class Timetable(db.Model):
 
 @dataclass
 class Service(db.Model):
+    IdServizio: int
+    Nome: str
+    Tipo: str
+    IdOrario: int
 
     __tablename__ = 'SERVIZI'
 
@@ -173,6 +217,11 @@ class Service(db.Model):
 
 @dataclass
 class Employee(db.Model):
+    CodiceFiscale: str
+    Nome: str
+    Cognome: str
+    IdRuolo: int
+    IdServizio: int
 
     __tablename__ = 'PERSONALE'
 

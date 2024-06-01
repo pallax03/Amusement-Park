@@ -72,8 +72,8 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
 }
 ```
 
-- /subscriptions/durations [GET] -> return a json contains all the [json](#duration-json)
-- /subscriptions/durations [POST] -> given a [json](#duration-json) add the duration.
+- /subscription/durations [GET] -> return a json contains all the [json](#duration-json)
+- /subscription/durations [POST] -> given a [json](#duration-json) add the duration.
 
   #### Duration Json
   ```json
@@ -84,8 +84,8 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
   }
   ```
 
-- /subscriptions/tariffs [GET] -> return a json contains all the [json](#tariff-json)
-- /subscriptions/tariffs [POST] -> given a [json](#tariff-json) add the tariff.
+- /subscription/tariffs [GET] -> return a json contains all the [json](#tariff-json)
+- /subscription/tariffs [POST] -> given a [json](#tariff-json) add the tariff.
   
   #### Tariff Json
   ```json
@@ -96,6 +96,13 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
   }
   ```
 
+- /subscription/cost [GET] + '?NomeTariffa=`giorni`&Giorni=`giorni`' -> return the cost of this subscription
+  #### Json
+  ```json
+  {
+    "Costo": float,
+  }
+  ```
 
 ### Activity
 

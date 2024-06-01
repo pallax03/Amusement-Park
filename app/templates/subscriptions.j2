@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+
+{% block links_css %}
+    <link rel="stylesheet" href="css/content.css">
+{% endblock links_css %}
+
+{% block title %} Abbonamenti {% endblock title %}
+
+{% block content %}
+    <script>
+        const url_for_get_tariffs = "{{ url_for_get_tariffs }}";
+        const url_for_add_tariff = "{{ url_for_add_tariff }}";
+        const url_for_get_durations = "{{ url_for_get_durations }}";
+        const url_for_add_duration = "{{ url_for_add_duration }}";
+        const url_for_cost = "{{ url_for_cost }}";
+    </script>
+    
+    
+    <h1>Abbonamenti</h1>
+    <p>Abbonamenti possibili:</p>
+
+    <div class="choices">
+        <div class="container">
+            <div class="options" id="options_tariff">
+                {% for tariff in tariffs %}
+                    <input type="radio" name="tariff" id="{{ tariff.NomeTariffa }}">
+                    <label for="{{ tariff.NomeTariffa }}">
+                        <p>{{ tariff.NomeTariffa }}</p>
+                        <label for="costogiornaliero">
+                            <input type="text" class="costogiornaliero" name="costogiornaliero" value="{{ tariff.CostoGiornaliero }}" disabled>
+                        € / Giorno</label>
+                    </label>
+                {% endfor %}
+            </div>
+            <button class="add" onclick='createOptionTariff()'>+</button>
+        </div>
+       
+        <div class="container">
+            <div class="options" id="options_duration">
+                {% for duration in durations %}
+                    <input type="radio" name="duration" id="{{ duration.Giorni }}">    
+                    <label for="{{ duration.Giorni }}">
+                        <p>{{ duration.Descrizione }}: {{ duration.Giorni }}</p>
+                        <label for="discount">Sconto: 
+                            <input type="text" name="discount" value="{{ duration.Sconto }}" disabled>
+                        </label>
+                    </label>
+                {% endfor %}
+            </div>
+            <button class="add" onclick='addDuration()'>+</button>
+        </div>
+        <div class="cost">
+            <label for="costTot">Costo totale:
+                <input type="text" name="costTot" id="costototale" disabled>
+            </label>
+        </div>
+    </div>
+
+    <script src="js/subscriptions.js"></script>
+{% endblock content %}

@@ -1,3 +1,4 @@
+@charset "UTF-8";
 @font-face {
   font-family: "Consolas", monospace;
   src: url("/fonts/Consolas.ttf") format("truetype");
@@ -229,6 +230,94 @@ table tbody tr td {
       -ms-flex-align: center;
           align-items: center;
 }
+.choices .container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.choices .container .options {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.choices .container .options input[type=radio] {
+  display: none;
+}
+.choices .container .options input[type=radio] + label {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  width: 150px;
+  height: 100px;
+  border: 2px solid #581C87;
+  padding: 10px;
+  margin: 10px;
+  color: #FAF5FF;
+  cursor: pointer;
+}
+.choices .container .options input[type=radio] + label input {
+  color: #FAF5FF;
+  background-color: rgba(0, 0, 0, 0);
+  background-color: #581C87;
+  border: 0;
+  font-size: 1em;
+  width: 50px;
+  cursor: text;
+}
+.choices .container .options input[type=radio] + label input.costo:after {
+  content: "€";
+}
+.choices .container .options input[type=radio]:checked + label {
+  border-color: #4ADE80;
+}
+.choices .container button.add {
+  border-radius: 25px;
+  width: 50px;
+  height: 50px;
+  font-size: 1.5em;
+  margin: 10px;
+  background-color: #581C87;
+  color: #4ADE80;
+  border: 2px solid #4ADE80;
+  cursor: pointer;
+}
+.choices .container button.add:hover {
+  border-color: #581C87;
+  background-color: #4ADE80;
+  color: #581C87;
+}
 .choices .tariffs {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -259,22 +348,6 @@ table tbody tr td {
 .choices .tariffs input[type=radio]:checked + label {
   background-color: #4ADE80;
   color: #FAF5FF;
-}
-.choices .tariffs button {
-  border-radius: 25px;
-  width: 50px;
-  height: 50px;
-  font-size: 1.5em;
-  margin: 10px;
-  background-color: #581C87;
-  color: #4ADE80;
-  border: 2px solid #4ADE80;
-  cursor: pointer;
-}
-.choices .tariffs button:hover {
-  border-color: #581C87;
-  background-color: #4ADE80;
-  color: #581C87;
 }
 .choices .durations {
   display: -webkit-box;

@@ -136,6 +136,74 @@ table{
     justify-content: center;
     align-items: center;
 
+    .container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-content: center;
+        justify-content: center;
+        align-items: center;
+        
+        .options {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-content: center;
+            justify-content: center;
+            align-items: center;
+            input[type="radio"] {
+                display: none;
+
+                & + label {
+                    display: flex;
+                    flex-direction: column;
+                    width: 150px;
+                    height: 100px;
+                    border: 2px solid $background_box-color;
+                    padding: 10px;
+                    margin: 10px;
+                    color: $text-color;
+                    cursor: pointer;
+                    
+                    input {
+                        color: $text-color;
+                        background-color: #00000000;
+                        background-color: $background_box-color;
+                        border: 0;
+                        font-size: 1em;
+                        width: 50px;
+                        cursor: text;
+                        &.costo:after {
+                            content: "€";
+                        }
+                    }
+                }
+
+                &:checked + label {
+                    border-color: $constrast-color;
+                    
+                }
+            }
+        }
+
+        button.add {
+            border-radius: 25px;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5em;
+            margin: 10px;
+            background-color: $background_box-color;
+            color: $constrast-color;
+            border: 2px solid $constrast-color;
+            cursor: pointer;
+            &:hover {
+                border-color: $background_box-color;
+                background-color: $constrast-color;
+                color: $background_box-color;
+            }
+        }
+    }
+
     .tariffs {
         display: flex;
         flex-direction: row;
@@ -159,20 +227,7 @@ table{
             }
         }
         button {
-            border-radius: 25px;
-            width: 50px;
-            height: 50px;
-            font-size: 1.5em;
-            margin: 10px;
-            background-color: $background_box-color;
-            color: $constrast-color;
-            border: 2px solid $constrast-color;
-            cursor: pointer;
-            &:hover {
-                border-color: $background_box-color;
-                background-color: $constrast-color;
-                color: $background_box-color;
-            }
+            
         }
     }
     
