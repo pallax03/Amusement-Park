@@ -10,14 +10,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-from routes import *
-visitor(app, db)
-subscription(app, db)
-
+from routes import routes
+routes(app, db)
 
 # from models import *
 # from routes import *

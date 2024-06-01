@@ -7,38 +7,74 @@
 {% endblock links_css %}
 
 {% block content %}
-    <script>
-    function deleteSubscription(codicefiscale) {
-            document.getElementById('codicefiscale').value = codicefiscale;
-            document.querySelector('form').method = 'DELETE';
-            document.querySelector('#subscription').style.display = 'block';
-        }
-
-        function addSubscription(codicefiscale) {
-            document.getElementById('codicefiscale').value = codicefiscale;
-            document.querySelector('form').method = 'POST';
-            document.querySelector('#subscription').style.display = 'block';
-        }
-    </script>
-
+    <script src="js/visitors.js"></script>
+    <!-- SUBSCRIPTION -->
     <div class="modal" id="subscription" style="display:none">
-        <form action="{{ url_add_subscription }}" method="post">
-            <input type="text" name="CodiceFiscale" id="codicefiscale" disabled>
-            <input type="date" name="DataInizio" id="datainizio">
-            <input type="text" name="Costo" id="cost" disabled>
-            <input type="text" name="NomeTariffa" id="tariffa" disabled>
-            <input type="text" name="Giorni" id="durata" hidden>
-            <input type="submit" value="Add Subscription">
-        </form>
+        <div class="modal-container">
+            <span class="close"></span>
+            <form action="{{ url_add_subscription }}" method="post">
+                <label for="CodiceFiscale">Codice Fiscale:
+                    <input type="text" name="CodiceFiscale" id="subscription_codicefiscale" disabled>
+                </label>
+                <label for="DataInizio">Data di inizio validità:
+                    <input type="date" name="DataInizio" id="datainizio">
+                </label>
+                <label for="Costo">Costo Totale:
+                    <input type="text" name="Costo" id="cost" disabled>
+                </label>
+                <label for="NomeTariffa">Tariffa scelta:
+                    <select name="NomeTariffa" id="tariffa" disabled>
+                        
+                    </select>
+                </label>
+                <label for="Giorni">Giorni di validità:
+                    <select name="Giorni" id="durata" disabled>
+
+                    </select>
+                </label>
+                <input type="submit" id="submit" value="">
+            </form>
+        </div>
     </div>
 
-    <div class="container">
+    <!-- VISITOR -->
+    <div class="modal" id="visitor" style="display:none">
+        <div class="modal-container">
+            <span class="close"></span>
+            <div class="content">
+                <form action="{{ url_for_add_visitor }}">
+                    <label for="CodiceFiscale">Codice Fiscale:
+                        <input type="text" name="CodiceFiscale" id="visitor_codicefiscale">
+                    </label>
+                    <label for="Nome">Nome:
+                        <input type="text" name="Nome" id="nome">
+                    </label>
+                    <label for="Cognome">Cognome:
+                        <input type="text" name="Cognome" id="cognome">
+                    </label>
+                    <label for="DataDiNascita">Data di nascita:
+                        <input type="date" name="DataDiNascita" id="birthday">
+                    </label>
+                    <label for="Altezza">Altezza:
+                        <input type="text" name="Altezza" id="altezza">
+                    </label>
+                    <label for="Peso">Peso:
+                        <input type="text" name="Peso" id="peso">
+                    </label>
+                    <input type="button" onclick="addVisitor()" value="Add Visitor">
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="content" class="container">
         <div class="center">
             <h1>Visitors</h1>
-    
+
             <table>
                 <thead>
                     <tr>
+                        <th>Options</th>
                         <th>Codice Fiscale</th>
                         <th>Nome Cognome</th>
                         <th>Data Di Nascita</th>
@@ -48,21 +84,25 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <tr class="empty_row">
+                        <td colspan="7"><button class="add" id="add_visitor" onclick='modalVisitor()'>+</button></td>
+                    </tr>
                     {% for visitor in visitors %}
                         <tr>
+                            <td><button class="delete" onclick='deleteVisitor({{ visitor|tojson }})'>DELETE</button></td>
                             <td>{{ visitor.CodiceFiscale }}</td>
                             <td>{{ visitor.Nome }} {{ visitor.Cognome }}</td>
                             <td>{{ visitor.DataDiNascita }}</td>
                             <td>{{ visitor.Altezza }}</td>
                             <td>{{ visitor.Peso }}</td>
-                            {% if visitor.subscription == None %}
-                                <td><button onclick='addSubscription("{{ visitor.CodiceFiscale }}")'>+</button></td>    
+                            {% if visitor.subscription.CodiceFiscale == None %}
+                                <td><button onclick='modalSubscription("{{ visitor.CodiceFiscale }}", "POST", "{{ url_for_get_tariffs }}", "{{ url_for_get_durations }}", "{{ url_for_get_subscription_cost }}")'>+</button></td>    
                             {% else %}
-                                <td>Active | <button onclick='deleteSubscription("{{ visitor.CodiceFiscale }}")'>-</button></td>
+                                <td><button onclick='modalSubscription({{ visitor.subscription|tojson }}, "DELETE")'>Active</button></td>
                             {% endif %}
                         </tr>
                     {% endfor %}
-                </tbody>
+                </tbody>    
             </table>
         </div>
     </div>
