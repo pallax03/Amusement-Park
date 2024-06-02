@@ -29,13 +29,18 @@
                         <label for="costogiornaliero">
                             <input type="text" class="costogiornaliero" name="costogiornaliero" value="{{ tariff.CostoGiornaliero }}" disabled>
                         € / Giorno</label>
+                        <ul class="categories">
+                            {% for category in tariff.Categories %}
+                                <li>{{ category.Nome }}</li>
+                            {% endfor %}
+                        </ul>
                     </label>
                 {% endfor %}
             </div>
             <button class="add" onclick='createOptionTariff()'>+</button>
         </div>
        
-        <div class="container">
+        <div class="container" style="display: none;">
             <div class="options" id="options_duration">
                 {% for duration in durations %}
                     <input type="radio" name="duration" id="{{ duration.Giorni }}">    
@@ -49,7 +54,7 @@
             </div>
             <button class="add" onclick='addDuration()'>+</button>
         </div>
-        <div class="cost">
+        <div class="cost" id="box_costototale" style="display: none;" >
             <label for="costTot">Costo totale:
                 <input type="text" name="costTot" id="costototale" disabled>
             </label>

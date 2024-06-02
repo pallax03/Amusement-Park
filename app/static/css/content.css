@@ -279,8 +279,6 @@ table tbody tr td {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  width: 150px;
-  height: 100px;
   border: 2px solid #581C87;
   padding: 10px;
   margin: 10px;

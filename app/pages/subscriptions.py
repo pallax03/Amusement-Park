@@ -7,7 +7,7 @@ from models import Subscription, Duration, Tariff, Include, Category
 def subscription(app, db):
     @app.route('/subscriptions', methods=['GET'])
     def page_subscriptions():
-        return render_template('subscriptions.j2', durations=Duration.query.all(), tariffs=Tariff.query.all(), 
+        return render_template('subscriptions.j2', durations=get_durations().json, tariffs=get_tariffs().json, 
                                url_for_get_durations=url_for('get_durations'), url_for_get_tariffs=url_for('get_tariffs'),
                                url_for_add_duration=url_for('add_duration'), url_for_add_tariff=url_for('add_tariff'), url_for_cost=url_for('get_subscription_cost'))
 

@@ -43,6 +43,7 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
 ## API documentation
 ### Visitor
 - /visitor [GET] + "?CodiceFiscale=`codicefiscale`" -> return [json](#visitor-json)
+- /visitor [DELETE] + "?CodiceFiscale=`codicefiscale`" -> delete the visitor and his subscriptions.
 - /visitor [POST] -> given a [json](#visitor-json) add the visitor.
 
 #### Visitor Json
@@ -51,29 +52,31 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
   "CodiceFiscale": str(16),
   "Nome": str,
   "Cognome": str,
-  "DataDiNascita": str, //of a date format
+  "DataDiNascita": str,
   "Altezza": int,
   "Peso": float
 }
 ```
 
 ### Subscription
-- /subscription [GET] + "?CodiceFiscale=`codicefiscale`" -> return the active [json](#subscription-json)
+- /subscription [GET] + "?CodiceFiscale=`codicefiscale`" -> return the active [json]
+(#subscription-json)
+- /subscription [DELETE] "?CodiceFiscale=`codicefiscale`&DataInizio=`datainizio`" -> delete the subscription.
 - /subscription [POST] -> given a [json](#subscription-json) add the subscription.
 
 #### Subscription Json
 ```json
 {
   "CodiceFiscale": str(16),
-  "DataInizio": str, //of a date format
+  "DataInizio": str,
   "Costo": float,
-  "Nome": str,       // chosen Tariff  
-  "Giorni": int      // chosen Duration
+  "Nome": str,
+  "Giorni": int
 }
 ```
 
 - /subscription/durations [GET] -> return a json contains all the [json](#duration-json)
-- /subscription/durations [POST] -> given a [json](#duration-json) add the duration.
+- /subscription/duration [POST] -> given a [json](#duration-json) add the duration.
 
   #### Duration Json
   ```json
@@ -85,19 +88,19 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
   ```
 
 - /subscription/tariffs [GET] -> return a json contains all the [json](#tariff-json)
-- /subscription/tariffs [POST] -> given a [json](#tariff-json) add the tariff.
+- /subscription/tariff [POST] -> given a [json](#tariff-json) add the tariff.
   
   #### Tariff Json
   ```json
   {
     "Nome": str,
     "CostoGiornaliero": float
-    "Include": [int] //IdCategoria -> categorie che si vogliono includere 
+    "Categories": [Category] 
   }
   ```
 
-- /subscription/cost [GET] + '?NomeTariffa=`giorni`&Giorni=`giorni`' -> return the cost of this subscription
-  #### Json
+- /subscription/cost [GET] + '?NomeTariffa=`nometariffa`&Giorni=`giorni`' -> return the cost of this subscription combo.
+  #### cost Json
   ```json
   {
     "Costo": float,
@@ -106,22 +109,48 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
 
 ### Activity
 
-#### rides
-#### categories
-#### constraints
-#### limits
+#### Rides
+- /activity/rides
+- /activity/ride
 
-#### events
-#### schedules
+#### Categories
+- /activity/ride/categories
 
-#### entries
-#### partecipates
+- /activity/ride/categories
 
-### Employess
-
-#### roles
-#### requires
-
-### Service
+#### Limits
+- /activity/ride/constraints
+- /activity/ride/limits
 
 #### Timetables
+- /activity/events
+- /activity/event
+
+- /activity/event/schedules
+- /activity/event/schedule
+
+#### Timetables
+- /activity/entries
+- /activity/entries
+
+- /activity/entries/partecipates
+- /activity/entries/partecipates
+
+### Employess
+- /employee
+- /employee
+
+#### Roles
+- /employee/roles
+- /employee/role
+
+#### Require
+- /employee/role/require
+
+### Service
+- /service
+- /service
+
+#### Timetables
+- /service/timetable
+- /service/timetable
