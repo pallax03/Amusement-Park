@@ -1,3 +1,23 @@
+function acceptInteger(input) {
+    input.value = input.value.replace(/[^0-9]/g, '');
+}
+
+function acceptFloat(input) {
+    input.value = input.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1').replace(/^0[^.]/, '0');
+}
+
+function getCategories() {
+    options = '';
+    fetch(url_for_get_categories)
+    .then(response => response.json())
+    .then(data => {
+        data.forEach(category => {
+            options += '<input type="checkbox" name="category" id="'+category.Nome+'"><label for="'+category.Nome+'">'+category.Nome+'</label>';
+        });
+    });
+    return options;
+}
+
 function getTariffs() {
     fetch(url_for_get_tariffs)
     .then(response => response.json())
@@ -14,41 +34,40 @@ function getTariffs() {
 }
 
 // TODO: Implementare la funzione per creare una pseudo nuova tariffa
-// async function createOptionTariff() {
-//     radioClone = document.querySelector('[name="tariff"]').cloneNode(true);
-//     labelClone = document.querySelector('[for="'+radioClone.id+'"]').cloneNode(true);
-//     // Generare un nuovo ID unico
-//     const newId = 'Tariff' + Date.now();
-//     radioClone.id = newId;
-//     labelClone.setAttribute('for', newId);
+async function createOptionTariff() {
+    const tariffId = 'Tariff' + Date.now();
+    const categoriesHtml = await getCategories();
+    const formHtml = `
+        <input type="radio" name="tariff" id="${tariffId}">
+        <label for="${tariffId}">
+            <input type="text" name="${tariffId}" placeholder="Nome Tariffa" value="" onblur="enableDailyCostInput(this)">
+            <label for="costogiornaliero">
+                <input type="text" class="costogiornaliero" oninput="acceptFloat(this)" name="costogiornaliero" value="15" disabled onblur="createTariffObject(this)">€ / Giorno
+            </label>
+            <div id="options_category">${categoriesHtml}</div>
+        </label>
+    `;
 
-//     // Aggiungere l'evento per richiedere il nome della tariffa
-//     const pClone = labelClone.querySelector('p');
-//     const costInputClone = labelClone.querySelector('.costogiornaliero');
+    document.getElementById('options_tariff').insertAdjacentHTML('beforeend', formHtml);
 
-//     pClone.textContent = 'Inserisci nome tariffa';
-//     pClone.setAttribute('contenteditable', 'true');
-//     costInputClone.disabled = false;
-//     costInputClone.value = '';
+    const tariffLabel = input.closest('label');
+    const tariffName = tariffLabel.querySelector('input[type="text"][name^="Tariff"]').value;
+    const dailyCost = input.value;
+    const selectedCategories = Array.from(tariffLabel.querySelectorAll('input[name="category"]:checked'))
+                                    .map(categoryInput => ({
+                                        IdCategoria: parseInt(categoryInput.id), // Assuming category ID is embedded in the ID
+                                        Nome: categoryInput.id
+                                    }));
 
-//     // Aggiungere l'evento per impostare il focus e disabilitare gli input
-//     pClone.addEventListener('blur', function () {
-//         costInputClone.focus();
-//     });
-
-//     costInputClone.addEventListener('blur', async function () {
-//         pClone.removeAttribute('contenteditable');
-//         costInputClone.disabled = true;
-//         await addTariff( Tariff = {NomeTariffa: pClone.textContent, CostoGiornaliero: costInputClone.value});
-//         getTariffs();
-//     });
-    
-//     document.getElementById('options_tariff').appendChild(radioClone);
-//     document.getElementById('options_tariff').appendChild(labelClone);
-// }
+    const Tariff = {
+        NomeTariffa: tariffName,
+        CostoGiornaliero: dailyCost,
+        Categories: selectedCategories
+    };
+}
 
 // TODO Implementare la funzione per aggiungere una tariffa, also in backend
-async function addTariff( Tariff = {NomeTariffa: '', CostoGiornaliero: ''} ) {
+async function addTariff( Tariff = {NomeTariffa: '', CostoGiornaliero: '', Categories: []} ) {
     fetch(url_for_add_tariff, {
         method: 'POST',
         body: JSON.stringify(Tariff),
@@ -79,40 +98,24 @@ document.querySelectorAll('[name="tariff"]').forEach(radio => {
     });
 })
 
+function getDurations() {
+    fetch(url_for_get_durations)
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('options_duration').innerHTML = '';
+        data.forEach(duration => {
+            document.getElementById('options_duration').innerHTML += '<input type="radio" name="duration" id="'+duration.Giorni+'"><label for="'+duration.Giorni+'"><p><input type="text" placeholder="Descrizione" value="'+duration.Descrizione+'" disabled>: <input type="number" placeholder="" oninput="acceptInteger(this)" value="'+duration.Giorni+'" disabled></p><label for="discount">Sconto: <input type="float" oninput="acceptFloat(this)" name="discount" value="'+duration.Sconto+'" disabled></label></label>';
+        });
+        document.querySelectorAll('[name="duration"]').forEach(radio => {
+            radio.addEventListener('click', function() {
+                getCost();
+            });
+        });
+    });
+}
+
 async function createOptionDuration() {
-    radioClone = document.querySelector('[name="duration"]').cloneNode(true);
-    labelClone = document.querySelector('[for="'+radioClone.id+'"]').cloneNode(true);
 
-    function changeid(id) {
-        radioClone.id = id;
-        labelClone.setAttribute('for', id);
-    }
-    tmp_id = 'Duration'+Date.now();
-    changeid(tmp_id); //tmp id
-    //qui
-    // Aggiungere l'evento per richiedere il nome della tariffa
-    const pClone = labelClone.querySelector('p');
-    const costInputClone = labelClone.querySelector('.costogiornaliero');
-
-    pClone.textContent = 'Inserisci nome tariffa';
-    pClone.setAttribute('contenteditable', 'true');
-    costInputClone.disabled = false;
-    costInputClone.value = '';
-
-    // Aggiungere l'evento per impostare il focus e disabilitare gli input
-    pClone.addEventListener('blur', function () {
-        costInputClone.focus();
-    });
-
-    costInputClone.addEventListener('blur', async function () {
-        pClone.removeAttribute('contenteditable');
-        costInputClone.disabled = true;
-        await addTariff( Tariff = {NomeTariffa: pClone.textContent, CostoGiornaliero: costInputClone.value});
-        getTariffs();
-    });
-    
-    document.getElementById('options_duration').appendChild(radioClone);
-    document.getElementById('options_duration').appendChild(labelClone);
 }
 
 

@@ -109,9 +109,10 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
 
 ### Activity
 
+- /activity
+
 #### Rides
 - /activity/rides
-- /activity/ride
 
 #### Categories
 - /activity/ride/categories
@@ -124,7 +125,6 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
 
 #### Timetables
 - /activity/events
-- /activity/event
 
 - /activity/event/schedules
 - /activity/event/schedule

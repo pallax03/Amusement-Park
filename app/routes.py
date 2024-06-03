@@ -6,6 +6,7 @@ from flask import render_template, url_for, flash, redirect, request, jsonify, m
 
 from pages.visitors import visitor
 from pages.subscriptions import subscription
+from pages.activities import activity
 # from pages.employees import *
 
 def routes(app, db):
@@ -16,6 +17,7 @@ def routes(app, db):
     #models routes
     visitor(app, db)
     subscription(app, db)
+    activity(app, db)
     # employee(app, db)
 
 

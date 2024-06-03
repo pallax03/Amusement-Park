@@ -138,7 +138,7 @@ table{
 
     .container {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         flex-wrap: nowrap;
         align-content: center;
         justify-content: center;
@@ -151,6 +151,7 @@ table{
             align-content: center;
             justify-content: center;
             align-items: center;
+
             input[type="radio"] {
                 display: none;
 
@@ -169,11 +170,7 @@ table{
                         background-color: $background_box-color;
                         border: 0;
                         font-size: 1em;
-                        width: 50px;
                         cursor: text;
-                        &.costo:after {
-                            content: "€";
-                        }
                     }
                 }
 
@@ -217,7 +214,12 @@ table{
                 border: 2px solid white;
                 padding: 10px;
                 margin: 10px;
+                
+                input {
+                    width: 20px !important;
+                }
             }
+
 
             &:checked + label {
                 background-color: $constrast-color;

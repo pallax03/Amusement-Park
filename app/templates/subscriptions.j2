@@ -8,6 +8,7 @@
 
 {% block content %}
     <script>
+        const url_for_get_categories = "{{ url_for_get_categories }}";
         const url_for_get_tariffs = "{{ url_for_get_tariffs }}";
         const url_for_add_tariff = "{{ url_for_add_tariff }}";
         const url_for_get_durations = "{{ url_for_get_durations }}";
@@ -45,14 +46,17 @@
                 {% for duration in durations %}
                     <input type="radio" name="duration" id="{{ duration.Giorni }}">    
                     <label for="{{ duration.Giorni }}">
-                        <p>{{ duration.Descrizione }}: {{ duration.Giorni }}</p>
+                        <p>
+                            <input type="text" placeholder="Descrizione" value="{{ duration.Descrizione }}" disabled>: 
+                            <input type="number" placeholder="" oninput="acceptInteger(this)" value="{{ duration.Giorni }}">
+                        </p>
                         <label for="discount">Sconto: 
-                            <input type="text" name="discount" value="{{ duration.Sconto }}" disabled>
+                            <input type="float" oninput="acceptFloat(this)" name="discount" value="{{ duration.Sconto }}">
                         </label>
                     </label>
                 {% endfor %}
             </div>
-            <button class="add" onclick='addDuration()'>+</button>
+            <button class="add" onclick='createOptionDuration()'>+</button>
         </div>
         <div class="cost" id="box_costototale" style="display: none;" >
             <label for="costTot">Costo totale:
