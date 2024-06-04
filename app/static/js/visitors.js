@@ -30,7 +30,6 @@ async function getDurations(url) {
     });
 }
 
-// api to get the cost of the subscription
 async function getCost(url) {
     fetch(url + '?NomeTariffa=' + document.getElementById('tariffa').value + '&Giorni=' + document.getElementById('durata').value)
     .then(response => response.json())
@@ -40,6 +39,8 @@ async function getCost(url) {
 }
 
 async function modalSubscription( subscription = {CodiceFiscale: '', DataInizio: '', Costo: '', NomeTariffa: '', Costo: ''} , method='POST', url_tariffs, url_durations, url_cost) {
+    document.getElementById('tariffa').innerHTML = '';
+    document.getElementById('durata').innerHTML = ''; 
     if (typeof subscription === 'string') { // if the subscription is a string, it means that we are adding a new subscription
         method = 'POST';
         document.getElementById('subscription_codicefiscale').value = subscription;
@@ -134,30 +135,14 @@ function addVisitor() {
         },
         body: JSON.stringify(json)
     })
-    .then(response => {
-        if (response.status >= 200 || response.status < 300) {
-            statusResponse("200", 'Visitor added successfully', response.json());
-        } else if (response.status >= 400 || response.status < 500) {
-            statusResponse("400", 'Visitor not added', response.json());
-        } else {
-            statusResponse("500", 'Internal server error', response.json());
-        }
-    });
+    .then(response => statusResponse(response));
 }
 
 function deleteVisitor(visitor = {CodiceFiscale: '', Nome: '', Cognome: '', DataDiNascita: '', Altezza: '', Peso: ''}) {
     fetch(document.querySelector('#visitor form').action + '?CodiceFiscale=' + visitor.CodiceFiscale, {
         method: 'DELETE'
     })
-    .then(response => {
-        if (response.status >= 200 || response.status < 300) {
-            statusResponse("200", 'Visitor deleted successfully', response.json());
-        } else if (response.status >= 400 || response.status < 500) {
-            statusResponse("400", 'Visitor not deleted', response.json());
-        } else {
-            statusResponse("500", 'Internal server error', response.json());
-        }
-    });
+    .then(response => statusResponse(response));
 }
 
 
@@ -165,15 +150,7 @@ function deleteSubscription(subscription = {CodiceFiscale: '', DataInizio: '', C
     fetch(document.querySelector('#subscription form').action + '?CodiceFiscale=' + subscription.CodiceFiscale + '&DataInizio=' + new Date(subscription.DataInizio).toLocaleDateString('en-CA'), {
         method: 'DELETE'
     })
-    .then(response => {
-        if (response.status >= 200 || response.status < 300) {
-            statusResponse("200", 'Subscription deleted successfully', response.json());
-        } else if (response.status >= 400 || response.status < 500) {
-            statusResponse("400", 'Subscription not deleted', response.json());
-        } else {
-            statusResponse("500", 'Internal server error', response.json());
-        }
-    });
+    .then(response => statusResponse(response));
 }
 
 function addSubscription() {
@@ -193,22 +170,5 @@ function addSubscription() {
         },
         body: JSON.stringify(json)
     })
-    .then(response => {
-        if (response.status >= 200 || response.status < 300) {
-            statusResponse("200", 'Subscription added successfully', response.json());
-        } else if (response.status >= 400 || response.status < 500) {
-            statusResponse("400", 'Subscription not added', response.json());
-        } else {
-            statusResponse("500", 'Internal server error', response.json());
-        }
-    });
-}
-
-function statusResponse(code, message, debug) {
-    img = 'img/status/' + code + '.jpg';
-    document.querySelector('#content').innerHTML = "<img class='status' src="+img+"><p>"+message+"</p>";
-    document.querySelector('#content').innerHTML += "<p>"+debug+"</p>";
-    setTimeout(function() {
-        location.reload();
-    }, 5000);
+    .then(response => statusResponse(response));
 }

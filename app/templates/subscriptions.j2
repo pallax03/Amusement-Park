@@ -16,52 +16,53 @@
         const url_for_cost = "{{ url_for_cost }}";
     </script>
     
-    
-    <h1>Abbonamenti</h1>
-    <p>Abbonamenti possibili:</p>
+    <div id="content" class="container">
+        <h1>Abbonamenti</h1>
+        <p>Abbonamenti possibili:</p>
 
-    <div class="choices">
-        <div class="container">
-            <div class="options" id="options_tariff">
-                {% for tariff in tariffs %}
-                    <input type="radio" name="tariff" id="{{ tariff.NomeTariffa }}">
-                    <label for="{{ tariff.NomeTariffa }}">
-                        <p>{{ tariff.NomeTariffa }}</p>
-                        <label for="costogiornaliero">
-                            <input type="text" class="costogiornaliero" name="costogiornaliero" value="{{ tariff.CostoGiornaliero }}" disabled>
-                        € / Giorno</label>
-                        <ul class="categories">
-                            {% for category in tariff.Categories %}
-                                <li>{{ category.Nome }}</li>
-                            {% endfor %}
-                        </ul>
-                    </label>
-                {% endfor %}
-            </div>
-            <button class="add" onclick='createOptionTariff()'>+</button>
-        </div>
-       
-        <div class="container" style="display: none;">
-            <div class="options" id="options_duration">
-                {% for duration in durations %}
-                    <input type="radio" name="duration" id="{{ duration.Giorni }}">    
-                    <label for="{{ duration.Giorni }}">
-                        <p>
-                            <input type="text" placeholder="Descrizione" value="{{ duration.Descrizione }}" disabled>: 
-                            <input type="number" placeholder="" oninput="acceptInteger(this)" value="{{ duration.Giorni }}">
-                        </p>
-                        <label for="discount">Sconto: 
-                            <input type="float" oninput="acceptFloat(this)" name="discount" value="{{ duration.Sconto }}">
+        <div class="choices">
+            <div class="container">
+                <div class="options" id="options_tariff">
+                    {% for tariff in tariffs %}
+                        <input type="radio" name="tariff" id="{{ tariff.NomeTariffa }}">
+                        <label for="{{ tariff.NomeTariffa }}">
+                            <p>{{ tariff.NomeTariffa }}</p>
+                            <label for="costogiornaliero">
+                                <input type="text" class="costogiornaliero" name="costogiornaliero" value="{{ tariff.CostoGiornaliero }}" disabled>
+                            € / Giorno</label>
+                            <ul class="categories">
+                                {% for category in tariff.Categories %}
+                                    <li>{{ category.Nome }}</li>
+                                {% endfor %}
+                            </ul>
                         </label>
-                    </label>
-                {% endfor %}
+                    {% endfor %}
+                </div>
+                <button class="add" id="btn_add_tariff" onclick='createOptionTariff()'>+</button>
             </div>
-            <button class="add" onclick='createOptionDuration()'>+</button>
-        </div>
-        <div class="cost" id="box_costototale" style="display: none;" >
-            <label for="costTot">Costo totale:
-                <input type="text" name="costTot" id="costototale" disabled>
-            </label>
+        
+            <div class="container" style="display: none;">
+                <div class="options" id="options_duration">
+                    {% for duration in durations %}
+                        <input type="radio" name="duration" id="{{ duration.Giorni }}">    
+                        <label for="{{ duration.Giorni }}">
+                            <p>
+                                <input type="text" placeholder="Descrizione" value="{{ duration.Descrizione }}" disabled>: 
+                                <input type="number" placeholder="" oninput="acceptInteger(this)" value="{{ duration.Giorni }}">
+                            </p>
+                            <label for="discount">Sconto: 
+                                <input type="float" oninput="acceptFloat(this)" name="discount" value="{{ duration.Sconto }}">
+                            </label>
+                        </label>
+                    {% endfor %}
+                </div>
+                <button class="add" onclick='createOptionDuration()'>+</button>
+            </div>
+            <div class="cost" id="box_costototale" style="display: none;" >
+                <label for="costTot">Costo totale:
+                    <input type="text" name="costTot" id="costototale" disabled>
+                </label>
+            </div>
         </div>
     </div>
 

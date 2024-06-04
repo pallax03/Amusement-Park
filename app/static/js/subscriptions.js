@@ -7,20 +7,19 @@ function acceptFloat(input) {
 }
 
 function getCategories() {
-    options = '';
     fetch(url_for_get_categories)
     .then(response => response.json())
     .then(data => {
+        document.getElementById('options_category').innerHTML = '';
         data.forEach(category => {
-            options += '<input type="checkbox" name="category" id="'+category.Nome+'"><label for="'+category.Nome+'">'+category.Nome+'</label>';
+            document.getElementById('options_category').innerHTML += '<input type="checkbox" name="category" id="'+category.IdCategoria+'"><label for="'+category.IdCategoria+'">'+category.Nome+'</label>';
         });
     });
-    return options;
 }
 
 function getTariffs() {
     fetch(url_for_get_tariffs)
-    .then(response => response.json())
+    .then(response => response.json()) 
     .then(data => {
         document.getElementById('options_tariff').innerHTML = '';
         data.forEach(tariff => {
@@ -30,44 +29,49 @@ function getTariffs() {
             });
             document.getElementById('options_tariff').innerHTML += html_tariff+'</ul></label>';
         });
+        dynamicEvents();
     });
 }
 
-// TODO: Implementare la funzione per creare una pseudo nuova tariffa
 async function createOptionTariff() {
     const tariffId = 'Tariff' + Date.now();
-    const categoriesHtml = await getCategories();
+    const category = await getCategories();
     const formHtml = `
         <input type="radio" name="tariff" id="${tariffId}">
         <label for="${tariffId}">
-            <input type="text" name="${tariffId}" placeholder="Nome Tariffa" value="" onblur="enableDailyCostInput(this)">
+            <input type="text" name="${tariffId}" placeholder="Nome Tariffa" value="">
             <label for="costogiornaliero">
-                <input type="text" class="costogiornaliero" oninput="acceptFloat(this)" name="costogiornaliero" value="15" disabled onblur="createTariffObject(this)">€ / Giorno
+                <input type="text" class="costogiornaliero" oninput="acceptFloat(this)" name="costogiornaliero" value="15">€ / Giorno
             </label>
-            <div id="options_category">${categoriesHtml}</div>
+            <div id="options_category"></div>
         </label>
     `;
 
     document.getElementById('options_tariff').insertAdjacentHTML('beforeend', formHtml);
+    await getCategories();
+    
+    document.querySelector('#btn_add_tariff').innerHTML = "S";
+    document.querySelector('#btn_add_tariff').onclick = function() {addTariff(tariffId)};
+}
 
-    const tariffLabel = input.closest('label');
-    const tariffName = tariffLabel.querySelector('input[type="text"][name^="Tariff"]').value;
-    const dailyCost = input.value;
-    const selectedCategories = Array.from(tariffLabel.querySelectorAll('input[name="category"]:checked'))
-                                    .map(categoryInput => ({
-                                        IdCategoria: parseInt(categoryInput.id), // Assuming category ID is embedded in the ID
-                                        Nome: categoryInput.id
-                                    }));
+async function addTariff(id) {
+    const tariffLabel = document.querySelector(`label[for="${id}"]`);
+    const tariffName = tariffLabel.querySelector('input[type="text"]').value;
+    const dailyCost = parseFloat(tariffLabel.querySelector('input.costogiornaliero').value);
+    const selectedCategories = [];
+    document.querySelectorAll('[name="category"]:checked').forEach(checkbox => {
+        selectedCategories.push({
+            IdCategoria: checkbox.id,
+            Nome: checkbox.nextElementSibling.textContent
+        });
+    });
 
     const Tariff = {
         NomeTariffa: tariffName,
         CostoGiornaliero: dailyCost,
         Categories: selectedCategories
     };
-}
-
-// TODO Implementare la funzione per aggiungere una tariffa, also in backend
-async function addTariff( Tariff = {NomeTariffa: '', CostoGiornaliero: '', Categories: []} ) {
+    
     fetch(url_for_add_tariff, {
         method: 'POST',
         body: JSON.stringify(Tariff),
@@ -75,7 +79,18 @@ async function addTariff( Tariff = {NomeTariffa: '', CostoGiornaliero: '', Categ
             'Content-Type': 'application/json'
         }
     })
-    .then(response => response.json())
+    .then(response => statusResponse(response))
+    .then(data => {
+        console.log(data);
+        getTariffs();
+    });
+}
+
+function deleteTariff(id) {
+    fetch(url_for_add_tariff + '?NomeTariffa=' + id, {
+        method: 'DELETE'
+    })
+    .then(response => statusResponse(response))
     .then(data => {
         console.log(data);
         getTariffs();
@@ -83,6 +98,9 @@ async function addTariff( Tariff = {NomeTariffa: '', CostoGiornaliero: '', Categ
 }
 
 function getCost() {
+    if(document.querySelector('[name="tariff"]:checked') == null ||
+       document.querySelector('[name="duration"]:checked') == undefined) return;
+    duration = document.querySelector('[name="duration"]:checked');
     fetch(url_for_cost + '?NomeTariffa=' + document.querySelector('[name="tariff"]:checked').id + '&Giorni=' + document.querySelector('[name="duration"]:checked').id)
     .then(response => response.json())
     .then(data => {
@@ -91,12 +109,37 @@ function getCost() {
     });
 }
 
-document.querySelectorAll('[name="tariff"]').forEach(radio => {
-    radio.addEventListener('change', async function() {
-        document.getElementById('options_duration').parentElement.style.display = '';
-        getCost();
+function dynamicEvents() {
+    let lastTariffSelected = null;
+    document.querySelectorAll('[name="tariff"]').forEach(radio => {
+        radio.addEventListener('click', async function() {
+            if(lastTariffSelected == radio) {
+                lastTariffSelected = null;
+                radio.checked = false;
+                changeTariffButton(createOptionTariff, radio.id, "add");
+            } else {
+                lastTariffSelected = radio; 
+                changeTariffButton(deleteTariff, radio.id, "delete")
+            }
+        });
+        radio.addEventListener('change', async function() {
+            document.getElementById('options_duration').parentElement.style.display = '';
+            getCost();
+        });
+    })
+
+    document.querySelectorAll('[name="duration"]').forEach(radio => {
+        radio.addEventListener('click', function() {
+            getCost();
+        });
     });
-})
+}
+
+function changeTariffButton(func, id, text) {
+    document.querySelector('#btn_add_tariff').innerHTML = text == "add" ? "+" : "x";
+    document.querySelector('#btn_add_tariff').className = text;
+    document.querySelector('#btn_add_tariff').onclick = function() {func(id)};
+}
 
 function getDurations() {
     fetch(url_for_get_durations)
@@ -106,11 +149,7 @@ function getDurations() {
         data.forEach(duration => {
             document.getElementById('options_duration').innerHTML += '<input type="radio" name="duration" id="'+duration.Giorni+'"><label for="'+duration.Giorni+'"><p><input type="text" placeholder="Descrizione" value="'+duration.Descrizione+'" disabled>: <input type="number" placeholder="" oninput="acceptInteger(this)" value="'+duration.Giorni+'" disabled></p><label for="discount">Sconto: <input type="float" oninput="acceptFloat(this)" name="discount" value="'+duration.Sconto+'" disabled></label></label>';
         });
-        document.querySelectorAll('[name="duration"]').forEach(radio => {
-            radio.addEventListener('click', function() {
-                getCost();
-            });
-        });
+        dynamicEvents();
     });
 }
 
@@ -119,10 +158,4 @@ async function createOptionDuration() {
 }
 
 
-
-document.querySelectorAll('[name="duration"]').forEach(radio => {
-    radio.addEventListener('click', function() {
-        getCost();
-    });
-});
-
+dynamicEvents();

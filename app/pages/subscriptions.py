@@ -101,6 +101,8 @@ def subscription(app, db):
     @app.route('/subscription/tariff', methods=['POST'])
     def add_tariff():
         try:
+            if (data["NomeTariffa"] == None or data['NomeTariffa'] == ''):
+                return make_response(jsonify({'error': 'NomeTariffa non specificato'}), 400)
             data = request.get_json()
             tariff = Tariff(
                 NomeTariffa=data['NomeTariffa'],
@@ -112,9 +114,23 @@ def subscription(app, db):
                     IdCategoria=category.IdCategoria
                 )
                 db.session.add(include)
+
             db.session.add(tariff)
             db.session.commit()
             return make_response(jsonify({'message': 'Tariffa creata'}), 201)
+        except Exception as e:
+            return make_response(jsonify({'error': str(e)}), 400)
+
+    @app.route('/subscription/tariff', methods=['DELETE'])
+    def delete_tariff():
+        try:
+            tariff = Tariff.query.filter_by(NomeTariffa=request.args.get('NomeTariffa')).first()
+            includes = Include.query.filter_by(IdTariffa=tariff.IdTariffa).all()
+            for include in includes:
+                db.session.delete(include)
+            db.session.delete(tariff)
+            db.session.commit()
+            return make_response(jsonify({'message': 'Tariffa eliminata'}), 200)
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
 
@@ -124,7 +140,7 @@ def subscription(app, db):
         try:
             tariff = Tariff.query.filter_by(NomeTariffa=request.args.get('NomeTariffa')).first()
             duration = Duration.query.filter_by(Giorni=request.args.get('Giorni')).first()
-            costo_totale = tariff.CostoGiornaliero * duration.Giorni 
+            costo_totale = (tariff.CostoGiornaliero * duration.Giorni)
             sconto = (costo_totale * (duration.Sconto/100))
             return make_response(jsonify({'Costo': costo_totale - sconto }), 200)
         except Exception as e:
