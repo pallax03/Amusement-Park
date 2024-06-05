@@ -28,8 +28,8 @@
                         <label for="{{ tariff.NomeTariffa }}">
                             <p>{{ tariff.NomeTariffa }}</p>
                             <label for="costogiornaliero">
-                                <input type="text" class="costogiornaliero" name="costogiornaliero" value="{{ tariff.CostoGiornaliero }}" disabled>
-                            € / Giorno</label>
+                                {{ tariff.CostoGiornaliero }}€ / Giorno
+                            </label>
                             <ul class="categories">
                                 {% for category in tariff.Categories %}
                                     <li>{{ category.Nome }}</li>
@@ -46,13 +46,8 @@
                     {% for duration in durations %}
                         <input type="radio" name="duration" id="{{ duration.Giorni }}">    
                         <label for="{{ duration.Giorni }}">
-                            <p>
-                                <input type="text" placeholder="Descrizione" value="{{ duration.Descrizione }}" disabled>: 
-                                <input type="number" placeholder="" oninput="acceptInteger(this)" value="{{ duration.Giorni }}">
-                            </p>
-                            <label for="discount">Sconto: 
-                                <input type="float" oninput="acceptFloat(this)" name="discount" value="{{ duration.Sconto }}">
-                            </label>
+                            {{ duration.Descrizione }}: {{ duration.Giorni }}
+                            Sconto: {{ duration.Sconto }} %
                         </label>
                     {% endfor %}
                 </div>

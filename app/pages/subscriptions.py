@@ -75,6 +75,18 @@ def subscription(app, db):
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
         
+        
+    @app.route('/subscription/duration', methods=['DELETE'])
+    def delete_duration():
+        try:
+            delete_non_active_subscriptions()
+            duration = Duration.query.filter_by(Giorni=request.args.get('Giorni')).first()
+            db.session.delete(duration)
+            db.session.commit()
+            return make_response(jsonify({'message': 'Durata eliminata'}), 200)
+        except Exception as e:
+            return make_response(jsonify({'error': str(e)}), 400)
+        
 
     @app.route('/subscription/tariffs', methods=['GET'])
     def get_tariffs():
@@ -101,29 +113,59 @@ def subscription(app, db):
     @app.route('/subscription/tariff', methods=['POST'])
     def add_tariff():
         try:
-            if (data["NomeTariffa"] == None or data['NomeTariffa'] == ''):
-                return make_response(jsonify({'error': 'NomeTariffa non specificato'}), 400)
             data = request.get_json()
             tariff = Tariff(
                 NomeTariffa=data['NomeTariffa'],
                 CostoGiornaliero=data['CostoGiornaliero']
             )
+            db.session.add(tariff)
+            db.session.commit()
+
             for category in data['Categories']:
                 include = Include(
                     IdTariffa=tariff.IdTariffa,
-                    IdCategoria=category.IdCategoria
+                    IdCategoria=category['IdCategoria']
                 )
                 db.session.add(include)
-
-            db.session.add(tariff)
             db.session.commit()
-            return make_response(jsonify({'message': 'Tariffa creata'}), 201)
+
+            return make_response(jsonify({'message': f"Tariffa {data['NomeTariffa']} creata"}), 201)
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
+        # try:
+        #     tariff_json = request.get_json()
+            
+        #     if (tariff_json["NomeTariffa"] == None or tariff_json['NomeTariffa'] == ''
+        #         or tariff_json["Categories"] == None or tariff_json['Categories'] == '' or len(tariff_json['Categories']) == 0):
+        #         return make_response(jsonify({'error': 'Tariffa invalida (inserire tutti i campi obbligatori)'}), 400)
+            
+        #     if(tariff_json["CostoGiornaliero"] == None or tariff_json['CostoGiornaliero'] == ''):
+        #         tariff_json['CostoGiornaliero'] = len(tariff_json['Categories'])
+
+        #     tariff = Tariff(
+        #         NomeTariffa=tariff_json['NomeTariffa'],
+        #         CostoGiornaliero=tariff_json['CostoGiornaliero']
+        #     )
+
+        #     db.session.add(tariff)
+        #     category_json = tariff_json['Categories']
+
+        #     for category in category_json:
+        #         include = Include(
+        #             IdTariffa=tariff.IdTariffa,
+        #             IdCategoria=category.IdCategoria
+        #         )
+        #         db.session.add(include)
+            
+        #     db.session.commit()
+        #     return make_response(jsonify({'message': 'Tariffa creata'}), 201)
+        # except Exception as e:
+        #     return make_response(jsonify({'error': str(e)}), 400)
 
     @app.route('/subscription/tariff', methods=['DELETE'])
     def delete_tariff():
         try:
+            delete_non_active_subscriptions()
             tariff = Tariff.query.filter_by(NomeTariffa=request.args.get('NomeTariffa')).first()
             includes = Include.query.filter_by(IdTariffa=tariff.IdTariffa).all()
             for include in includes:
@@ -133,7 +175,7 @@ def subscription(app, db):
             return make_response(jsonify({'message': 'Tariffa eliminata'}), 200)
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
-
+        
 
     @app.route('/subscription/cost', methods=['GET'])
     def get_subscription_cost():
@@ -145,3 +187,10 @@ def subscription(app, db):
             return make_response(jsonify({'Costo': costo_totale - sconto }), 200)
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
+
+    def delete_non_active_subscriptions():
+        subscriptions = Subscription.query.all()
+        for subscription in subscriptions:
+            if datetime.strptime(str(subscription.DataInizio),'%Y-%m-%d') + timedelta(days=float(subscription.Giorni)) < datetime.now():
+                db.session.delete(subscription)
+        db.session.commit()

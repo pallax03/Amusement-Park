@@ -71,7 +71,7 @@ async function addTariff(id) {
         CostoGiornaliero: dailyCost,
         Categories: selectedCategories
     };
-    
+
     fetch(url_for_add_tariff, {
         method: 'POST',
         body: JSON.stringify(Tariff),
@@ -80,10 +80,7 @@ async function addTariff(id) {
         }
     })
     .then(response => statusResponse(response))
-    .then(data => {
-        console.log(data);
-        getTariffs();
-    });
+    .then(data => getTariffs());
 }
 
 function deleteTariff(id) {
@@ -91,10 +88,7 @@ function deleteTariff(id) {
         method: 'DELETE'
     })
     .then(response => statusResponse(response))
-    .then(data => {
-        console.log(data);
-        getTariffs();
-    });
+    .then(data => getTariffs());
 }
 
 function getCost() {
@@ -154,7 +148,16 @@ function getDurations() {
 }
 
 async function createOptionDuration() {
-
+    // <input type="radio" name="duration" id="{{ duration.Giorni }}">    
+    //                     <label for="{{ duration.Giorni }}">
+    //                         <p>
+    //                             <input type="text" placeholder="Descrizione" value="{{ duration.Descrizione }}" disabled>: 
+    //                             <input type="number" placeholder="" oninput="acceptInteger(this)" value="{{ duration.Giorni }}">
+    //                         </p>
+    //                         <label for="discount">Sconto: 
+    //                             <input type="float" oninput="acceptFloat(this)" name="discount" value="{{ duration.Sconto }}">
+    //                         </label>
+    //                     </label> 
 }
 
 
