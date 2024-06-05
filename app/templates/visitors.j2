@@ -56,10 +56,10 @@
                         <input type="date" name="DataDiNascita" id="birthday">
                     </label>
                     <label for="Altezza">Altezza:
-                        <input type="text" name="Altezza" id="altezza">
+                        <input type="number" oninput="acceptInteger(this)" name="Altezza" id="altezza">
                     </label>
                     <label for="Peso">Peso:
-                        <input type="text" name="Peso" id="peso">
+                        <input type="float" oninput="acceptFloat(this)" name="Peso" id="peso">
                     </label>
                     <input type="button" onclick="addVisitor()" value="Add Visitor">
                 </form>
@@ -90,7 +90,7 @@
                     </tr>
                     {% for visitor in visitors %}
                         <tr>
-                            <td><button class="delete" onclick='deleteVisitor({{ visitor|tojson }})'>DELETE</button></td>
+                            <td><button class="delete" onclick='deleteVisitor({{ visitor|tojson }})'>x</button></td>
                             <td>{{ visitor.CodiceFiscale }}</td>
                             <td>{{ visitor.Nome }} {{ visitor.Cognome }}</td>
                             <td>{{ visitor.DataDiNascita }}</td>

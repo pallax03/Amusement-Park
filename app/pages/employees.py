@@ -1,19 +1,27 @@
 from flask import render_template, url_for, request, jsonify, make_response
 from datetime import datetime, timedelta
-from models import Employee, Role, Category, Require
+from models import Employee, Role, Category, Require, Service
 
+from pages.services import service
 
 def employee(app, db):
     @app.route('/employees', methods=['GET'])
     def get_employees():
-        employees = Employee.query.all()
-        for employee in employees:
-            employee.role = Role.query.filter_by(IdRuolo=employee.IdRuolo).first()
+
+        employees = []
+        for employee in Employee.query.all():
+            role = Role.query.filter_by(IdRuolo=employee.IdRuolo).first()
+            employees.append({  'CodiceFiscale': employee.CodiceFiscale,
+                                    'Nome': employee.Nome,
+                                    'Cognome': employee.Cognome,
+                                    'DataDiNascita': employee.DataDiNascita,
+                                    'Ruolo': role.NomeRuolo,
+                                    'Servizio': Service.query.filter_by(IdServizio=role.IdServizio).first().NomeServizio})
+
         return render_template('employees.j2', employees=employees,
                                 url_for_add_employee=url_for('add_employee'),
                                 url_for_get_roles=url_for('get_roles'),
-                                url_for_get_services=url_for('get_services'),
-                                url_for_get_activities=url_for('get_activities'))
+                                url_for_get_services=url_for('get_services'))
     
     @app.route('/employee', methods=['GET'])
     def get_employee():

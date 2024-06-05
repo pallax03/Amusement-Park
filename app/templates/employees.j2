@@ -7,6 +7,9 @@
 {% endblock links_css %}
 
 {% block content %}
+    <script>
+        // const url_add_employee = "{{ url_add_employee }}";
+    </script>
     <script src="js/employees.js"></script>
 
     <div class="modal" id="employee" style="display: none;">
@@ -26,13 +29,15 @@
                     <input type="date" name="DataDiNascita" id="employee_datadinascita">
                 </label>
                 <label for="Ruolo">Ruolo:
-                    <select name="Ruolo" id="ruolo">
-
-                    </select>
-                    <input type="text" name="Ruolo" id="employee_ruolo">
+                    <input list="roles" id="employee_role" name="Ruolo" title="Ruolo">
+                    <datalist id="roles">
+                    </datalist>
+                    <input type="float" oninput="acceptFloat(this)" name="Stipendio" id="employee_stipendio">
                 </label>
                 <label for="Servizio">Servizio:
-                    <input type="text" name="Servizio" id="employee_servizio" disabled>
+                    <select name="Servizio" id="employee_servizio">
+
+                    </select>
                 </label>
                 <input type="button" onclick="addEmployee()" value="Assumi">
             </form>
@@ -55,7 +60,23 @@
                     </tr>
                 </thead>
                 <tbody>  
-
+                    <tr class="empty_row">
+                        <td colspan="6"><button class="add" id="add_employee" onclick="modalEmployee()">+</button></td>
+                    </tr>
+                    {% for employee in employees %}
+                        <tr>
+                            <td><button class="delete" onclick="deleteEmployee()">x</button></td>
+                            <td>{{ employee.CodiceFiscale }}</td>
+                            <td>{{ employee.Nome }} {{ employee.Cognome }}</td>
+                            <td>{{ employee.DataDiNascita }}</td>
+                            <td>{{ employee.Ruolo }}</td>
+                            {% if employee.Servizio == None %}
+                                <td><button class="add" id="service_add" >+</button></td>
+                            {% else %}
+                                <td>{{ employee.Servizio }}</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
                 </tbody>    
             </table>
         </div>

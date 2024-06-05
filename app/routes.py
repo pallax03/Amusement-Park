@@ -8,6 +8,7 @@ from pages.visitors import visitor
 from pages.subscriptions import subscription
 from pages.activities import activity
 from pages.employees import employee
+from pages.services import service
 
 def routes(app, db):
     @app.route('/')
@@ -19,6 +20,7 @@ def routes(app, db):
     subscription(app, db)
     activity(app, db)
     employee(app, db)
+    service(app, db)
 
 
 
