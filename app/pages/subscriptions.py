@@ -7,6 +7,7 @@ from pages.activities import activity
 
 # SUBSCRIPTION
 def subscription(app, db):
+    # PAGE (return the page and all the apis links necessary for ajax calls)
     @app.route('/subscriptions', methods=['GET'])
     def page_subscriptions():
         return render_template('subscriptions.j2', durations=get_durations().json, tariffs=get_tariffs().json, 
@@ -17,6 +18,9 @@ def subscription(app, db):
                                 url_for_add_tariff=url_for('add_tariff'), 
                                 url_for_cost=url_for('get_subscription_cost'))
 
+# APIs
+    # get the active subscription of the given visitor
+    # /subscription + '?CodiceFiscale=MNNGPP99A01H501A'
     @app.route('/subscription', methods=['GET'])
     def get_active_subscription():
         try:
@@ -27,16 +31,20 @@ def subscription(app, db):
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
 
+    # delete the given subscription identified by codice fiscale and data inizio
+    # /subscription + '?CodiceFiscale=MNNGPP99A01H501A&DataInizio=2021-01-01'
     @app.route('/subscription', methods=['DELETE'])
     def delete_subscription():
         try:
             subscription = Subscription.query.filter_by(CodiceFiscale=request.args.get('CodiceFiscale')).filter_by(DataInizio=request.args.get('DataInizio')).first()
             db.session.delete(subscription)
             db.session.commit()
-            return make_response(jsonify({'message': 'Abbonamento eliminato'}), 200)
+            return make_response(jsonify({'message': f'Abbonamento di {subscription.CodiceFiscale} eliminato'}), 200)
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
 
+    # add a subscription
+    # /subscription + new json of Subscription
     @app.route('/subscription', methods=['POST'])
     def add_subscription():
         try:
@@ -50,16 +58,17 @@ def subscription(app, db):
             )
             db.session.add(subscription)
             db.session.commit()
-            return make_response(jsonify({'message': 'Abbonamento creato'}), 201)
+            return make_response(jsonify({'message': f'Abbonamento per {subscription.CodiceFiscale} creato'}), 201)
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
 
-
+    # get all the durations
     @app.route('/subscription/durations', methods=['GET'])
     def get_durations():
         return make_response(jsonify(Duration.query.all()), 200)
 
-
+    # add a new duration
+    # /subscription/duration + new json of Duration
     @app.route('/subscription/duration', methods=['POST'])
     def add_duration():
         try:
@@ -75,7 +84,8 @@ def subscription(app, db):
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
         
-        
+    # delete a duration
+    # /subscription/duration + '?Giorni=7'
     @app.route('/subscription/duration', methods=['DELETE'])
     def delete_duration():
         try:
@@ -88,6 +98,7 @@ def subscription(app, db):
             return make_response(jsonify({'error': str(e)}), 400)
         
 
+    # get all the tariffs
     @app.route('/subscription/tariffs', methods=['GET'])
     def get_tariffs():
         try:
@@ -109,7 +120,8 @@ def subscription(app, db):
             return make_response(jsonify({'error': str(e)}), 400)
 
     
-
+    # add a new tariff
+    # /subscription/tariff + new json of Tariff and included Categories
     @app.route('/subscription/tariff', methods=['POST'])
     def add_tariff():
         try:
@@ -129,7 +141,7 @@ def subscription(app, db):
                 db.session.add(include)
             db.session.commit()
 
-            return make_response(jsonify({'message': f"Tariffa {data['NomeTariffa']} creata"}), 201)
+            return make_response(jsonify({'message': f"Tariffa {tariff.NomeTariffa} creata"}), 201)
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
         # try:
@@ -162,6 +174,8 @@ def subscription(app, db):
         # except Exception as e:
         #     return make_response(jsonify({'error': str(e)}), 400)
 
+    # delete a tariff, call a function to delete all old subscriptions, because if there is a subscription with the tariff to delete, it will not be deleted
+    # /subscription/tariff + '?NomeTariffa=Standard'
     @app.route('/subscription/tariff', methods=['DELETE'])
     def delete_tariff():
         try:
@@ -172,11 +186,12 @@ def subscription(app, db):
                 db.session.delete(include)
             db.session.delete(tariff)
             db.session.commit()
-            return make_response(jsonify({'message': 'Tariffa eliminata'}), 200)
+            return make_response(jsonify({'message': f'Tariffa {tariff.NomeTariffa} eliminata'}), 200)
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
         
-
+    # get the cost of a subscription
+    # /subscription/cost + '?NomeTariffa=Standard&Giorni=7'
     @app.route('/subscription/cost', methods=['GET'])
     def get_subscription_cost():
         try:
@@ -188,6 +203,10 @@ def subscription(app, db):
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
 
+
+
+# private db calls
+    # delete all the subscriptions that are not active anymore
     def delete_non_active_subscriptions():
         subscriptions = Subscription.query.all()
         for subscription in subscriptions:

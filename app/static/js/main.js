@@ -1,4 +1,12 @@
 
+function acceptInteger(input) {
+    input.value = input.value.replace(/[^0-9]/g, '');
+}
+
+function acceptFloat(input) {
+    input.value = input.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1').replace(/^0[^.]/, '0');
+}
+
 async function statusResponse(response) {
     response_status = response.status;
     json = await response.json();

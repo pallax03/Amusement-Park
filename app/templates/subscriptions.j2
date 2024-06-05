@@ -26,10 +26,8 @@
                     {% for tariff in tariffs %}
                         <input type="radio" name="tariff" id="{{ tariff.NomeTariffa }}">
                         <label for="{{ tariff.NomeTariffa }}">
-                            <p>{{ tariff.NomeTariffa }}</p>
-                            <label for="costogiornaliero">
-                                {{ tariff.CostoGiornaliero }}€ / Giorno
-                            </label>
+                            {{ tariff.NomeTariffa }}:
+                            {{ tariff.CostoGiornaliero }}€ / Giorno
                             <ul class="categories">
                                 {% for category in tariff.Categories %}
                                     <li>{{ category.Nome }}</li>
@@ -51,7 +49,7 @@
                         </label>
                     {% endfor %}
                 </div>
-                <button class="add" onclick='createOptionDuration()'>+</button>
+                <button class="add" id="btn_add_duration" onclick='createOptionDuration()'>+</button>
             </div>
             <div class="cost" id="box_costototale" style="display: none;" >
                 <label for="costTot">Costo totale:
