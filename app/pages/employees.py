@@ -72,6 +72,15 @@ def employee(app, db):
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
         
+    # given a role, return if it can be assigned to a service
+    @app.route('/employee/role/require', methods=['GET'])
+    def get_requires():
+        try:
+            return make_response(Require.query.filter_by(IdRuolo=request.args.get('IdRuolo')).all() == [], 200)
+        except Exception as e:
+            return make_response(jsonify({'error': str(e)}), 400)
+
+
     @app.route('/employee/role/require', methods=['POST'])
     def add_require():
         try:
@@ -85,3 +94,5 @@ def employee(app, db):
             return make_response(jsonify({'message': 'Requisito creato'}), 201)
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
+        
+   

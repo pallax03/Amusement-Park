@@ -229,4 +229,3 @@ function dynamicEvents() {
 }
 
 dynamicEvents();
-

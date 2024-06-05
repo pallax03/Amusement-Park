@@ -1,0 +1,63 @@
+{% extends 'layout.html' %}
+
+{% block title %} Visitors {% endblock title %}
+
+{% block links_css %}
+    <link rel="stylesheet" href="css/content.css">
+{% endblock links_css %}
+
+{% block content %}
+    <script src="js/employees.js"></script>
+
+    <div class="modal" id="employee" style="display: none;">
+        <div class="modal-container">
+            <span class="close"></span>
+            <form action="{{ url_add_employee }}" method="post">
+                <label for="CodiceFiscale">Codice Fiscale:
+                    <input type="text" name="CodiceFiscale" id="employee_codicefiscale">
+                </label>
+                <label for="Nome">Nome:
+                    <input type="text" name="Nome" id="employee_nome">
+                </label>
+                <label for="Cognome">Cognome:
+                    <input type="text" name="Cognome" id="employee_cognome">
+                </label>
+                <label for="DataDiNascita">Data Di Nascita:
+                    <input type="date" name="DataDiNascita" id="employee_datadinascita">
+                </label>
+                <label for="Ruolo">Ruolo:
+                    <select name="Ruolo" id="ruolo">
+
+                    </select>
+                    <input type="text" name="Ruolo" id="employee_ruolo">
+                </label>
+                <label for="Servizio">Servizio:
+                    <input type="text" name="Servizio" id="employee_servizio" disabled>
+                </label>
+                <input type="button" onclick="addEmployee()" value="Assumi">
+            </form>
+        </div>
+    </div>
+
+    <div id="content" class="container">
+        <div class="center">
+            <h1>Personale</h1>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Codice Fiscale</th>
+                        <th>Nome Cognome</th>
+                        <th>Data Di Nascita</th>
+                        <th>Ruolo</th>
+                        <th>Servizio</th>
+                    </tr>
+                </thead>
+                <tbody>  
+
+                </tbody>    
+            </table>
+        </div>
+    </div>
+{% endblock content %}
