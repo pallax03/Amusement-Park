@@ -20,7 +20,7 @@ def subscription(app, db):
 # APIs
     # get the active subscription of the given visitor
     # /subscription + '?CodiceFiscale=MNNGPP99A01H501A'
-    @app.route('/subscription', methods=['GET'])
+    @app.route('/api/subscription', methods=['GET'])
     def get_active_subscription():
         try:
             subscriptions = Subscription.query.filter_by(CodiceFiscale=request.args.get('CodiceFiscale')).all()
@@ -32,7 +32,7 @@ def subscription(app, db):
 
     # delete the given subscription identified by codice fiscale and data inizio
     # /subscription + '?CodiceFiscale=MNNGPP99A01H501A&DataInizio=2021-01-01'
-    @app.route('/subscription', methods=['DELETE'])
+    @app.route('/api/subscription', methods=['DELETE'])
     def delete_subscription():
         try:
             subscription = Subscription.query.filter_by(CodiceFiscale=request.args.get('CodiceFiscale')).filter_by(DataInizio=request.args.get('DataInizio')).first()
@@ -44,7 +44,7 @@ def subscription(app, db):
 
     # add a subscription
     # /subscription + new json of Subscription
-    @app.route('/subscription', methods=['POST'])
+    @app.route('/api/subscription', methods=['POST'])
     def add_subscription():
         try:
             data = request.get_json()
@@ -62,13 +62,13 @@ def subscription(app, db):
             return make_response(jsonify({'error': str(e)}), 400)
 
     # get all the durations
-    @app.route('/subscription/durations', methods=['GET'])
+    @app.route('/api/subscription/durations', methods=['GET'])
     def get_durations():
         return make_response(jsonify(Duration.query.all()), 200)
 
     # add a new duration
     # /subscription/duration + new json of Duration
-    @app.route('/subscription/duration', methods=['POST'])
+    @app.route('/api/subscription/duration', methods=['POST'])
     def add_duration():
         try:
             data = request.get_json()
@@ -85,7 +85,7 @@ def subscription(app, db):
         
     # delete a duration
     # /subscription/duration + '?Giorni=7'
-    @app.route('/subscription/duration', methods=['DELETE'])
+    @app.route('/api/subscription/duration', methods=['DELETE'])
     def delete_duration():
         try:
             delete_non_active_subscriptions()
@@ -98,7 +98,7 @@ def subscription(app, db):
         
 
     # get all the tariffs
-    @app.route('/subscription/tariffs', methods=['GET'])
+    @app.route('/api/subscription/tariffs', methods=['GET'])
     def get_tariffs():
         try:
             tariffs = Tariff.query.all()
@@ -121,7 +121,7 @@ def subscription(app, db):
     
     # add a new tariff
     # /subscription/tariff + new json of Tariff and included Categories
-    @app.route('/subscription/tariff', methods=['POST'])
+    @app.route('/api/subscription/tariff', methods=['POST'])
     def add_tariff():
         try:
             data = request.get_json()
@@ -143,39 +143,11 @@ def subscription(app, db):
             return make_response(jsonify({'message': f"Tariffa {tariff.NomeTariffa} creata"}), 201)
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
-        # try:
-        #     tariff_json = request.get_json()
-            
-        #     if (tariff_json["NomeTariffa"] == None or tariff_json['NomeTariffa'] == ''
-        #         or tariff_json["Categories"] == None or tariff_json['Categories'] == '' or len(tariff_json['Categories']) == 0):
-        #         return make_response(jsonify({'error': 'Tariffa invalida (inserire tutti i campi obbligatori)'}), 400)
-            
-        #     if(tariff_json["CostoGiornaliero"] == None or tariff_json['CostoGiornaliero'] == ''):
-        #         tariff_json['CostoGiornaliero'] = len(tariff_json['Categories'])
 
-        #     tariff = Tariff(
-        #         NomeTariffa=tariff_json['NomeTariffa'],
-        #         CostoGiornaliero=tariff_json['CostoGiornaliero']
-        #     )
-
-        #     db.session.add(tariff)
-        #     category_json = tariff_json['Categories']
-
-        #     for category in category_json:
-        #         include = Include(
-        #             IdTariffa=tariff.IdTariffa,
-        #             IdCategoria=category.IdCategoria
-        #         )
-        #         db.session.add(include)
-            
-        #     db.session.commit()
-        #     return make_response(jsonify({'message': 'Tariffa creata'}), 201)
-        # except Exception as e:
-        #     return make_response(jsonify({'error': str(e)}), 400)
 
     # delete a tariff, call a function to delete all old subscriptions, because if there is a subscription with the tariff to delete, it will not be deleted
     # /subscription/tariff + '?NomeTariffa=Standard'
-    @app.route('/subscription/tariff', methods=['DELETE'])
+    @app.route('/api/subscription/tariff', methods=['DELETE'])
     def delete_tariff():
         try:
             delete_non_active_subscriptions()
@@ -191,7 +163,7 @@ def subscription(app, db):
         
     # get the cost of a subscription
     # /subscription/cost + '?NomeTariffa=Standard&Giorni=7'
-    @app.route('/subscription/cost', methods=['GET'])
+    @app.route('/api/subscription/cost', methods=['GET'])
     def get_subscription_cost():
         try:
             tariff = Tariff.query.filter_by(NomeTariffa=request.args.get('NomeTariffa')).first()

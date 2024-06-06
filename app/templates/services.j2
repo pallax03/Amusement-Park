@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block title %} Services {% endblock title %}
+
+{% block links_css %}
+    <link rel="stylesheet" href="css/content.css">
+{% endblock links_css %}
+
+{% block content %}
+    <script>
+        const url_for_add_service = "{{ url_for_add_service }}";
+        const url_for_get_timetables = "{{ url_for_get_timetables }}";
+    </script>
+
+    <div id="content" class="container">
+        <div class="center">
+            <h1>Services</h1>
+            
+        </div>
+    </div>
+    <script src="js/services.js"></script>
+{% endblock content %}

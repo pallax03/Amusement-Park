@@ -257,5 +257,5 @@ INSERT INTO `SERVIZI` (`Nome`, `Tipo`, `IdOrario`) VALUES
 ('Feltrinelli', 'Negozio', 1);
 
 -- PERSONALE 
-
+-- RSSMRA85M01H501Z
 -- NECESSITA

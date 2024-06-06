@@ -22,7 +22,10 @@ def employee(app, db):
                                 url_for_check_require=url_for('get_requires'),
                                 url_for_get_services=url_for('get_services'))
 
-    @app.route('/employee', methods=['GET'])
+# APIs
+    # get a employee
+    # /employee + '?CodiceFiscale=RSSMRA85M01H501Z'
+    @app.route('/api/employee', methods=['GET'])
     def get_employee():
         try:
             employee = Employee.query.filter_by(CodiceFiscale=request.args.get('CodiceFiscale')).first()
@@ -30,6 +33,8 @@ def employee(app, db):
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
 
+    # add a employee and if the role is not present, add it
+    # /employee + new json of Employee
     @app.route('/employee', methods=['POST'])
     def add_employee():
         try:
@@ -54,6 +59,8 @@ def employee(app, db):
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
 
+    # delete a employee
+    # /employee + '?CodiceFiscale=RSSMRA85M01H501Z'
     @app.route('/employee', methods=['DELETE'])
     def delete_employee():
         try:
@@ -67,10 +74,13 @@ def employee(app, db):
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
 
+    # get all the roles
     @app.route('/employee/roles', methods=['GET'])
     def get_roles():
         return make_response(jsonify(Role.query.all()), 200)
 
+    # add a role
+    # /employee/role + new json of Role
     @app.route('/employee/role', methods=['POST'])
     def add_role():
         try:
@@ -93,6 +103,8 @@ def employee(app, db):
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
 
+    # add a require
+    # /employee/role/require + new json of Require
     @app.route('/employee/role/require', methods=['POST'])
     def add_require():
         try:

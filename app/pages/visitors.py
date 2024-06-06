@@ -23,7 +23,7 @@ def visitor(app, db):
                                 url_for_get_subscription_cost=url_for('get_subscription_cost'))
 
 
-    @app.route('/visitor', methods=['GET'])
+    @app.route('/api/visitor', methods=['GET'])
     def get_visitor():
         try:
             visitor = Visitor.query.filter_by(CodiceFiscale=request.args.get('CodiceFiscale')).first()
@@ -32,7 +32,7 @@ def visitor(app, db):
             return make_response(jsonify({'error': str(e)}), 400)
 
 
-    @app.route('/visitor', methods=['POST'])
+    @app.route('/api/visitor', methods=['POST'])
     def add_visitor():
         try:
             data = request.get_json()
@@ -51,7 +51,7 @@ def visitor(app, db):
             return make_response(jsonify({'error': str(e)}), 400)
         
 
-    @app.route('/visitor', methods=['DELETE'])
+    @app.route('/api/visitor', methods=['DELETE'])
     def delete_visitor():
         try:
             visitor = Visitor.query.filter_by(CodiceFiscale=request.args.get('CodiceFiscale')).first()

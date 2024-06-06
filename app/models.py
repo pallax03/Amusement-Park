@@ -211,7 +211,7 @@ class Service(db.Model):
     __tablename__ = 'SERVIZI'
 
     IdServizio = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    Nome = db.Column(db.String(50), nullable=False)
+    Nome = db.Column(db.String(50), nullable=False, unique=True)
     Tipo = db.Column(db.String(50), nullable=False)
     IdOrario = db.Column(db.Integer, db.ForeignKey('ORARI.IdOrario'), nullable=False)
 
