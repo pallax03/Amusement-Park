@@ -39,11 +39,6 @@
                         <input type="float" oninput="acceptFloat(this)" placeholder="Stipendio" name="Stipendio" id="employee_stipendio">
                     </div>
                 </label>
-                <label for="Servizio" style="display: none;">Servizio:
-                    <select name="Servizio" id="employee_servizio">
-
-                    </select>
-                </label>
                 <input type="button" onclick="addEmployee()" value="Assumi">
             </form>
         </div>
@@ -72,7 +67,7 @@
                     </tr>
                     {% for employee in employees %}
                         <tr>
-                            <td><button class="delete" onclick="deleteEmployee()">x</button></td>
+                            <td><button class="delete" onclick="deleteEmployee('{{ employee.CodiceFiscale }}')">x</button></td>
                             <td>{{ employee.CodiceFiscale }}</td>
                             <td>{{ employee.Nome }} {{ employee.Cognome }}</td>
                             <td>{{ employee.DataDiNascita }}</td>

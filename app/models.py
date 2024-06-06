@@ -98,7 +98,7 @@ class Category(db.Model):
     __tablename__ = 'CATEGORIE'
 
     IdCategoria = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    Nome = db.Column(db.String(50), nullable=False)
+    Nome = db.Column(db.String(50), nullable=False, unique=True)
 
 @dataclass
 class Activity(db.Model):
@@ -176,7 +176,7 @@ class Role(db.Model):
     __tablename__ = 'RUOLI'
 
     IdRuolo = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    Nome = db.Column(db.String(50), nullable=False)
+    Nome = db.Column(db.String(50), nullable=False, unique=True)
     Stipendio = db.Column(db.Float, nullable=False)
 
 @dataclass
@@ -220,6 +220,7 @@ class Employee(db.Model):
     CodiceFiscale: str
     Nome: str
     Cognome: str
+    DataDiNascita: str
     IdRuolo: int
     IdServizio: int
 
@@ -228,8 +229,9 @@ class Employee(db.Model):
     CodiceFiscale = db.Column(db.String(16), primary_key=True)
     Nome = db.Column(db.String(50), nullable=False)
     Cognome = db.Column(db.String(50), nullable=False)
+    DataDiNascita = db.Column(db.Date, nullable=False)
     IdRuolo = db.Column(db.Integer, db.ForeignKey('RUOLI.IdRuolo'), nullable=False)
-    IdServizio = db.Column(db.Integer, db.ForeignKey('SERVIZI.IdServizio'), nullable=False)
+    IdServizio = db.Column(db.Integer, db.ForeignKey('SERVIZI.IdServizio'), nullable=True)
 
 @dataclass
 class Require(db.Model):
