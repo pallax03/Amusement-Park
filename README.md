@@ -42,9 +42,9 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
 
 ## API documentation
 ### Visitor
-- /visitor [GET] + "?CodiceFiscale=`codicefiscale`" -> return [json](#visitor-json)
-- /visitor [DELETE] + "?CodiceFiscale=`codicefiscale`" -> delete the visitor and his subscriptions.
-- /visitor [POST] -> given a [json](#visitor-json) add the visitor.
+- /api/visitor [GET] + "?CodiceFiscale=`codicefiscale`" -> return [json](#visitor-json)
+- /api/visitor [DELETE] + "?CodiceFiscale=`codicefiscale`" -> delete the visitor and his subscriptions.
+- /api/visitor [POST] -> given a [json](#visitor-json) add the visitor.
 
 #### Visitor Json
 ```json
@@ -58,11 +58,24 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
 }
 ```
 
+#### Entry
+- /api/visitor/entries [GET] + "?CodiceFiscale=`codicefiscale`" -> return all the entries done by the given visitor
+- /api/visitor/entry [POST] -> add a entry of the given visitor ([json](#visitor-entry-json))
+- /api/visitor/entry [DELETE] + "?CodiceFiscale=`codicefiscale`&Data=`date`" -> delete the given entry 
+
+#### Visitor Entry Json
+```json
+{
+  "CodiceFiscale": str(16),
+  "Data": date
+}
+```
+
 ### Subscription
-- /subscription [GET] + "?CodiceFiscale=`codicefiscale`" -> return the active [json]
+- /api/subscription [GET] + "?CodiceFiscale=`codicefiscale`" -> return the active [json]
 (#subscription-json)
-- /subscription [DELETE] "?CodiceFiscale=`codicefiscale`&DataInizio=`datainizio`" -> delete the subscription.
-- /subscription [POST] -> given a [json](#subscription-json) add the subscription.
+- /api/subscription [DELETE] "?CodiceFiscale=`codicefiscale`&DataInizio=`datainizio`" -> delete the subscription.
+- /api/subscription [POST] -> given a [json](#subscription-json) add the subscription.
 
 #### Subscription Json
 ```json
@@ -75,8 +88,8 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
 }
 ```
 
-- /subscription/durations [GET] -> return a json contains all the [json](#duration-json)
-- /subscription/duration [POST] -> given a [json](#duration-json) add the duration.
+- /api/subscription/durations [GET] -> return a json contains all the [json](#duration-json)
+- /api/subscription/duration [POST] -> given a [json](#duration-json) add the duration.
 
   #### Duration Json
   ```json
@@ -87,8 +100,8 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
   }
   ```
 
-- /subscription/tariffs [GET] -> return a json contains all the [json](#tariff-json)
-- /subscription/tariff [POST] -> given a [json](#tariff-json) add the tariff.
+- /api/subscription/tariffs [GET] -> return a json contains all the [json](#tariff-json)
+- /api/subscription/tariff [POST] -> given a [json](#tariff-json) add the tariff.
   
   #### Tariff Json
   ```json
