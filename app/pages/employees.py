@@ -6,8 +6,7 @@ from pages.services import service
 
 def employee(app, db):
     @app.route('/employees', methods=['GET'])
-    def get_employees():
-
+    def page_employees():
         employees = []
         for employee in Employee.query.all():
             role = Role.query.filter_by(IdRuolo=employee.IdRuolo).first()
@@ -17,10 +16,10 @@ def employee(app, db):
                                     'DataDiNascita': employee.DataDiNascita,
                                     'Ruolo': role.NomeRuolo,
                                     'Servizio': Service.query.filter_by(IdServizio=role.IdServizio).first().NomeServizio})
-
         return render_template('employees.j2', employees=employees,
                                 url_for_add_employee=url_for('add_employee'),
                                 url_for_get_roles=url_for('get_roles'),
+                                url_for_check_require=url_for('get_requires'),
                                 url_for_get_services=url_for('get_services'))
     
     @app.route('/employee', methods=['GET'])

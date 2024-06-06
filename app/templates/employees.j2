@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
 
-{% block title %} Visitors {% endblock title %}
+{% block title %} Employees {% endblock title %}
 
 {% block links_css %}
     <link rel="stylesheet" href="css/content.css">
@@ -8,9 +8,11 @@
 
 {% block content %}
     <script>
-        // const url_add_employee = "{{ url_add_employee }}";
+        const url_for_add_employee = "{{ url_for_add_employee }}"
+        const url_for_get_roles = "{{ url_for_get_roles }}"
+        const url_for_check_require = "{{ url_for_check_require }}"
+        const url_for_get_services = "{{ url_for_get_services }}"
     </script>
-    <script src="js/employees.js"></script>
 
     <div class="modal" id="employee" style="display: none;">
         <div class="modal-container">
@@ -28,13 +30,16 @@
                 <label for="DataDiNascita">Data Di Nascita:
                     <input type="date" name="DataDiNascita" id="employee_datadinascita">
                 </label>
-                <label for="Ruolo">Ruolo:
-                    <input list="roles" id="employee_role" name="Ruolo" title="Ruolo">
-                    <datalist id="roles">
-                    </datalist>
-                    <input type="float" oninput="acceptFloat(this)" name="Stipendio" id="employee_stipendio">
+                <label for="Ruolo">
+                    <div>
+                        <h3>Ruolo:</h3>
+                        <input list="roles" id="employee_role" name="Ruolo" placeholder="Nome Ruolo" onblur="updateStipendio(this)" title="Ruolo">
+                        <datalist id="roles">
+                        </datalist>
+                        <input type="float" oninput="acceptFloat(this)" placeholder="Stipendio" name="Stipendio" id="employee_stipendio">
+                    </div>
                 </label>
-                <label for="Servizio">Servizio:
+                <label for="Servizio" style="display: none;">Servizio:
                     <select name="Servizio" id="employee_servizio">
 
                     </select>
@@ -61,7 +66,9 @@
                 </thead>
                 <tbody>  
                     <tr class="empty_row">
-                        <td colspan="6"><button class="add" id="add_employee" onclick="modalEmployee()">+</button></td>
+                        <td colspan="6">
+                            <button class="add" id="add_employee" onclick="modalEmployee()">+</button>
+                        </td>
                     </tr>
                     {% for employee in employees %}
                         <tr>
@@ -81,4 +88,5 @@
             </table>
         </div>
     </div>
+    <script src="js/employees.js"></script>
 {% endblock content %}

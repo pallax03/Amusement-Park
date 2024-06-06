@@ -2,6 +2,14 @@ $font: 'Consolas', monospace;
 $curve: 25;
 
 // COLORS
+$personale-entity-color: #5ce1e6;
+$personale-relation-color: #5271ff;
+$visitatore-entity-color: #ffa8e9;
+$visitatore-relation-color: #cb6ce6;
+$attivita-entity-color:#ffbd59;
+$attivita-relation-color: #fdf9b4;
+
+
 $background-color:#18181b;
 $constrast-color: #4ADE80;
 
@@ -52,6 +60,10 @@ p {
 
 nav {
     ul {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row;
+
         list-style-type: none;
         padding: 0;
         margin: 0;

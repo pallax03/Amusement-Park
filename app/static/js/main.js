@@ -25,3 +25,19 @@ async function statusResponse(response) {
     }, 10000);
 }
 
+
+document.querySelectorAll('.close').forEach(function(element) {
+    element.addEventListener('click', function() {
+        document.querySelector('.modal').style.display = 'none';
+    }); 
+});
+
+
+window.onclick = function(event) {
+    document.querySelectorAll('.modal').forEach(function(element) {
+        if (event.target == element) {
+            element.style.display = "none";
+        }
+    });
+}
+

@@ -101,21 +101,6 @@ function modalVisitor(visitor = {CodiceFiscale: '', Nome: '', Cognome: '', DataD
     document.querySelector('#visitor').style.display = 'block';
 }
 
-document.querySelectorAll('.close').forEach(function(element) {
-    element.addEventListener('click', function() {
-        document.querySelector('.modal').style.display = 'none';
-    }); 
-});
-
-
-window.onclick = function(event) {
-    document.querySelectorAll('.modal').forEach(function(element) {
-        if (event.target == element) {
-            element.style.display = "none";
-        }
-    });
-}
-
 
 function addVisitor() {
     json = {

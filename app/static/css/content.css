@@ -28,6 +28,16 @@ p {
 }
 
 nav ul {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
   list-style-type: none;
   padding: 0;
   margin: 0;
@@ -159,6 +169,15 @@ img.status {
   color: #fff;
 }
 
+button.delete {
+  background-color: rgba(255, 255, 255, 0);
+  font-size: 2.5em;
+  vertical-align: super;
+  text-align: center;
+  color: red;
+  cursor: pointer;
+  border: 0px solid black;
+}
 table {
   border: 0;
   width: 100%;
@@ -176,7 +195,6 @@ table thead th {
   font-size: 0.5em;
 }
 table tbody {
-  height: 300px;
   overflow-y: auto;
 }
 table tbody tr {
@@ -190,7 +208,7 @@ table tbody tr.empty_row td {
   margin: 0;
   padding: 0;
 }
-table tbody tr.empty_row td button#add_visitor {
+table tbody tr.empty_row td button.add {
   margin: 0;
   padding: 10px;
   height: auto;
@@ -201,7 +219,7 @@ table tbody tr.empty_row td button#add_visitor {
   -webkit-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
 }
-table tbody tr.empty_row td button#add_visitor:hover {
+table tbody tr.empty_row td button.add:hover {
   background-color: #4ADE80;
   color: #581C87;
   font-size: 4em;

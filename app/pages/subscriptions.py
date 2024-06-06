@@ -1,5 +1,4 @@
 from flask import render_template, url_for, request, make_response, jsonify
-import json
 from datetime import datetime, timedelta
 from models import Subscription, Duration, Tariff, Include, Category
 
