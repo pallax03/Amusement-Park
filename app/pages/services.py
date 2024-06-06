@@ -10,7 +10,6 @@ def service(app, db):
                                 url_for_add_service=url_for('add_service'),
                                 url_for_get_timetables=url_for('get_timetable'))
     
-
 #APIs
     # get all the services
     @app.route('/api/services', methods=['GET'])
@@ -55,7 +54,15 @@ def service(app, db):
             return make_response(jsonify({'message': 'Servizio eliminato'}), 200)
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
-        
+    
+    # get all services types
+    @app.route('/api/services/types', methods=['GET'])
+    def get_services_types():
+        types = []
+        for type in Service.query.with_entities(Service.Tipo).distinct().all():
+            types.append(type)
+        return make_response(types, 200)
+
     # get timetable of the service
     # /service/timetable + '?Nome=nomeservizio'
     @app.route('/api/service/timetable', methods=['GET'])

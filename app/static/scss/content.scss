@@ -80,6 +80,24 @@ button {
                      
         }
     }
+
+    &.add {
+        border-radius: 25px;
+        width: 50px;
+        height: 50px;
+        font-size: 1.5em;
+        margin: 10px;
+        background-color: $background_box-color;
+        color: $constrast-color;
+        border: 2px solid $constrast-color;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        &:hover {
+            border-color: $background_box-color;
+            background-color: $constrast-color;
+            color: $background_box-color;
+        }
+    }
 }
 
 
@@ -117,13 +135,10 @@ table{
                         padding: 10px;
                         height: auto;
                         width: 100%;
-                        border: 2px solid $constrast-color;
-                        background-color: $background_box-color;
-                        color: $text-color;
-                        transition: all 0.2s ease-in-out;
+                        border-radius: 0;
+                        font-size: 2em;
+
                         &:hover {
-                            background-color: $constrast-color;
-                            color: $background_box-color;
                             font-size: 4em;
                         }
                     }
@@ -192,23 +207,6 @@ table{
                     border-color: $constrast-color;
                     
                 }
-            }
-        }
-
-        button.add {
-            border-radius: 25px;
-            width: 50px;
-            height: 50px;
-            font-size: 1.5em;
-            margin: 10px;
-            background-color: $background_box-color;
-            color: $constrast-color;
-            border: 2px solid $constrast-color;
-            cursor: pointer;
-            &:hover {
-                border-color: $background_box-color;
-                background-color: $constrast-color;
-                color: $background_box-color;
             }
         }
     }
@@ -292,3 +290,35 @@ table{
     }
 }
 
+.cards {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+
+    .card {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-content: center;
+        justify-content: center;
+        align-items: center;
+        margin: 10px;
+        padding: 10px;
+        background-color: $background_box-color;
+        border: 2px solid $constrast-color;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        color: $text-color;
+        width: 200px;
+        height: 200px;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        &:hover {
+            background-color: $constrast-color;
+            color: $background_box-color;
+        }
+    }
+}

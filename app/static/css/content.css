@@ -178,6 +178,25 @@ button.delete {
   cursor: pointer;
   border: 0px solid black;
 }
+button.add {
+  border-radius: 25px;
+  width: 50px;
+  height: 50px;
+  font-size: 1.5em;
+  margin: 10px;
+  background-color: #581C87;
+  color: #4ADE80;
+  border: 2px solid #4ADE80;
+  cursor: pointer;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+button.add:hover {
+  border-color: #581C87;
+  background-color: #4ADE80;
+  color: #581C87;
+}
+
 table {
   border: 0;
   width: 100%;
@@ -213,15 +232,10 @@ table tbody tr.empty_row td button.add {
   padding: 10px;
   height: auto;
   width: 100%;
-  border: 2px solid #4ADE80;
-  background-color: #581C87;
-  color: #FAF5FF;
-  -webkit-transition: all 0.2s ease-in-out;
-  transition: all 0.2s ease-in-out;
+  border-radius: 0;
+  font-size: 2em;
 }
 table tbody tr.empty_row td button.add:hover {
-  background-color: #4ADE80;
-  color: #581C87;
   font-size: 4em;
 }
 table tbody tr td {
@@ -318,22 +332,6 @@ table tbody tr td {
 .choices .container .options input[type=radio]:checked + label {
   border-color: #4ADE80;
 }
-.choices .container button.add {
-  border-radius: 25px;
-  width: 50px;
-  height: 50px;
-  font-size: 1.5em;
-  margin: 10px;
-  background-color: #581C87;
-  color: #4ADE80;
-  border: 2px solid #4ADE80;
-  cursor: pointer;
-}
-.choices .container button.add:hover {
-  border-color: #581C87;
-  background-color: #4ADE80;
-  color: #581C87;
-}
 .choices .tariffs {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -412,6 +410,62 @@ table tbody tr td {
 }
 .choices .durations button:hover {
   border-color: #581C87;
+  background-color: #4ADE80;
+  color: #581C87;
+}
+
+.cards {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.cards .card {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin: 10px;
+  padding: 10px;
+  background-color: #581C87;
+  border: 2px solid #4ADE80;
+  border-radius: 10px;
+  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  color: #FAF5FF;
+  width: 200px;
+  height: 200px;
+  cursor: pointer;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+.cards .card:hover {
   background-color: #4ADE80;
   color: #581C87;
 }
