@@ -106,7 +106,8 @@ function checkTimetable(select, orario) {
 }
 
 function disableDay(giorno) {
-    giorno.querySelectorAll('input').forEach(input => input.disabled = !input.disabled);
+
+    giorno.querySelectorAll('label input[type=time]').forEach(input => input.disabled = !input.disabled);
 }
 
 function createService() {
@@ -137,6 +138,7 @@ function createService() {
 
         let checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
+        checkbox.checked = true;
         checkbox.id = giorno;
         
         let label = document.createElement('label');
@@ -151,7 +153,7 @@ function createService() {
         input_fine.className = 'fine';
         input_fine.type = 'time';
 
-        checkbox.onclick = function() {disableDay(label)};
+        checkbox.onclick = function() {disableDay(li)};
 
         label.appendChild(input_inizio);
         label.innerHTML += ' - ';
@@ -218,8 +220,12 @@ function addService(args) {
     dict_orario = {};
 
     giorni.forEach(giorno => {
-        time = document.querySelectorAll('#'+giorno+' + label input[type=time]')
-        dict_orario[giorno] = time[0].value+'-'+time[1].value;
+        if(document.getElementById(giorno).checked === false) {
+            dict_orario[giorno] = ''; 
+        } else {
+            time = document.querySelectorAll('#'+giorno+' + label input[type=time]')
+            dict_orario[giorno] = time[0].value+'-'+time[1].value;
+        }
     });
 
     service = {
@@ -227,6 +233,8 @@ function addService(args) {
         Tipo: document.querySelector('.card-body input').value,
         Orario: dict_orario
     };  
+
+    console.log(service);
 
     console.log(service);  
     fetch(url_for_add_service, {
