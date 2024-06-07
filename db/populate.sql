@@ -228,8 +228,6 @@ INSERT INTO `RUOLI` (`Nome`, `Stipendio`) VALUES
 ('Magazziniere', 1350.0),
 ('Cuoco', 1600.0),
 ('Cameriere', 1200.0),
-('Addetto agli Eventi', 1450.0),
-('Coordinatore Eventi', 1900.0),
 ('Responsabile di Negozio', 2000.0),
 ('Soccorritore', 1500.0);
 
@@ -256,6 +254,34 @@ INSERT INTO `SERVIZI` (`Nome`, `Tipo`, `IdOrario`) VALUES
 ('Pull & Bear', 'Negozio', '1'),
 ('Feltrinelli', 'Negozio', 1);
 
--- PERSONALE 
--- RSSMRA85M01H501Z
 -- NECESSITA
+INSERT INTO `NECESSITA` (`IdCategoria`, `IdRuolo`, `Quantita`) VALUES
+(1, 2, 5),  -- Necessità per 5 Addetti alle Attrazioni per le Montagne Russe
+(2, 4, 4),  -- Necessità per 4 Operatori di Giostra per le Attrazioni Acquatiche
+(3, 2, 3),  -- Necessità per 3 Addetti alle Attrazioni per le Torri di Caduta
+(4, 4, 2),  -- Necessità per 2 Operatori di Giostra per le Dark Ride
+(5, 2, 4),  -- Necessità per 4 Addetti alle Attrazioni per le Attrazioni per Bambini
+(6, 2, 3),  -- Necessità per 3 Addetti alle Attrazioni per le Giostre Classiche
+(7, 8, 2);  -- Necessità per 2 Tecnici del Suono e Luci per le Attrazioni di Realtà Virtuale
+
+-- PERSONALE 
+INSERT INTO `PERSONALE` (`CodiceFiscale`, `Nome`, `Cognome`, `DataDiNascita`, `IdRuolo`, `IdServizio`) VALUES
+('RSSMRA85M01H501Z', 'Marco', 'Rossi', '1985-01-01', 1, NULL),  -- Responsabile alle Attrazioni, Necessita, quindi IdServizio è NULL
+('BLNLNZ80A01H501Z', 'Lorenzo', 'Bianchi', '1980-01-01', 2, NULL),  -- Addetto alle Attrazioni, Necessita, quindi IdServizio è NULL
+('VRDGNN75B01F205X', 'Gianna', 'Verdi', '1975-02-01', 3, NULL),  -- Addetto alla Sicurezza, Necessita, quindi IdServizio è NULL
+('FRRFRC90C15H501Y', 'Francesco', 'Ferrari', '1990-03-15', 4, NULL),  -- Operatore di Giostra, Necessita, quindi IdServizio è NULL
+('GLLMRL92D01H501J', 'Mirella', 'Galli', '1992-04-01', 5, 1),  -- Addetto alle Pulizie, non Necessita, assegnato a WC - Nord
+('RSLTNC88E01H501K', 'Tania', 'Russo', '1988-05-01', 6, 10),  -- Addetto alla Biglietteria, non Necessita, assegnato a Souvenirs
+('MRTLBR81F01H501L', 'Lorenzo', 'Martini', '1981-06-01', 7, NULL),  -- Animatore, Necessita, quindi IdServizio è NULL
+('FNTMRL87G01H501M', 'Marco', 'Fantini', '1987-07-01', 8, NULL),  -- Tecnico del Suono e Luci, Necessita, quindi IdServizio è NULL
+('SRLMCL94H01H501N', 'Michele', 'Sarli', '1994-08-01', 9, NULL),  -- Tecnico di Manutenzione, Necessita, quindi IdServizio è NULL
+('GNFMRT85I01H501P', 'Martina', 'Gennari', '1985-09-01', 10, 14),  -- Commesso, non Necessita, assegnato a Pull & Bear
+('RLLFLC83J01H501Q', 'Federico', 'Rallo', '1983-10-01', 11, 12),  -- Cassiere, non Necessita, assegnato a OVS
+('PNTLBR89K01H501R', 'Laura', 'Pintus', '1989-11-01', 12, NULL),  -- Magazziniere, Necessita, quindi IdServizio è NULL
+('BRTGRG77L01H501S', 'Giorgio', 'Baratta', '1977-12-01', 13, 6),  -- Cuoco, non Necessita, assegnato a Mustafa Kebab
+('VNTMRL90M01H501T', 'Mario', 'Vincenti', '1990-01-01', 14, 7),  -- Cameriere, non Necessita, assegnato a McDonald
+('BRNMRC87P01H501W', 'Marco', 'Bruni', '1987-04-01', 15, 11),  -- Responsabile di Negozio, non Necessita, assegnato a Fiori Rossi
+('ZNNLCR85Q01H501X', 'Lucia', 'Zanini', '1985-05-01', 16, NULL),  -- Soccorritore, Necessita, quindi IdServizio è NULL
+('MNCLRC92R01H501Y', 'Lorenzo', 'Mancini', '1992-06-01', 10, 13),  -- Commesso, non Necessita, assegnato a Terranova
+('GRGFRN90S01H501Z', 'Francesco', 'Gregori', '1990-07-01', 5, 2);  -- Addetto alle Pulizie, non Necessita, assegnato a WC - Est
+

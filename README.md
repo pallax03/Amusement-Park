@@ -22,7 +22,9 @@ IMMAGINE SCHEMA RELAZIONALE!!!
 
 ## Running the project
 
-Run the database, is a MySQL server, that create a database called amusamentpark, and it will automatically  create and populate some tables. 
+Compose:
+- a MySQL server, that create a database called amusamentpark, and it will automatically  create and populate some tables.
+- a Flask web app.
 
 ```console
 docker compose up --build
@@ -63,7 +65,7 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
 - /api/visitor/entry [POST] -> add a entry of the given visitor ([json](#visitor-entry-json))
 - /api/visitor/entry [DELETE] + "?CodiceFiscale=`codicefiscale`&Data=`date`" -> delete the given entry 
 
-#### Visitor Entry Json
+##### Visitor Entry Json
 ```json
 {
   "CodiceFiscale": str(16),
@@ -72,9 +74,9 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
 ```
 
 ### Subscription
-- /api/subscription [GET] + "?CodiceFiscale=`codicefiscale`" -> return the active [json]
+- /api/subscription [GET] + "?CodiceFiscale=`MNNGPP99A01H501A`" -> return the active [json]
 (#subscription-json)
-- /api/subscription [DELETE] "?CodiceFiscale=`codicefiscale`&DataInizio=`datainizio`" -> delete the subscription.
+- /api/subscription [DELETE] '?CodiceFiscale=`MNNGPP99A01H501A`&DataInizio=`2021-01-01`' -> delete the subscription.
 - /api/subscription [POST] -> given a [json](#subscription-json) add the subscription.
 
 #### Subscription Json
@@ -83,15 +85,18 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
   "CodiceFiscale": str(16),
   "DataInizio": str,
   "Costo": float,
-  "Nome": str,
+  "NomeTariffa": str,
   "Giorni": int
 }
 ```
 
+#### Duration
 - /api/subscription/durations [GET] -> return a json contains all the [json](#duration-json)
 - /api/subscription/duration [POST] -> given a [json](#duration-json) add the duration.
+- /api/subscription/duration [DELETE] + '?Giorni=`7`' -> delete the given Duration.
+(if is not used by any of active subscriptions)
 
-  #### Duration Json
+  ##### Duration Json
   ```json
   {
     "Giorni": int,
@@ -100,10 +105,13 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
   }
   ```
 
+#### Tariff
 - /api/subscription/tariffs [GET] -> return a json contains all the [json](#tariff-json)
 - /api/subscription/tariff [POST] -> given a [json](#tariff-json) add the tariff.
-  
-  #### Tariff Json
+- /api/subscription/tariff [DELETE] + '?NomeTariffa=`Standard`' -> delete the given Tariff.
+(if is not used by any of active subscriptions)
+
+  ##### Tariff Json
   ```json
   {
     "Nome": str,
@@ -112,7 +120,7 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
   }
   ```
 
-- /subscription/cost [GET] + '?NomeTariffa=`nometariffa`&Giorni=`giorni`' -> return the cost of this subscription combo.
+- /api/subscription/cost [GET] + '?NomeTariffa=`Standard`&Giorni=`7`' -> return the cost of this subscription combo.
   #### cost Json
   ```json
   {
@@ -124,36 +132,33 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
 
 - /activity
 
-#### Rides
+#### Ride
 - /activity/rides
 
-#### Categories
+#### Category
 - /activity/ride/categories
 
 - /activity/ride/categories
 
-#### Limits
+#### Limit
 - /activity/ride/constraints
 - /activity/ride/limits
 
-#### Timetables
+#### Event
 - /activity/events
 
 - /activity/event/schedules
 - /activity/event/schedule
 
-#### Timetables
-- /activity/entries
-- /activity/entries
+#### Partecipate
+- /activity/partecipates
+- /activity/partecipates
 
-- /activity/entries/partecipates
-- /activity/entries/partecipates
-
-### Employess
+### Employee
 - /employee
 - /employee
 
-#### Roles
+#### Role
 - /employee/roles
 - /employee/role
 
@@ -161,9 +166,35 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
 - /employee/role/require
 
 ### Service
-- /service
-- /service
+- /api/services [GET] /services + '?Tipo=`Negozio`' -> given the services filtered with `Tipo`, iif not wxist give all the [json](#service-timetable-json) 
+- /api/services/types [GET] -> give the Tipo of the services (distinct). 
+- /api/service [GET] + '?Nome=OVS' -> give the service [json](#service-timetable-json) 
+- /api/service [POST] -> add the service given the [json](#service-timetable-json)
+- /api/service [DELETE] + '?Nome=OVS' -> delete the service 
 
-#### Timetables
-- /service/timetable
-- /service/timetable
+#### Service Timetable Json
+```json
+{
+  "Nome": str,
+  "Tipo": str,
+  "Orario": [Timetable](#timetable-json)
+}
+```
+
+#### Timetable
+- /api/service/timetable [GET] + '?Nome=OVS' -> give the [json](#timetable-json).
+- /api/service/timetable [POST] -> add the given [json](#timetable-json)
+
+##### Timetable Json
+```json
+{
+  "IdOrario": int,
+  "Lunedi": str, //11:00-11:00
+  "Martedi": str,
+  "Mercoledi": str,
+  "Giovedi": str,
+  "Venerdi": str,
+  "Sabato": str,
+  "Domenica": str
+}
+```

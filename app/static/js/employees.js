@@ -36,7 +36,11 @@ function updateStipendio(input) {
 
     function selectedRole(input) {
         let selectedOption = null;
-        
+        document.querySelector('#roles').childNodes.forEach( option => {   
+            if(selectedOption == null) {
+                if (option.text == input.value) selectedOption = option;
+            }
+        });
         return selectedOption == null ? false : selectedOption;
     }
 
@@ -96,7 +100,7 @@ function addEmployee() {
 
     fetch(url_for_add_employee, {
         method: 'POST',
-        body: employee
+        body: JSON.stringify(employee)
     })
     .then(response => statusResponse(response));
 }

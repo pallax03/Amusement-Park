@@ -64,3 +64,5 @@ def visitor(app, db):
                 return make_response(jsonify({'message': 'Visitor not found'}), 404)
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
+        
+    ### ads Entry look README.md

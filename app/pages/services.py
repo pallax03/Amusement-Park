@@ -1,7 +1,6 @@
 from flask import render_template, url_for, request, jsonify, make_response
 from datetime import datetime, timedelta
-from models import Service, Timetable
-
+from models import Service, Timetable, Employee
 
 def service(app, db):
     @app.route('/services', methods=['GET'])
@@ -26,7 +25,7 @@ def service(app, db):
             return make_response(jsonify({'error': str(e)}), 400)
 
     # get a service
-    # /service + '?Nome=nomeservizio'
+    # /service + '?Nome=OVS'
     @app.route('/api/service', methods=['GET'])
     def get_service():
         try:
@@ -79,6 +78,11 @@ def service(app, db):
     def delete_service():
         try:
             service = Service.query.filter_by(Nome=request.args.get('Nome')).first()
+            # before deleting the service, modify the people that are assigned to it
+            for employee in Employee.query.filter_by(IdServizio=service.IdServizio).all():
+                employee.IdServizio = None
+            db.session.commit()
+            
             db.session.delete(service)
             db.session.commit()
             return make_response(jsonify({'message': 'Servizio eliminato'}), 200)

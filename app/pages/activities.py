@@ -12,7 +12,9 @@ def activity(app, db):
                                 url_for_get_events=url_for('get_events'),
                                 url_for_add_activity=url_for('add_activity'))
 
-    @app.route('/activity', methods=['POST'])
+#APIs
+    # add an activity
+    @app.route('/api/activity', methods=['POST'])
     def add_activity():
         try:
             data = request.get_json()
@@ -28,15 +30,15 @@ def activity(app, db):
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
 
-    @app.route('/activity/rides', methods=['GET'])
+    @app.route('/api/activity/rides', methods=['GET'])
     def get_activities():
         return make_response(jsonify(Activity.query.filter_by(IsEvent=False).all()), 200)
 
-    @app.route('/activity/rides/categories', methods=['GET'])
+    @app.route('/api/activity/rides/categories', methods=['GET'])
     def get_categories():
         return make_response(jsonify(Category.query.all()), 200)
     
-    @app.route('/activity/rides/categories', methods=['POST'])
+    @app.route('/api/activity/rides/categories', methods=['POST'])
     def add_category():
         try:
             data = request.get_json()
@@ -50,6 +52,6 @@ def activity(app, db):
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
 
-    @app.route('/activity/events', methods=['GET'])
+    @app.route('/api/activity/events', methods=['GET'])
     def get_events():
         return make_response(jsonify(Activity.query.filter_by(IsEvent=True).all()), 200)
