@@ -41,14 +41,34 @@ def service(app, db):
     def add_service():
         try:
             data = request.get_json()
-            
+            for orari in data['Orario']:
+                orari = None if orari == '' else orari
+
+            # search if the given Orario already exists
+            timetable = Timetable.query.filter_by(Lunedi=data['Orario']['Lunedi'], Martedi=data['Orario']['Martedi'], Mercoledi=data['Orario']['Mercoledi'], Giovedi=data['Orario']['Giovedi'], Venerdi=data['Orario']['Venerdi'], Sabato=data['Orario']['Sabato'], Domenica=data['Orario']['Domenica']).first()
+            if timetable is None:
+                timetable = Timetable(
+                    Lunedi=data['Orario']['Lunedi'],
+                    Martedi=data['Orario']['Martedi'],
+                    Mercoledi=data['Orario']['Mercoledi'],
+                    Giovedi=data['Orario']['Giovedi'],
+                    Venerdi=data['Orario']['Venerdi'],
+                    Sabato=data['Orario']['Sabato'],
+                    Domenica=data['Orario']['Domenica']
+                )
+                db.session.add(timetable)
+                db.session.commit()
+            else:
+                timetable = timetable.IdOrario
+
             service = Service(
                 Nome=data['Nome'],
                 Tipo=data['Tipo'],
-                IdOrario=data['IdOrario']
+                IdOrario=timetable
             )
             db.session.add(service)
             db.session.commit()
+
             return make_response(jsonify({'message': 'Servizio creato'}), 201)
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
@@ -68,9 +88,6 @@ def service(app, db):
     # get all services types
     @app.route('/api/services/types', methods=['GET'])
     def get_services_types():
-        # types = []
-        # for type in Service.query.with_entities(Service.Tipo).distinct().all():
-        #     types.append(type.Tipo)
         dict = []
         for tmp in Service.query.with_entities(Service.Tipo).distinct().all():
             dict.append(tmp.Tipo)

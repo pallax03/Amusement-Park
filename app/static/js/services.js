@@ -173,21 +173,9 @@ function createService() {
     let services = document.getElementById('services');
     services.insertBefore(card, services.lastChild);
 
-    service = {
-        Nome: nome,
-        Tipo: tipo,
-        Orario: {
-            Lunedi: orario.children[0].children[0],
-            Martedi: orario.children[1].children[0],
-            Mercoledi: orario.children[2].children[0],
-            Giovedi: orario.children[3].children[0],
-            Venerdi: orario.children[4].children[0],
-            Sabato: orario.children[5].children[0],
-            Domenica: orario.children[6].children[0]
-        }
-    };
+    
 
-    changeAPIButton('#add_service', addService, service, 'save');
+    changeAPIButton('#add_service', addService, '', 'save');
 }
 
 function getServices(type) {
@@ -225,10 +213,25 @@ function deleteService(nomeservizio) {
     .then(data => getServices(document.getElementById('types').value));
 }
 
-function addService(Service = {Nome: '', Tipo: '', Orario: {Lunedi: '', Martedi: '', Mercoledi: '', Giovedi: '', Venerdi: '', Sabato: '', Domenica: ''}}) {
+function addService(args) {
+
+    dict_orario = {};
+
+    giorni.forEach(giorno => {
+        time = document.querySelectorAll('#'+giorno+' + label input[type=time]')
+        dict_orario[giorno] = time[0].value+'-'+time[1].value;
+    });
+
+    service = {
+        Nome: document.querySelector('.card-header input').value,
+        Tipo: document.querySelector('.card-body input').value,
+        Orario: dict_orario
+    };  
+
+    console.log(service);  
     fetch(url_for_add_service, {
         method: 'POST',
-        body: JSON.stringify(Service),
+        body: JSON.stringify(service),
         headers: {
             'Content-Type': 'application/json'
         }
