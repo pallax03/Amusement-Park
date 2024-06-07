@@ -8,7 +8,9 @@
 
 {% block content %}
     <script>
+        const url_for_get_services = "{{ url_for_get_services }}";
         const url_for_add_service = "{{ url_for_add_service }}";
+        const url_for_get_services_types = "{{ url_for_get_services_types }}";
         const url_for_get_timetables = "{{ url_for_get_timetables }}";
     </script>
 
@@ -16,23 +18,12 @@
         <div class="center">
             <h1>
                 Servizi 
-                <select id="tipo">
+                <select id="types" onchange="getServices(this.value)">
                     <option value="all">all</option>
                 </select>
             </h1>
-            <div class="cards">
-                {% for service in services %}
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>{{ service.Nome }}</h4>
-                        </div>
-                        <div class="card-body">
-                            <p>{{ service.Tipo }}</p>
-                        </div>
-                        <div class="timetable">{{ service.IdOrario }}</div>
-                    </div>    
-                {% endfor %}
-                <button class="add">+</button>
+            <div id="services" class="cards">
+                
             </div>
         </div>
     </div>

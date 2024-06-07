@@ -36,11 +36,7 @@ function updateStipendio(input) {
 
     function selectedRole(input) {
         let selectedOption = null;
-        document.querySelector('#roles').childNodes.forEach( option => {   
-            if(selectedOption == null) {
-                if (option.text == input.value) selectedOption = option;
-            }
-        });
+        
         return selectedOption == null ? false : selectedOption;
     }
 

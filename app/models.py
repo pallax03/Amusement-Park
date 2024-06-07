@@ -182,24 +182,24 @@ class Role(db.Model):
 @dataclass
 class Timetable(db.Model):
     IdOrario: int
-    Monday: str
-    Tuesday: str
-    Wednesday: str
-    Thursday: str
-    Friday: str
-    Saturday: str
-    Sunday: str
+    Lunedi: str
+    Martedi: str
+    Mercoledi: str
+    Giovedi: str
+    Venerdi: str
+    Sabato: str
+    Domenica: str
 
     __tablename__ = 'ORARI'
 
     IdOrario = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    Monday = db.Column(db.String(11), nullable=True)
-    Tuesday = db.Column(db.String(11), nullable=True)
-    Wednesday = db.Column(db.String(11), nullable=True)
-    Thursday = db.Column(db.String(11), nullable=True)
-    Friday = db.Column(db.String(11), nullable=True)
-    Saturday = db.Column(db.String(11), nullable=True)
-    Sunday = db.Column(db.String(11), nullable=True)
+    Lunedi = db.Column(db.String(11), nullable=True)
+    Martedi = db.Column(db.String(11), nullable=True)
+    Mercoledi = db.Column(db.String(11), nullable=True)
+    Giovedi = db.Column(db.String(11), nullable=True)
+    Venerdi = db.Column(db.String(11), nullable=True)
+    Sabato = db.Column(db.String(11), nullable=True)
+    Domenica = db.Column(db.String(11), nullable=True)
 
 @dataclass
 class Service(db.Model):
