@@ -96,10 +96,13 @@ function addEmployee() {
         }
     }
 
-    console.log(employee);
+    console.log(JSON.stringify(employee));
 
     fetch(url_for_add_employee, {
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify(employee)
     })
     .then(response => statusResponse(response));

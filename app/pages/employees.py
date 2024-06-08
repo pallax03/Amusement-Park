@@ -43,7 +43,6 @@ def employee(app, db):
     @app.route('/api/employee', methods=['POST'])
     def add_employee():
         try:
-            # {CodiceFiscale: "RSSMRA85M01H501Z", Cognome: "Biondo", DataNascita: "2024-06-07", Nome: "Paolo", Ruolo: {Nome: 'Responsabile alle Attrazioni', Stipendio: '3000'}}
             data = request.get_json()
 
             role = Role.query.filter_by(Nome=data['Ruolo']['Nome']).first()
@@ -56,8 +55,7 @@ def employee(app, db):
                 Nome=data['Nome'],
                 Cognome=data['Cognome'],
                 DataDiNascita=data['DataNascita'],
-                IdRuolo=role.IdRuolo,
-                IdServizio=None
+                IdRuolo=role.IdRuolo
             )
             db.session.add(employee)
             db.session.commit()
