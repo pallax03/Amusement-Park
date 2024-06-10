@@ -270,7 +270,7 @@ table{
                 color: $text-color;
             }
         }
-        button {
+        input[type=button]~button {
             border-radius: 25px;
             width: 50px;
             height: 50px;

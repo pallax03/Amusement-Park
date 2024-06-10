@@ -20,9 +20,11 @@ def visitor(app, db):
                                 url_add_subscription=url_for('add_subscription'),
                                 url_for_get_durations=url_for('get_durations'),
                                 url_for_get_tariffs=url_for('get_tariffs'),
-                                url_for_get_subscription_cost=url_for('get_subscription_cost'))
+                                url_for_get_subscription_cost=url_for('get_subscription_cost'),
+                                url_for_get_entries=url_for('get_entries'))
 
-
+    # get visitor by CodiceFiscale
+    # /api/visitor + '?CodiceFiscale=MNNGPP99A01H501A'
     @app.route('/api/visitor', methods=['GET'])
     def get_visitor():
         try:
@@ -31,7 +33,8 @@ def visitor(app, db):
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
 
-
+    # add visitor
+    # /api/visitor + json
     @app.route('/api/visitor', methods=['POST'])
     def add_visitor():
         try:
@@ -46,11 +49,12 @@ def visitor(app, db):
             )
             db.session.add(visitor)
             db.session.commit()
-            return make_response(jsonify({'message': 'visitatore creato'}), 201)
+            return make_response(jsonify({'message': f'Visitatore {visitor.CodiceFiscale} registrato'}), 201)
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
         
-
+    # delete a visitor
+    # /api/visitor + '?CodiceFiscale=MNNGPP99A01H501A'
     @app.route('/api/visitor', methods=['DELETE'])
     def delete_visitor():
         try:
@@ -59,10 +63,40 @@ def visitor(app, db):
                 Subscription.query.filter_by(CodiceFiscale=visitor.CodiceFiscale).delete()
                 db.session.delete(visitor)
                 db.session.commit()
-                return make_response(jsonify({'message': 'Visitor deleted'}), 200)
+                return make_response(jsonify({'message': f'Visitatore {visitor.CodiceFiscale} eliminato'}), 200)
             else:
-                return make_response(jsonify({'message': 'Visitor not found'}), 404)
+                return make_response(jsonify({'message': 'Visitatore non trovato'}), 404)
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
         
     ### ads Entry look README.md
+
+    # get entries for a visitor
+    # /api/visitor/entries + '?CodiceFiscale=MNNGPP99A01H501A'
+    @app.route('/api/visitor/entries', methods=['GET'])
+    def get_entries():
+        try:
+            visitor = Visitor.query.filter_by(CodiceFiscale=request.args.get('CodiceFiscale')).first()
+            if visitor:
+                entries = visitor.entries
+                return make_response(jsonify(entries), 200)
+            else:
+                return make_response(jsonify({'message': 'Visitatore non trovato'}), 404)
+        except Exception as e:
+            return make_response(jsonify({'error': str(e)}), 400)
+    
+    # add entry for a visitor
+    # /api/visitor/entry + json
+    @app.route('/api/visitor/entries', methods=['POST'])
+    def add_entry():
+        try:
+            data = request.get_json()
+            visitor = Visitor.query.filter_by(CodiceFiscale=data['CodiceFiscale']).first()
+            if visitor:
+                visitor.entries.append(data)
+                db.session.commit()
+                return make_response(jsonify({'message': f'Ingresso per {visitor.CodiceFiscale} registrato'}), 201)
+            else:
+                return make_response(jsonify({'message': 'Visitatore non trovato'}), 404)
+        except Exception as e:
+            return make_response(jsonify({'error': str(e)}), 400)

@@ -10,14 +10,15 @@
     <script>
         const url_for_add_employee = "{{ url_for_add_employee }}"
         const url_for_get_roles = "{{ url_for_get_roles }}"
-        const url_for_check_require = "{{ url_for_check_require }}"
-        const url_for_get_services = "{{ url_for_get_services }}"
+        const url_for_delete_role = "{{ url_for_delete_role }}"
+        const url_for_get_categories = "{{ url_for_get_categories }}"
+        const url_for_add_employee_service = "{{ url_for_add_employee_service }}"
     </script>
 
     <div class="modal" id="employee" style="display: none;">
         <div class="modal-container">
             <span class="close"></span>
-            <form action="{{ url_add_employee }}" method="post">
+            <form>
                 <label for="CodiceFiscale">Codice Fiscale:
                     <input type="text" name="CodiceFiscale" id="employee_codicefiscale">
                 </label>
@@ -33,10 +34,13 @@
                 <label for="Ruolo">
                     <div>
                         <h3>Ruolo:</h3>
-                        <input list="roles" id="employee_role" name="Ruolo" placeholder="Nome Ruolo" onblur="updateStipendio(this)" title="Ruolo">
-                        <datalist id="roles">
+                        <input list="datalist_roles" id="employee_ruolo" name="Ruolo" placeholder="Nome Ruolo" oninput="updateSelectedRole(this)" title="Ruolo">
+                        <datalist id="datalist_roles">
                         </datalist>
                         <input type="float" oninput="acceptFloat(this)" placeholder="Stipendio" name="Stipendio" id="employee_stipendio">
+                        <ul id="roles_require">
+                            
+                        </ul>
                     </div>
                 </label>
                 <input type="button" onclick="addEmployee()" value="Assumi">
@@ -45,7 +49,7 @@
     </div>
 
     <div id="content" class="container">
-        <div class="center">
+        <div class="center" id="container_employees">
             <h1>Personale</h1>
             
             <table>
@@ -72,18 +76,33 @@
                             <td>{{ employee.Nome }} {{ employee.Cognome }}</td>
                             <td>{{ employee.DataDiNascita }}</td>
                             <td>{{ employee.Ruolo }}</td>
-                            {% if employee.Servizio == None %}
-                                <td><button class="add" id="service_add" >+</button></td>
+                            {% if employee.Servizio != false %}
+                                <td>
+                                    <select id="service_{{ employee.CodiceFiscale }}" onchange="addService('{{ employee.CodiceFiscale }}',this.value)">
+                                    <option value="">no service</option>
+                                    {% for service in services %}
+                                        {% if service.Nome == employee.Servizio %}
+                                            <option value="{{ service.IdServizio }}" selected>{{ service.Nome }}</option>
+                                        {% else %}
+                                            <option value="{{ service.IdServizio }}">{{ service.Nome }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
                             {% else %}
-                                <td>{{ employee.Servizio }}</td>
+                                <td></td>
                             {% endif %}
                         </tr>
                     {% endfor %}
                 </tbody>    
             </table>
-
-            
         </div>
+
+        <!-- <div class="center" id="container_roles">
+            <h1>Ruoli</h1>
+            <div id="cards_roles" class="cards">
+                
+            </div>
+        </div> -->
     </div>
     <script src="js/employees.js"></script>
 {% endblock content %}

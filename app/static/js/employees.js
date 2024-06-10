@@ -3,15 +3,23 @@ function getRoles() {
     fetch(url_for_get_roles)
     .then(response => response.json())
     .then(data => {
-        document.getElementById('roles').innerHTML = '';
+        document.getElementById('datalist_roles').innerHTML = '';
         data.forEach(role => {
             let option = document.createElement('option');
             option.setAttribute('IdRuolo', role.IdRuolo);
             option.setAttribute('Stipendio', role.Stipendio);
             option.text = role.Nome;
-            document.getElementById('roles').appendChild(option);
+            option.setAttribute('Requires', JSON.stringify(role.Requires));
+            document.getElementById('datalist_roles').appendChild(option);
         });
     });
+}
+
+function deleteRole(IdRuolo) {
+    fetch(url_for_delete_role + '?IdRuolo=' + IdRuolo, {
+        method: 'DELETE'
+    })
+    .then(response => statusResponse(response));
 }
 
 function getServices() {
@@ -28,15 +36,17 @@ function getServices() {
     });
 }
 
+function getQuantity(input) {
+    input.disabled = !input.disabled;
+}
 
-
-function updateStipendio(input) {
+function updateSelectedRole(input) {
 
     let option = selectedRole(input);
 
     function selectedRole(input) {
         let selectedOption = null;
-        document.querySelector('#roles').childNodes.forEach( option => {   
+        document.querySelector('#datalist_roles').childNodes.forEach( option => {   
             if(selectedOption == null) {
                 if (option.text == input.value) selectedOption = option;
             }
@@ -45,7 +55,16 @@ function updateStipendio(input) {
     }
 
     showStipendio(option);
-    // checkRequire(option);
+    showRequire(option);
+    if(option) {
+        let button = document.createElement('input');
+        button.type = 'button';
+        button.className = 'delete';
+        button.value = 'elimina ruolo';
+        button.onclick = function() {deleteRole(option.getAttribute('IdRuolo'))};
+
+        document.getElementById('roles_require').appendChild(button);
+    }
 
     function showStipendio(option) {
         if(option) {
@@ -57,25 +76,56 @@ function updateStipendio(input) {
         }
     }
 
+    function getRequires() {
+        fetch(url_for_get_categories)
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(category => {
+                let li = document.createElement('li');
 
-    // function checkRequire(option) {
-    //     fetch(url_for_check_require + '?IdRuolo=' + input.value)
-    //     .then(response => response.json())
-    //     .then(data => {
-    //         if (data) {
-    //             document.getElementById('employee_servizio').parentElement.style.display = 'none';
-    //         } else {
-    //             document.getElementById('employee_servizio').parentElement.style.display = '';
-    //             getServices();
-    //         }
-    //     });
-    // }
+                let checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = category.Nome;
 
-    // <label for="Servizio" style="display: none;">Servizio:
-    //                 <select name="Servizio" id="employee_servizio">
+                let label = document.createElement('label');
+                label.htmlFor = category.Nome;
+                label.innerHTML = category.Nome;
 
-    //                 </select>
-    //             </label>
+                let quantity = document.createElement('input');
+                quantity.type = 'number';
+                quantity.id = 'quantity_'+category.Nome;
+                quantity.placeholder = 'quantità';
+                quantity.disabled = true;
+                
+                label.appendChild(quantity);
+
+                checkbox.onclick = function () {getQuantity(quantity)};
+
+                li.appendChild(checkbox);
+                li.appendChild(label);
+                
+
+                document.getElementById('roles_require').appendChild(li);
+            });
+        });
+    }
+
+    function showRequire(option) {
+        document.getElementById('roles_require').innerHTML = '<h3>Necessita:</h3>';
+        if(option) {
+            requires = JSON.parse(option.getAttribute('Requires'));
+            if (requires.length == 0) document.getElementById('roles_require').innerHTML = '';
+            else {
+                requires.forEach(require => {
+                    let li = document.createElement('li');
+                    li.innerHTML = require.NomeCategoria + ': ' + require.Quantita;
+                    document.getElementById('roles_require').appendChild(li);
+                });
+            }
+        } else {
+            getRequires();
+        }
+    }
 }
 
 function modalEmployee() {
@@ -84,26 +134,40 @@ function modalEmployee() {
 }
 
 function addEmployee() {
-
     let employee = {
         CodiceFiscale: document.getElementById('employee_codicefiscale').value,
         Nome: document.getElementById('employee_nome').value,
         Cognome: document.getElementById('employee_cognome').value,
         DataNascita: document.getElementById('employee_datadinascita').value,
         Ruolo: {
-            Nome: document.getElementById('employee_role').value,
+            Nome: document.getElementById('employee_ruolo').value,
             Stipendio: document.getElementById('employee_stipendio').value
         }
-    }
+    };
 
-    console.log(JSON.stringify(employee));
+    selected_requires = document.querySelectorAll('input[type=checkbox]:checked');
+    dict_requires = {
+        Requires: []
+    };
+    selected_requires.forEach(input => {
+        quantity = document.querySelector('#quantity_'+input.id).value;
+        quantity = !isNaN(quantity) && quantity<1 ? 1 : quantity; 
+        let dict_require = {
+            NomeCategoria: input.id,
+            Quantita: quantity
+        };
+        dict_requires.Requires.push(dict_require);
+    });
+    employee.Ruolo.Requires = dict_requires.Requires;
+
+    console.log(employee);
 
     fetch(url_for_add_employee, {
         method: 'POST',
+        body: JSON.stringify(employee),
         headers: {
             'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(employee)
+        }
     })
     .then(response => statusResponse(response));
 }
@@ -111,6 +175,13 @@ function addEmployee() {
 function deleteEmployee(codicefiscale) {
     fetch(url_for_add_employee + '?CodiceFiscale=' + codicefiscale, {
         method: 'DELETE'
+    })
+    .then(response => statusResponse(response));
+}
+
+function addService(codicefiscale, service) {
+    fetch(url_for_add_employee_service + '?CodiceFiscale=' + codicefiscale + '&IdServizio=' + service, {
+        method: 'POST'
     })
     .then(response => statusResponse(response));
 }
