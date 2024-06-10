@@ -89,11 +89,12 @@
                         <th>Altezza</th>
                         <th>Peso</th>
                         <th>Abbonamento</th>
+                        <th>Ingressi</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr class="empty_row">
-                        <td colspan="7"><button class="add" id="add_visitor" onclick='modalVisitor()'>+</button></td>
+                        <td colspan="8"><button class="add" id="add_visitor" onclick='modalVisitor()'>+</button></td>
                     </tr>
                     {% for visitor in visitors %}
                         <tr>
@@ -108,6 +109,7 @@
                             {% else %}
                                 <td><button onclick='modalSubscription({{ visitor.subscription|tojson }}, "DELETE")'>Active</button></td>
                             {% endif %}
+                            <td><span class="arrow down" onclick="showEntries(this, '{{ visitor.CodiceFiscale }}')"></span></td>
                         </tr>
                     {% endfor %}
                 </tbody>    

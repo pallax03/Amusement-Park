@@ -32,7 +32,7 @@ def employee(app, db):
 # APIs
 
     # add a employee and if the role is not present, add it
-    # /employee + new json of Employee
+    # /api/employee + new json of Employee
     @app.route('/api/employee', methods=['POST'])
     def add_employee():
         try:
@@ -64,7 +64,7 @@ def employee(app, db):
             return make_response(jsonify({'error': str(e)}), 400)
 
     # delete a employee
-    # /employee + '?CodiceFiscale=RSSMRA85M01H501Z'
+    # /api/employee + '?CodiceFiscale=RSSMRA85M01H501Z'
     @app.route('/api/employee', methods=['DELETE'])
     def delete_employee():
         try:
@@ -91,7 +91,7 @@ def employee(app, db):
         return make_response(jsonify(dict_roles), 200)
 
     # delete a role
-    # /employee/role + '?IdRuolo=1'
+    # /api/employee/role + '?IdRuolo=1'
     @app.route('/api/employee/role', methods=['DELETE'])
     def delete_role():
         try:

@@ -197,6 +197,45 @@ button.add:hover {
   color: #581C87;
 }
 
+span.arrow {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  cursor: pointer;
+}
+span.arrow.up {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 10px;
+  margin-right: 10px;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid #4ADE80;
+}
+span.arrow.down {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 10px;
+  margin-right: 10px;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid #4ADE80;
+}
+
 table {
   border: 0;
   width: 100%;
@@ -244,6 +283,9 @@ table tbody tr td {
   color: #FAF5FF;
   border-bottom: 1px solid #6B21A8;
   font-size: 0.5em;
+}
+table tbody tr td.entries {
+  display: inline-block;
 }
 
 .choices {

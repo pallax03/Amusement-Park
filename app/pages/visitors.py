@@ -1,6 +1,6 @@
 from flask import render_template, url_for, request, jsonify, make_response
 from datetime import datetime, timedelta
-from models import Visitor, Subscription, Duration, Tariff
+from models import Visitor, Subscription, Duration, Tariff, Entry
 
 from pages.subscriptions import subscription
 
@@ -76,12 +76,8 @@ def visitor(app, db):
     @app.route('/api/visitor/entries', methods=['GET'])
     def get_entries():
         try:
-            visitor = Visitor.query.filter_by(CodiceFiscale=request.args.get('CodiceFiscale')).first()
-            if visitor:
-                entries = visitor.entries
-                return make_response(jsonify(entries), 200)
-            else:
-                return make_response(jsonify({'message': 'Visitatore non trovato'}), 404)
+            entries = Entry.query.filter_by(CodiceFiscale=request.args.get('CodiceFiscale')).all() 
+            return make_response(jsonify(entries), 200)
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
     

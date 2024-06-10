@@ -157,3 +157,60 @@ function addSubscription() {
     })
     .then(response => statusResponse(response));
 }
+
+
+function addEntry(codicefiscale, data) {
+    data = data === '' || data == undefined ? new Date().toLocaleDateString('en-CA') : data.toLocaleDateString('en-CA');
+    // fetch(url_for_get_entries + '?CodiceFiscale=' + codicefiscale + '&Data=' + data)
+    // .then(response => statusResponse(response));
+}
+
+function createOptionEntry(entries) {
+    let entry = document.createElement('div');
+    entry.classList.add('entry');
+    let data = document.createElement('input');
+    data.type = 'date';
+    data.onblur = function() {addEntry(entries.id.split('_')[1], data.value)};
+    entry.appendChild(data);
+    // append child as second to entries_id
+    console.log(entries);
+    entries.insertBefore(entry, entries.children[1]);
+}
+
+function showEntries(button, codicefiscale) {
+    let tr = document.createElement('tr');
+    let entries = document.createElement('td');
+    entries.colSpan = 8;
+    entries.classList.add('entries');
+    entries.id = 'entries_'+codicefiscale;
+
+    //add entries
+    let add = document.createElement('button');
+    add.classList.add('add');
+    add.innerHTML = '+';
+    add.onclick = function() {createOptionEntry(entries)};
+
+    entries.appendChild(add);
+
+    fetch(url_for_get_entries + '?CodiceFiscale=' + codicefiscale)
+    .then(response => response.json())
+    .then(data => {
+        
+        data.forEach(function(entry) { 
+            console.log(entry);
+        });
+        
+    });
+    tr.appendChild(entries);
+    button.parentNode.parentNode.after(tr);
+    button.classList.replace('down', 'up');
+    button.onclick = function() {hideEntries(tr, button)};
+    button.classList[1] === 'up' ? button.classList.replace('up', 'down') : button.classList.replace('down', 'up');
+}
+
+function hideEntries(tr, button) {
+    codicefiscale = tr.querySelector('.entries').id.split('_')[1];
+    tr.remove();
+    button.classList.replace('up', 'down');
+    button.onclick = function() {showEntries(button, codicefiscale)};
+}

@@ -128,7 +128,7 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
   }
   ```
 
-### Activity
+<!-- ### Activity
 
 - /activity
 
@@ -152,18 +152,49 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
 
 #### Partecipate
 - /activity/partecipates
-- /activity/partecipates
+- /activity/partecipates -->
 
 ### Employee
-- /employee
-- /employee
+- /api/employee [POST] -> add a employee and if the role is not present, add it [json](#employee-json)
+- /api/employee + '?CodiceFiscale=RSSMRA85M01H501Z' [DELETE] -> delete a employee 
+
+#### Employee Json
+```json
+{
+  "CodiceFiscale": str,
+  "Nome": str,
+  "Cognome": str,
+  "DataDiNascita": str,
+  "Ruolo": {
+    "Nome": str
+    "Stipendio": float
+    "Requires": [Require](#require-json)
+  }
+}
+```
 
 #### Role
-- /employee/roles
-- /employee/role
+- /api/employee/roles -> get all the roles [json](#role-json)
+- /api/employee/role [DELETE] + '?IdRuolo=1' -> delete a role
+- /api/employee/service [POST] + '?CodiceFiscale=RSSMRA85M01H501Z&IdServizio=1' -> add a service to a employee, the service can be None
 
-#### Require
-- /employee/role/require
+##### Role Json
+```json
+{
+  "IdRuolo": int,
+  "Nome": str,
+  "Stipendio": float,
+  "Requires": [Require](#require-json)  
+}
+```
+
+##### Require Json
+```json
+{
+  "NomeCategoria": str,
+  "Quantita": int,
+}
+```
 
 ### Service
 - /api/services [GET] /services + '?Tipo=`Negozio`' -> given the services filtered with `Tipo`, iif not wxist give all the [json](#service-timetable-json) 
