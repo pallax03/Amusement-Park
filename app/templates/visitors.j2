@@ -97,7 +97,7 @@
                         <td colspan="8"><button class="add" id="add_visitor" onclick='modalVisitor()'>+</button></td>
                     </tr>
                     {% for visitor in visitors %}
-                        <tr>
+                        <tr id="{{ visitor.CodiceFiscale }}">
                             <td><button class="delete" onclick='deleteVisitor({{ visitor|tojson }})'>x</button></td>
                             <td>{{ visitor.CodiceFiscale }}</td>
                             <td>{{ visitor.Nome }} {{ visitor.Cognome }}</td>

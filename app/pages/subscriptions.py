@@ -23,10 +23,7 @@ def subscription(app, db):
     @app.route('/api/subscription', methods=['GET'])
     def get_active_subscription():
         try:
-            subscriptions = Subscription.query.filter_by(CodiceFiscale=request.args.get('CodiceFiscale')).all()
-            for subscription in subscriptions:
-                active = Subscription.query.filter_by(CodiceFiscale=subscription.CodiceFiscale).filter(datetime.strptime(str(subscription.DataInizio),'%Y-%m-%d') + timedelta(days=float(subscription.Giorni)) > datetime.now()).first()
-            return make_response(jsonify(active), 200)
+            return make_response(jsonify(Subscription.query.filter_by(CodiceFiscale=request.args.get('CodiceFiscale')).filter(datetime.strptime(str(Subscription.DataInizio),'%Y-%m-%d') + timedelta(days=float(Subscription.Giorni)) > datetime.now()).first()), 200)
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
 

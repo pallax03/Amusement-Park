@@ -1,6 +1,7 @@
 from flask import render_template, url_for, request, jsonify, make_response
 from datetime import datetime, timedelta
 from models import Visitor, Subscription, Duration, Tariff, Entry
+from sqlalchemy import func
 
 from pages.subscriptions import subscription
 
@@ -81,18 +82,31 @@ def visitor(app, db):
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
     
-    # add entry for a visitor
-    # /api/visitor/entry + json
+    # add entry for a visitor checking if the visitor exists, 
+    # and if the subscription is active in the date of the entry
+    # /api/visitor/entries + json
     @app.route('/api/visitor/entries', methods=['POST'])
     def add_entry():
         try:
             data = request.get_json()
             visitor = Visitor.query.filter_by(CodiceFiscale=data['CodiceFiscale']).first()
-            if visitor:
-                visitor.entries.append(data)
-                db.session.commit()
-                return make_response(jsonify({'message': f'Ingresso per {visitor.CodiceFiscale} registrato'}), 201)
-            else:
-                return make_response(jsonify({'message': 'Visitatore non trovato'}), 404)
+            if visitor is None:
+                return make_response(jsonify({'error': 'Visitatore non trovato'}), 404)
+
+            if check_active_subscription(visitor.CodiceFiscale, data['Data']) is None:
+                return make_response(jsonify({'error': 'Abbonamento non attivo'}), 404)
+            entry = Entry(
+                CodiceFiscale=data['CodiceFiscale'],
+                Data=data['Data']
+            )
+            db.session.add(entry)
+            db.session.commit()
+            return make_response(jsonify({'message': f'Entrata per {visitor.CodiceFiscale} registrata'}), 201)
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
+        
+    # check if the subscription is active
+    def check_active_subscription(CodiceFiscale, Data):
+        for subscription in Subscription.query.filter_by(CodiceFiscale=CodiceFiscale).all():
+            if subscription.DataInizio + timedelta(days=float(subscription.Giorni)) > (datetime.strptime(Data, '%Y-%m-%d').date()):
+                return subscription

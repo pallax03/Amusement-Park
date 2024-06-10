@@ -284,9 +284,6 @@ table tbody tr td {
   border-bottom: 1px solid #6B21A8;
   font-size: 0.5em;
 }
-table tbody tr td.entries {
-  display: inline-block;
-}
 
 .choices {
   display: -webkit-box;

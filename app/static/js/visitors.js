@@ -160,57 +160,85 @@ function addSubscription() {
 
 
 function addEntry(codicefiscale, data) {
-    data = data === '' || data == undefined ? new Date().toLocaleDateString('en-CA') : data.toLocaleDateString('en-CA');
-    // fetch(url_for_get_entries + '?CodiceFiscale=' + codicefiscale + '&Data=' + data)
-    // .then(response => statusResponse(response));
+    let data_value = data.value == '' || data.value == undefined ? new Date().toLocaleDateString('en-CA') : newData(data.value).toLocaleDateString('en-CA');
+    fetch(url_for_get_entries , {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({CodiceFiscale: codicefiscale, Data: data_value})
+    })
+    .then(response => statusResponse(response));
 }
 
-function createOptionEntry(entries) {
-    let entry = document.createElement('div');
-    entry.classList.add('entry');
-    let data = document.createElement('input');
-    data.type = 'date';
-    data.onblur = function() {addEntry(entries.id.split('_')[1], data.value)};
-    entry.appendChild(data);
-    // append child as second to entries_id
-    console.log(entries);
-    entries.insertBefore(entry, entries.children[1]);
+function createOptionEntry(empty_row, codicefiscale) {
+    empty_row.innerHTML = '';
+    let cell = empty_row.insertCell();
+    cell.colSpan = 2;
+    cell.innerHTML = 'nuovo ingresso';
+    cell = empty_row.insertCell();
+    cell.colSpan = 4;
+    let input = document.createElement('input');
+    input.type = 'date';
+    cell.appendChild(input);
+    cell = empty_row.insertCell();
+    cell.colSpan = 2;
+    let button = document.createElement('button');
+    button.classList.add('save');
+    button.onclick = function() {addEntry(codicefiscale, input)};
+    button.innerHTML = 's';
+    cell.appendChild(button);
 }
 
-function showEntries(button, codicefiscale) {
+function showEntries(showTable, codicefiscale) {
     let tr = document.createElement('tr');
-    let entries = document.createElement('td');
-    entries.colSpan = 8;
-    entries.classList.add('entries');
-    entries.id = 'entries_'+codicefiscale;
+    let td = document.createElement('td');
+    td.colSpan = 8;
+    
+    let table = document.createElement('table');
+    table.classList.add('entries');
+    table.id = 'entries_' + codicefiscale;
+    
+    let empty_row = table.insertRow();
+    empty_row.classList.add('empty_row');
+    let empty_row_td = empty_row.insertCell();
+    empty_row_td.colSpan = 8;
+    let button = document.createElement('button');
+    button.classList.add('add');
+    button.id = 'add_entry';
+    button.onclick = function() {createOptionEntry(empty_row, codicefiscale)};
+    button.innerHTML = '+';
 
-    //add entries
-    let add = document.createElement('button');
-    add.classList.add('add');
-    add.innerHTML = '+';
-    add.onclick = function() {createOptionEntry(entries)};
-
-    entries.appendChild(add);
+    empty_row_td.appendChild(button);
+    empty_row.appendChild(empty_row_td);
 
     fetch(url_for_get_entries + '?CodiceFiscale=' + codicefiscale)
     .then(response => response.json())
     .then(data => {
-        
+        count=0;
         data.forEach(function(entry) { 
-            console.log(entry);
+            let row = table.insertRow();
+            cell = row.insertCell();
+            cell.innerHTML = ++count;
+            cell.colSpan = 2;
+            cell = row.insertCell();
+            cell. colSpan = 4;
+            cell.innerHTML = new Date(entry.Data).toLocaleDateString('en-CA');
+            cell = row.insertCell();
+            cell.colSpan = 2;
+            cell.innerHTML = '<button>></button>';
         });
-        
     });
-    tr.appendChild(entries);
-    button.parentNode.parentNode.after(tr);
-    button.classList.replace('down', 'up');
-    button.onclick = function() {hideEntries(tr, button)};
-    button.classList[1] === 'up' ? button.classList.replace('up', 'down') : button.classList.replace('down', 'up');
+
+    td.appendChild(table);
+    tr.appendChild(td);
+    showTable.parentNode.parentNode.after(tr);
+    showTable.classList.replace('down', 'up');
+    showTable.onclick = function() {hideEntries(tr, showTable)};
 }
 
-function hideEntries(tr, button) {
-    codicefiscale = tr.querySelector('.entries').id.split('_')[1];
+function hideEntries(tr, hideTable) {
     tr.remove();
-    button.classList.replace('up', 'down');
-    button.onclick = function() {showEntries(button, codicefiscale)};
+    hideTable.classList.replace('up', 'down');
+    hideTable.onclick = function() {showEntries(hideTable, hideTable.parentNode.parentNode.id)};
 }
