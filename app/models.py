@@ -123,7 +123,7 @@ class Constraint(db.Model):
     IdAttivita: int
     IdLimite: int
 
-    __tablename__ = 'VINCOLI'
+    __tablename__ = 'VINCOLA'
 
     IdAttivita = db.Column(db.Integer, db.ForeignKey('ATTIVITA.IdAttivita'), primary_key=True)
     IdLimite = db.Column(db.Integer, db.ForeignKey('LIMITI.IdLimite'), primary_key=True)

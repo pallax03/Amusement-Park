@@ -104,20 +104,51 @@ function getRides() {
     
     console.log(url);
     
-    // fetch(url)
-    // .then(response => response.json())
-    // .then(data => {
-    //     document.getElementById('table-body_rides').innerHTML = '';
-    //     data.forEach(ride => {
-    //         document.getElementById('table_ride').innerHTML += '<tr>';
-    //         document.getElementById('table_ride').innerHTML += '<td>' + ride.Nome + '</td>';
-    //         document.getElementById('table_ride').innerHTML += '<td>' + ride.Categoria + '</td>';
-    //         document.getElementById('table_ride').innerHTML += '<td>' + ride.Limite + '</td>';
-    //         document.getElementById('table_ride').innerHTML += '<td>' + ride.Tariffa + '</td>';
-    //         document.getElementById('table_ride').innerHTML += '<td>' + ride.Descrizione + '</td>';
-    //         document.getElementById('table_ride').innerHTML += '</tr>';
-    //     });
-    // });
+    document.getElementById('table-body_rides').innerHTML = '';
+    let empty_row = document.createElement('tr');
+    empty_row.className = 'empty_row';
+    let cell = document.createElement('td');
+    cell.colSpan = 6;
+    let button = document.createElement('button');
+    button.classList.add('add');
+    // button.onclick = function() {modalRide()};
+    button.innerHTML = '+';
+    cell.appendChild(button);
+    empty_row.appendChild(cell);
+    document.getElementById('table-body_rides').appendChild(empty_row);
+
+    fetch(url)
+    .then(response => response.json())
+    .then(data => {
+        data.forEach(ride => {
+            let row = document.createElement('tr');
+            cell = document.createElement('td');
+            cell.innerHTML = '<button class="delete" onclick="deleteEvent('+ride.IdAttivita+')">x</button>';
+            row.appendChild(cell);
+            cell = document.createElement('td');
+            cell.innerHTML = ride.Nome;
+            row.appendChild(cell);
+            cell = document.createElement('td');
+            cell.innerHTML = ride.Descrizione;
+            row.appendChild(cell);
+            cell = document.createElement('td');
+            cell.innerHTML = ride.Posti;
+            row.appendChild(cell);
+            cell = document.createElement('td');
+            cell.innerHTML = ride.NomeCategoria;
+            row.appendChild(cell);
+            cell = document.createElement('td');
+            let ul = document.createElement('ul');
+            ride.Limiti.forEach(limit => {
+                let li = document.createElement('li');
+                li.innerHTML = limit.Descrizione;
+                ul.appendChild(li);
+            });
+            cell.appendChild(ul);
+            row.appendChild(cell);
+            document.getElementById('table-body_rides').appendChild(row);
+        });
+    });
 }
 
 function filterRides() {
@@ -134,7 +165,7 @@ function filterRides() {
     });
 
     // LIMITS
-    document.getElementById('filter_limiti').innerHTML = '<option value="" selected>Nessuno</option>';
+    document.getElementById('filter_limiti').innerHTML = '<option value="" selected>Qualsiasi</option><option value="limit_0">Nessuno</option>';
     fetch(url_for_get_limits)
     .then(response => response.json())
     .then(data => {
