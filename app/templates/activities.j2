@@ -7,19 +7,76 @@
 {% endblock links_css %}
 
 {% block content %}
-    <div class="container">
-        <h1>Attività</h1>
+    <script>
+        const url_for_get_events = "{{ url_for_get_events }}";
+        const url_for_get_rides = "{{ url_for_get_rides }}";
+        const url_for_get_categories = "{{ url_for_get_categories }}";
+        const url_for_get_tariffs = "{{ url_for_get_tariffs }}";
+        const url_for_get_limits = "{{ url_for_get_limits }}";
+    </script>
+    <div id="content" class="container">
+        <div class="center">
+            <h1>Attività</h1>
+            <div class="choices">
+                <div class="container">
+                    <div class="options">
+                        <input type="radio" name="activity" id="chosen_events">
+                        <label for="chosen_events">Eventi</label>
+                        <input type="radio" name="activity" id="chosen_rides">
+                        <label for="chosen_rides">Attrazioni</label>
+                    </div>
+                </div>
+            </div>
+            <div class="container" style="display: none;">
+                <table id="table_events">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Nome</th>
+                            <th>Descrizione</th>
+                            <th>Posti totali</th>
+                            <th>Programmazione</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body_events">
+                    </tbody>
+                </table>
+            </div>
 
-        <div class="box">
-            INGRESSI
-        </div>
+            <div class="container" style="display: none;">
+                <div id="filter_menu">
+                    <h3>Filtra:</h3>
+                    <label for="filter_categorie">categoria:</label>
+                    <select id="filter_categorie">
 
-        <div href="/rides.html" class="box">
-            ATTRAZIONI
-        </div>
-        <div href="/events.html" class="box">
-            EVENTI
-        </div>
+                    </select>
+                    <label for="filter_limiti">limite:</label>
+                    <select id="filter_limiti">
+ 
+                    </select>
+                    <label for="filter_tariffe">tariffa richiesta:</label>
+                    <select id="filter_tariffe">
 
+                    </select>
+                </div>
+                <table id="table_rides">    
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Descrizione</th>
+                            <th>Prezzo</th>
+                            <th>Posti disponibili</th>
+                            <th>Posti totali</th>
+                            <th>Categoria</th>
+                            <th>Limiti</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body_rides">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+    <script src="/js/activities.js"></script>
 {% endblock content %}
