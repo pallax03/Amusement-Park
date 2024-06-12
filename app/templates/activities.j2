@@ -16,7 +16,26 @@
     </script>
     <div id="content" class="container">
         <!-- MODAL RIDE -->
-        
+        <div class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <form>
+                    <label for="name">Nome:</label>
+                    <input type="text" id="name" name="name" required>
+                    <label for="description">Descrizione:</label>
+                    <textarea id="description" name="description" required></textarea>
+                    <label for="total_seats">Posti totali:</label>
+                    <input type="number" id="total_seats" name="total_seats" required>
+                    <label for="category">Categoria:</label>
+                    <select id="category" name="category" required>
+                    </select>
+                    <label for="limit">Limiti:</label>
+                    <select id="limit" name="limit">
+                        
+                    </select>
+                    <input type="button" value="Aggiungi Attrazione">
+                </form>
+        </div>
 
         <div class="center">
             <h1>Attività</h1>
