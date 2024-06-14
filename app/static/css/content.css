@@ -283,6 +283,7 @@ table tbody tr td {
   color: #FAF5FF;
   border-bottom: 1px solid #6B21A8;
   font-size: 0.5em;
+  text-wrap: balance;
 }
 
 .choices {

@@ -234,9 +234,6 @@ function addService(args) {
         Orario: dict_orario
     };  
 
-    console.log(service);
-
-    console.log(service);  
     fetch(url_for_add_service, {
         method: 'POST',
         body: JSON.stringify(service),

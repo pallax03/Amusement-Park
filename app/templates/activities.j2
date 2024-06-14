@@ -2,41 +2,61 @@
 
 {% block title %} Attività {% endblock title %}
 
-{% block links_css %}
+{% block links %}
     <link rel="stylesheet" href="css/content.css">
-{% endblock links_css %}
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js"></script>
+{% endblock links %}
 
 {% block content %}
     <script>
         const url_for_get_events = "{{ url_for_get_events }}";
+        const url_for_get_schedules = "{{ url_for_get_schedules }}";
         const url_for_get_rides = "{{ url_for_get_rides }}";
         const url_for_get_categories = "{{ url_for_get_categories }}";
         const url_for_get_tariffs = "{{ url_for_get_tariffs }}";
         const url_for_get_limits = "{{ url_for_get_limits }}";
     </script>
     <div id="content" class="container">
+        <!-- MODAL EVENT -->
+        <div class="modal" id="modal_event" style="display: none;">
+            <div class="modal-container">
+                <span class="close">&times;</span>
+                <div id="calendar">
+
+                </div>
+            </div>
+        </div>
+        
         <!-- MODAL RIDE -->
-        <div class="modal">
-            <div class="modal-content">
+        <div class="modal" id="modal_ride" style="display: none;">
+            <div class="modal-container">
                 <span class="close">&times;</span>
                 <form>
-                    <label for="name">Nome:</label>
-                    <input type="text" id="name" name="name" required>
+                    <label for="name">
+                        <h3>Attrazione:</h3>
+                        <input type="text" id="modal_ride-name" placeholder="nome" name="name" required>
+                    </label>
                     <label for="description">Descrizione:</label>
-                    <textarea id="description" name="description" required></textarea>
-                    <label for="total_seats">Posti totali:</label>
-                    <input type="number" id="total_seats" name="total_seats" required>
-                    <label for="category">Categoria:</label>
-                    <select id="category" name="category" required>
-                    </select>
-                    <label for="limit">Limiti:</label>
-                    <select id="limit" name="limit">
-                        
-                    </select>
-                    <input type="button" value="Aggiungi Attrazione">
+                    <textarea id="modal_ride-description" name="description" required></textarea>
+                    <label for="total_seats">Posti totali:
+                        <input type="number" oninput="acceptInteger(this)" id="modal_ride-total_seats" name="total_seats" required>
+                    </label>
+                    <label for="category">Categoria:
+                        <input list="modal_ride-datalist_category" id="modal_ride-category" name="category" placeholder="nome categoria" title="category" required>
+                        <datalist id="modal_ride-datalist_category">
+                        </datalist>
+                    </label>
+                    <label for="limit">
+                        <h3>Limiti:</h3>
+                        <ul id="modal_ride-constraint_limits">   
+                        </ul>
+                    </label>
+                    <input type="button" onclick="addRide()" value="Aggiungi Attrazione">
                 </form>
             </div>
         </div>
+
+
         <div class="center">
             <h1>Attività</h1>
             <div class="choices">

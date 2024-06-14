@@ -1,6 +1,4 @@
-
-// add tables empty row QoL
-
+var calendar;
 
 function addEvent(id) {
     fetch(url_for_get_events, {
@@ -50,10 +48,102 @@ function createOptionEvent(empty_row) {
 }
 
 function deleteEvent(id) {
-    fetch(url_for_get_events + '?IdEvento=' + id, {
+    fetch(url_for_get_events + '?IdAttivita=' + id, {
         method: 'DELETE'
     })
     .then(response => statusResponse(response));
+}
+
+function addSchedule(id, nome, datePart) {
+    let dict_schedule = {
+        IdAttivita: id,
+        Data: datePart,
+        Inizio: document.getElementById('modal_event-start').value,
+        Fine: document.getElementById('modal_event-end').value
+    }
+
+    console.log(dict_schedule);
+
+    fetch(url_for_get_schedules, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dict_schedule)
+    })
+    .then(response => calendarProgrammazioni(id, nome));
+}
+
+function calendarProgrammazioni(id, nome) {
+    document.querySelector('.modal#modal_event').style.display = 'block';
+    
+    
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      headerToolbar: {
+        left: 'prev next',
+        center: 'title',
+        right: 'selectedEvent'
+        },
+        customButtons: {
+            selectedEvent: {
+                text: nome,
+                click: function() {
+                    let form = document.createElement('div');
+                    form.id = 'modal_event-form';
+                    form.className = 'custom-form';
+                    form.innerHTML = 'inserisci gli orari e seleziona un giorno!'
+                    let div = document.createElement('div');
+                    let label = document.createElement('label');
+                    label.innerHTML = 'Inizio';
+                    let input = document.createElement('input');
+                    input.type = 'time';
+                    input.id = 'modal_event-start';
+                    label.appendChild(input);
+                    div.appendChild(label);
+                    form.appendChild(div);
+
+                    label = document.createElement('label');
+                    label.innerHTML = 'Fine';
+                    input = document.createElement('input');
+                    input.type = 'time';
+                    input.id = 'modal_event-end';
+                    label.appendChild(input);
+                    div.appendChild(label);
+                    form.appendChild(div);
+
+                    if(!document.querySelector('#modal_event-form') ) {
+                        var toolbarCenter = document.querySelector('.fc-header-toolbar.fc-toolbar.fc-toolbar-ltr');
+                        toolbarCenter.parentElement.insertBefore(form, toolbarCenter.parentElement.childNodes[1]);
+                    } else {
+                        document.querySelector('#modal_event-form').remove();
+                    }
+                }
+            }
+        },
+    });
+    calendar.render();
+
+    calendar.on('dateClick', function(info) {
+        addSchedule(id, nome, info.dateStr.split('T')[0]);
+    });
+
+    addEventsToCalendar(id);
+
+    function addEventsToCalendar(id) {
+        fetch(url_for_get_schedules + '?IdAttivita=' + id)
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(schedule => {
+                const datePart = new Date(schedule.Data).toISOString().split('T')[0];
+                calendar.addEvent({
+                    start: new Date(`${datePart}T${schedule.Inizio}Z`),
+                    end: new Date(`${datePart}T${schedule.Fine}Z`)
+                });
+            });
+        });
+    }  
 }
 
 function getEvents() {
@@ -89,10 +179,103 @@ function getEvents() {
             cell.innerHTML = event.Posti;
             row.appendChild(cell);
             cell = document.createElement('td');
+            cell.innerHTML = '<button onclick="calendarProgrammazioni(\''+event.IdAttivita+'\', \''+event.Nome+'\')">calendario</button>'
             row.appendChild(cell);
             document.getElementById('table-body_events').appendChild(row);
         });
     });
+}
+
+function modalRide() {
+    document.querySelector('.modal').style.display = 'block';
+
+    document.querySelector('#modal_ride-datalist_category').innerHTML = '';
+    fetch(url_for_get_categories)
+    .then(response => response.json())
+    .then(data => { 
+        data.forEach(category => {
+            let option = document.createElement('option');
+            option.setAttribute('value', category.Nome);
+            option.setAttribute('IdCategoria', category.IdCategoria);
+            document.querySelector('#modal_ride-datalist_category').appendChild(option);
+        });
+    });
+
+    // function newOption() {
+    //     let input = document.createElement('input');
+    //     input.id = 'modal_ride-new_limit';
+    //     input.type = 'text';
+    //     input.placeholder = 'Nuovo Limite';
+    //     /*
+    //     devi farci stare:
+    //      - Attributo: reflection(?)
+    //      - Condizione
+    //      - Descrizione
+    //      - Valore str 
+    //     */
+        
+    //     document.querySelector('#modal_ride-constraint_limits').appendChild(option);
+    // }
+
+    document.querySelector('#modal_ride-constraint_limits').innerHTML = '';
+    // newOption();
+    fetch(url_for_get_limits)
+    .then(response => response.json())
+    .then(data => {
+        data.forEach(limit => {
+            let limit_id = 'modal_ride-limit_'+limit.IdLimite;
+            
+            let li = document.createElement('li');
+            let checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.id = limit_id;
+
+            let label = document.createElement('label');
+            label.htmlFor = limit_id;
+            label.innerHTML = limit.Descrizione;
+            
+            li.appendChild(checkbox);
+            li.appendChild(label);
+            document.querySelector('#modal_ride-constraint_limits').appendChild(li);
+        });
+    });
+}
+
+function addRide() {    
+    posti = document.querySelector('#modal_ride-total_seats').value;
+    posti = !isNaN(posti) && posti<1 ? 1 : posti;
+
+    let dict_limits = [];
+    document.querySelectorAll('#modal_ride-constraint_limits input').forEach((checkbox) => {
+        if (checkbox.checked) {
+            dict_limits.push(checkbox.id.split('_')[2]);
+        }
+    });
+
+    let dict_ride = {
+        Nome: document.getElementById('modal_ride-name').value,
+        Descrizione: document.getElementById('modal_ride-description').value,
+        Posti: posti,
+        Categoria: document.getElementById('modal_ride-category').value, 
+        Limiti: dict_limits
+    }
+    
+    console.log(dict_ride);
+    fetch(url_for_get_rides, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dict_ride)
+    })
+    .then(response => statusResponse(response));
+}
+
+function deleteRide(id) {
+    fetch(url_for_get_rides + '?IdAttivita=' + id, {
+        method: 'DELETE'
+    })
+    .then(response => statusResponse(response));
 }
 
 function getRides() {
@@ -102,7 +285,6 @@ function getRides() {
     url += 'limit=' + limit_id + '&';
     url += 'tariff=' + document.getElementById('filter_tariffe').value;
     
-    console.log(url);
     
     document.getElementById('table-body_rides').innerHTML = '';
     let empty_row = document.createElement('tr');
@@ -111,7 +293,7 @@ function getRides() {
     cell.colSpan = 6;
     let button = document.createElement('button');
     button.classList.add('add');
-    // button.onclick = function() {modalRide()};
+    button.onclick = function() {modalRide()};
     button.innerHTML = '+';
     cell.appendChild(button);
     empty_row.appendChild(cell);
@@ -123,7 +305,7 @@ function getRides() {
         data.forEach(ride => {
             let row = document.createElement('tr');
             cell = document.createElement('td');
-            cell.innerHTML = '<button class="delete" onclick="deleteEvent('+ride.IdAttivita+')">x</button>';
+            cell.innerHTML = '<button class="delete" onclick="deleteRide('+ride.IdAttivita+')">x</button>';
             row.appendChild(cell);
             cell = document.createElement('td');
             cell.innerHTML = ride.Nome;

@@ -128,12 +128,38 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
   }
   ```
 
-<!-- ### Activity
+### Activity
+#### Event
+- /activity/events [GET] -> return all the [events](#events-json)
+- /activity/events [POST] -> given a json add an event
 
-- /activity
+##### Events Json
+```json
+{
+  "IdAttivita": int,
+  "Nome": str,
+  "Descrizione": str,
+  "Posti": int
+}
+```
+
+- /activity/event/schedules
+- /activity/event/schedule
+
 
 #### Ride
 - /activity/rides
+
+```json
+{
+  "Nome": str,
+  "Descrizione": str,
+  "Posti": int,
+  "NomeCategoria": str,
+  "Limiti": [[json](#limit-json)],
+  "Tariffe": [[json](#tariff-json)]
+}
+```
 
 #### Category
 - /activity/ride/categories
@@ -144,15 +170,11 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
 - /activity/ride/constraints
 - /activity/ride/limits
 
-#### Event
-- /activity/events
-
-- /activity/event/schedules
-- /activity/event/schedule
 
 #### Partecipate
 - /activity/partecipates
-- /activity/partecipates -->
+- /activity/partecipates
+
 
 ### Employee
 - /api/employee [POST] -> add a employee and if the role is not present, add it [json](#employee-json)

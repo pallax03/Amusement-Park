@@ -164,7 +164,6 @@ table{
                         width: 100%;
                         border-radius: 0;
                         font-size: 2em;
-
                         &:hover {
                             font-size: 4em;
                         }
@@ -178,7 +177,7 @@ table{
                 color: $text-color;
                 border-bottom: 1px solid $border-color;
                 font-size: .5em;
-                
+                text-wrap: balance;
             }
         }
     }

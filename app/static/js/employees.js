@@ -160,8 +160,6 @@ function addEmployee() {
     });
     employee.Ruolo.Requires = dict_requires.Requires;
 
-    console.log(employee);
-
     fetch(url_for_add_employee, {
         method: 'POST',
         body: JSON.stringify(employee),

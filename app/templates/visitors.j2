@@ -2,9 +2,9 @@
 
 {% block title %} Visitors {% endblock title %}
 
-{% block links_css %}
+{% block links %}
     <link rel="stylesheet" href="css/content.css">
-{% endblock links_css %}
+{% endblock links %}
 
 {% block content %}
     <script>
@@ -18,7 +18,7 @@
     <!-- SUBSCRIPTION -->
     <div class="modal" id="subscription" style="display:none">
         <div class="modal-container">
-            <span class="close"></span>
+            <span class="close">&times;</span>
             <form action="{{ url_add_subscription }}" method="post">
                 <label for="CodiceFiscale">Codice Fiscale:
                     <input type="text" name="CodiceFiscale" id="subscription_codicefiscale" disabled>
@@ -47,7 +47,7 @@
     <!-- VISITOR -->
     <div class="modal" id="visitor" style="display:none">
         <div class="modal-container">
-            <span class="close"></span>
+            <span class="close">&times;</span>
             <div class="content">
                 <form action="{{ url_for_add_visitor }}">
                     <label for="CodiceFiscale">Codice Fiscale:
