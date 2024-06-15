@@ -187,7 +187,7 @@ function getEvents() {
 }
 
 function modalRide() {
-    document.querySelector('.modal').style.display = 'block';
+    document.querySelector('.modal#modal_ride').style.display = 'block';
 
     document.querySelector('#modal_ride-datalist_category').innerHTML = '';
     fetch(url_for_get_categories)

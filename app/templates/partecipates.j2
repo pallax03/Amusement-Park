@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+
+{% block title %} Partecipazioni {% endblock title %}
+
+{% block links %}
+    <link rel="stylesheet" href="css/content.css">
+{% endblock links %}
+
+{% block content %}
+    <script>
+        // const url_for
+    </script>
+
+    <div id="content" class="container">
+        <div class="center">
+            <h1>Partecipazioni</h1>
+            <h3> Visitatore {{ codicefiscale }}, entrato il {{ dataingresso }}: </h3>
+            
+            <table id="table_partecipates">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th onclick="orderBy('time')">Ora</th>
+                        <th>Attivita</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="empty_row">
+                        <td>
+                            <button class="add" onclick="addPartecipate()">+</button>
+                        </td>
+                    </tr>
+                    {% for partecipate in partecipates %}
+                        <tr>
+                            <td>
+                                <button class="delete" onclick="deletePartecipate({{ partecipate|tojson }})">-</button>
+                            </td>
+                            <td>{{ partecipate.Ora }}</td>
+                            <td>{{ partecipazione.Nome }}</td>
+                            <td>{{ partecipazione.Posti }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+{% endblock content %}

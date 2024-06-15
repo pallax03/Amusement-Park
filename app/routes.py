@@ -9,6 +9,7 @@ from pages.subscriptions import subscription
 from pages.activities import activity
 from pages.employees import employee
 from pages.services import service
+from pages.partecipates import partecipates
 
 def routes(app, db):
     @app.route('/')
@@ -21,7 +22,7 @@ def routes(app, db):
     activity(app, db)
     employee(app, db)
     service(app, db)
-
+    partecipates(app, db)
 
 
 # # SUBSCRIPTION

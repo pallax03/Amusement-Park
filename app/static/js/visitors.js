@@ -160,7 +160,7 @@ function addSubscription() {
 
 
 function addEntry(codicefiscale, data) {
-    let data_value = data.value == '' || data.value == undefined ? new Date().toLocaleDateString('en-CA') : newData(data.value).toLocaleDateString('en-CA');
+    let data_value = data.value == '' || data.value == undefined ? new Date().toLocaleDateString('en-CA') : new Date(data.value).toLocaleDateString('en-CA');
     fetch(url_for_get_entries , {
         method: 'POST',
         headers: {
@@ -216,17 +216,18 @@ function showEntries(showTable, codicefiscale) {
     .then(response => response.json())
     .then(data => {
         count=0;
-        data.forEach(function(entry) { 
+        data.forEach(function(entry) {
+            let date = new Date(entry.Data).toLocaleDateString('en-CA') 
             let row = table.insertRow();
             cell = row.insertCell();
             cell.innerHTML = ++count;
             cell.colSpan = 2;
             cell = row.insertCell();
             cell. colSpan = 4;
-            cell.innerHTML = new Date(entry.Data).toLocaleDateString('en-CA');
+            cell.innerHTML = date;
             cell = row.insertCell();
             cell.colSpan = 2;
-            cell.innerHTML = '<button>></button>';
+            cell.innerHTML = '<button onclick="partecipates(\''+codicefiscale+'\', \''+date+'\')">></button>';
         });
     });
 
@@ -241,4 +242,8 @@ function hideEntries(tr, hideTable) {
     tr.remove();
     hideTable.classList.replace('up', 'down');
     hideTable.onclick = function() {showEntries(hideTable, hideTable.parentNode.parentNode.id)};
+}
+
+function partecipates(codicefiscale, data) {
+    window.location = url_for_partecipates + '?CodiceFiscale=' + codicefiscale + '&DataIngresso=' + data;
 }

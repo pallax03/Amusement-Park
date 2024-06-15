@@ -4,6 +4,7 @@ from models import Visitor, Subscription, Duration, Tariff, Entry
 from sqlalchemy import func
 
 from pages.subscriptions import subscription
+from pages.partecipates import partecipates
 
 def visitor(app, db):
     @app.route('/visitors', methods=['GET'])
@@ -22,7 +23,8 @@ def visitor(app, db):
                                 url_for_get_durations=url_for('get_durations'),
                                 url_for_get_tariffs=url_for('get_tariffs'),
                                 url_for_get_subscription_cost=url_for('get_subscription_cost'),
-                                url_for_get_entries=url_for('get_entries'))
+                                url_for_get_entries=url_for('get_entries'),
+                                url_for_partecipates=url_for('get_partecipates'))
 
     # get visitor by CodiceFiscale
     # /api/visitor + '?CodiceFiscale=MNNGPP99A01H501A'
@@ -54,19 +56,18 @@ def visitor(app, db):
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
         
-    # delete a visitor
+    # delete a visitor, and all the non active subscriptions
     # /api/visitor + '?CodiceFiscale=MNNGPP99A01H501A'
     @app.route('/api/visitor', methods=['DELETE'])
     def delete_visitor():
         try:
             visitor = Visitor.query.filter_by(CodiceFiscale=request.args.get('CodiceFiscale')).first()
             if visitor:
-                Subscription.query.filter_by(CodiceFiscale=visitor.CodiceFiscale).delete()
                 db.session.delete(visitor)
                 db.session.commit()
                 return make_response(jsonify({'message': f'Visitatore {visitor.CodiceFiscale} eliminato'}), 200)
             else:
-                return make_response(jsonify({'message': 'Visitatore non trovato'}), 404)
+                return make_response(jsonify({'error': 'Visitatore non trovato'}), 404)
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
         
@@ -108,5 +109,7 @@ def visitor(app, db):
     # check if the subscription is active
     def check_active_subscription(CodiceFiscale, Data):
         for subscription in Subscription.query.filter_by(CodiceFiscale=CodiceFiscale).all():
-            if subscription.DataInizio + timedelta(days=float(subscription.Giorni)) > (datetime.strptime(Data, '%Y-%m-%d').date()):
+            subscription_endDate = subscription.DataInizio + timedelta(days=float(subscription.Giorni))
+            formatted_date = datetime.strptime(Data, '%Y-%m-%d').date()
+            if subscription.DataInizio <= formatted_date and subscription_endDate >= formatted_date:
                 return subscription

@@ -22,7 +22,7 @@ async function statusResponse(response) {
     }
     setTimeout(function() {
         location.reload();
-    }, 10000);
+    }, 5000);
 }
 
 
