@@ -37,8 +37,7 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
 - [/visitors](http://localhost:4000/visitors)
 - [/subscriptions](http://localhost:4000/subscriptions)
 - [/activities](http://localhost:4000/activities)
-- [/rides](http://localhost:4000/rides)
-- [/events](http://localhost:4000/events)
+- [/partecipates](http://localhost:4000/partecipates)
 - [/employees](http://localhost:4000/employees)
 - [/services](http://localhost:4000/services)
 
@@ -171,9 +170,9 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
 - /activity/ride/limits
 
 
-#### Partecipate
-- /activity/partecipates
-- /activity/partecipates
+### Partecipate
+- /partecipates
+- /partecipates
 
 
 ### Employee

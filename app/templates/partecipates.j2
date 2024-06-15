@@ -8,7 +8,7 @@
 
 {% block content %}
     <script>
-        // const url_for
+        const url_for_get_partecipates = "{{ url_for_get_partecipates }}";
     </script>
 
     <div id="content" class="container">
@@ -21,25 +21,13 @@
                     <tr>
                         <th></th>
                         <th onclick="orderBy('time')">Ora</th>
-                        <th>Attivita</th>
+                        <th>Nome Attivita</th>
+                        <th>Posti Occupati / Totali</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="empty_row">
-                        <td>
-                            <button class="add" onclick="addPartecipate()">+</button>
-                        </td>
-                    </tr>
-                    {% for partecipate in partecipates %}
-                        <tr>
-                            <td>
-                                <button class="delete" onclick="deletePartecipate({{ partecipate|tojson }})">-</button>
-                            </td>
-                            <td>{{ partecipate.Ora }}</td>
-                            <td>{{ partecipazione.Nome }}</td>
-                            <td>{{ partecipazione.Posti }}</td>
-                        </tr>
-                    {% endfor %}
+
                 </tbody>
             </table>
         </div>
