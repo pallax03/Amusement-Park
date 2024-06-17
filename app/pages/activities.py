@@ -1,8 +1,9 @@
 from flask import render_template, url_for, request, make_response, jsonify
-import json
 import urllib.parse
-from datetime import datetime, timedelta
-from models import Activity, Schedule, Category, Limit, Constraint, Include, Tariff, Require
+from datetime import datetime
+from models import Activity, Schedule, Category, Limit, Constraint
+
+from utilities import dict_schedules, get_ride_limits, get_categories_tariffs, delete_expired_schedules, delete_orphan_limits, delete_orphan_categories
 
 def activity(app, db):
     @app.route('/activities', methods=['GET'])
@@ -209,49 +210,3 @@ def activity(app, db):
             return make_response(jsonify(Limit.query.all()), 200)
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
-        
-    # used to delete the orphan limits, if a limit is not constraint in any activity
-    def delete_orphan_limits():
-        for limit in Limit.query.all():
-            if not Constraint.query.filter_by(IdLimite=limit.IdLimite).first():
-                db.session.delete(limit)
-                db.session.commit()
-
-    # check if the category is not present in Activity table, Include and Require, then delete it 
-    def delete_orphan_categories():
-        for category in Category.query.all():   
-            if not Activity.query.filter_by(IdCategoria=category.IdCategoria).first() and not Include.query.filter_by(IdCategoria=category.IdCategoria).first() and not Require.query.filter_by(IdCategoria=category.IdCategoria).first():
-                db.session.delete(category)
-                db.session.commit()
-
-    def get_ride_limits(id_attivita):
-        dict_limits = []
-        for constraint in Constraint.query.filter_by(IdAttivita=id_attivita).all():
-            dict_limits.append(Limit.query.get(constraint.IdLimite))
-        return dict_limits
-    
-    def get_categories_tariffs(id_categoria):
-        dict_tariffs = []
-        for include in Include.query.filter_by(IdCategoria=id_categoria).all():
-            dict_tariffs.append(Tariff.query.get(include.IdTariffa))
-        return dict_tariffs
-    
-    def dict_schedules(id_attivita):
-        dict_schedules = []
-        for schedule in Schedule.query.filter_by(IdAttivita=id_attivita).all():
-            dict_schedule = {
-                'IdProgrammazione': schedule.IdProgrammazione,
-                'Data': schedule.Data,
-                'Inizio': str(schedule.Inizio),
-                'Fine': str(schedule.Fine)
-            }
-            dict_schedules.append(dict_schedule)
-        return dict_schedules
-    
-    # delete schedules if the today's date is greater than the schedule's date
-    def delete_expired_schedules():
-        for schedule in Schedule.query.all():
-            if schedule.Data < datetime.now().date():
-                db.session.delete(schedule)
-                db.session.commit()
-    

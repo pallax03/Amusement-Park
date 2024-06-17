@@ -15,9 +15,6 @@ function getEntries(codicefiscale) {
 }
 
 function addPartecipate(codicefiscale, dataingresso, ora, attivita) {
-    
-    console.log(JSON.stringify({CodiceFiscale: codicefiscale.value,DataIngresso: dataingresso.value,Ora: orae.value,NomeAttivita: attivita.value}));
-    
     fetch(url_for_add_partecipate, {
         method: 'POST',
         body: JSON.stringify({

@@ -1,8 +1,7 @@
 from flask import render_template, url_for, request, jsonify, make_response
-from datetime import datetime, timedelta
 from models import Employee, Role, Require, Service, Category
 
-from pages.activities import activity
+from utilities import get_require
 
 def employee(app, db):
     @app.route('/employees', methods=['GET'])
@@ -125,12 +124,3 @@ def employee(app, db):
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
 
-    def get_require(IdRuolo):
-        requires = []
-        for require in Require.query.filter_by(IdRuolo=IdRuolo).all():
-            dict_require = {
-                'NomeCategoria': Category.query.filter_by(IdCategoria=require.IdCategoria).first().Nome,
-                'Quantita': require.Quantita
-            }
-            requires.append(dict_require)
-        return requires 

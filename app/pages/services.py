@@ -3,6 +3,9 @@ import urllib.parse
 from datetime import datetime, timedelta
 from models import Service, Timetable, Employee
 
+from utilities import dict_services
+
+# SERVICES, TIMETABLES, EMPLOYEES
 def service(app, db):
     @app.route('/services', methods=['GET'])
     def page_services():
@@ -12,6 +15,7 @@ def service(app, db):
                                 url_for_get_timetables=url_for('get_timetable'))
     
 #APIs
+
     # get all the services
     # can be filtered by type
     # /services + '?Tipo=Negozio'
@@ -132,14 +136,3 @@ def service(app, db):
             return make_response(jsonify({'message': 'Orario creato'}), 201)
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
-        
-def dict_service(service):
-    service_dict = {
-                'Nome': service.Nome,
-                'Tipo': service.Tipo,
-                'Orario': Timetable.query.filter_by(IdOrario=service.IdOrario).first()
-            }
-    return service_dict
-
-def dict_services(services):
-    return [dict_service(service) for service in services]

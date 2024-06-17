@@ -3,7 +3,8 @@ from datetime import datetime, timedelta
 import urllib.parse
 from models import Subscription, Duration, Tariff, Include, Category
 
-from pages.activities import activity
+
+from utilities import delete_non_active_subscriptions
 
 # SUBSCRIPTION
 def subscription(app, db):
@@ -19,6 +20,7 @@ def subscription(app, db):
                                 url_for_cost=url_for('get_subscription_cost'))
 
 # APIs
+
     # get the active subscription of the given visitor
     # /subscription + '?CodiceFiscale=MNNGPP99A01H501A'
     @app.route('/api/subscription', methods=['GET'])
@@ -173,14 +175,3 @@ def subscription(app, db):
             return make_response(jsonify({'Costo': costo_totale - sconto }), 200)
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
-
-
-
-# private db calls
-    # delete all the subscriptions that are not active anymore
-    def delete_non_active_subscriptions():
-        subscriptions = Subscription.query.all()
-        for subscription in subscriptions:
-            if datetime.strptime(str(subscription.DataInizio),'%Y-%m-%d') + timedelta(days=float(subscription.Giorni)) < datetime.now():
-                db.session.delete(subscription)
-        db.session.commit()

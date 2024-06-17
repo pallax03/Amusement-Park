@@ -1,10 +1,9 @@
 from flask import render_template, url_for, request, jsonify, make_response
 from datetime import datetime, timedelta
-from models import Visitor, Subscription, Duration, Tariff, Entry
+from models import Visitor, Subscription, Tariff, Entry
 from sqlalchemy import func
 
-from pages.subscriptions import subscription
-from pages.partecipates import partecipates
+from utilities import check_active_subscription
 
 def visitor(app, db):
     @app.route('/visitors', methods=['GET'])
@@ -25,6 +24,8 @@ def visitor(app, db):
                                 url_for_get_subscription_cost=url_for('get_subscription_cost'),
                                 url_for_get_entries=url_for('get_entries'),
                                 url_for_partecipates=url_for('page_partecipates'))
+
+# APIs
 
     # get visitor by CodiceFiscale
     # /api/visitor + '?CodiceFiscale=MNNGPP99A01H501A'
@@ -105,11 +106,3 @@ def visitor(app, db):
             return make_response(jsonify({'message': f'Entrata per {visitor.CodiceFiscale} registrata'}), 201)
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
-        
-    # check if the subscription is active
-    def check_active_subscription(CodiceFiscale, Data):
-        for subscription in Subscription.query.filter_by(CodiceFiscale=CodiceFiscale).all():
-            subscription_endDate = subscription.DataInizio + timedelta(days=float(subscription.Giorni))
-            formatted_date = datetime.strptime(Data, '%Y-%m-%d').date()
-            if subscription.DataInizio <= formatted_date and subscription_endDate >= formatted_date:
-                return subscription

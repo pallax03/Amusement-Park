@@ -1,8 +1,8 @@
 from flask import render_template, url_for, request, jsonify, make_response
-from datetime import datetime, timedelta
+from datetime import datetime
+from models import Participate, Entry, Activity, Include, Category, Tariff
 
-from models import Participate, Entry, Activity, Visitor, Schedule, Include, Constraint
-
+from utilities import get_visitor_with_entries, get_schedule_between_time, get_partecipates_in_schedule, check_active_subscription
 
 def partecipates(app, db):
     # return the partecipates
@@ -20,7 +20,8 @@ def partecipates(app, db):
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
 
-    
+# APIs
+   
     # get all the partecipations of a visitor's entry
     # can be filtered by the activity
     # /api/partecipates + '?CodiceFiscale=MNNGPP99A01H501A&DataIngresso=2021-01-01'
@@ -35,7 +36,7 @@ def partecipates(app, db):
                     partecipates.append({
                         'IdIngresso': partecipate.IdIngresso,
                         'Ora': str(partecipate.Ora),
-                        'Attivita': dict_activity(partecipate.IdAttivita),
+                        'Attivita': Activity.query.filter_by(IdAttivita=partecipate.IdAttivita).first(),
                         'PostiOccupati': Participate.query.filter_by(IdAttivita=partecipate.IdAttivita, Ora=partecipate.Ora).count()
                     })
             return make_response(jsonify(partecipates), 200)
@@ -73,11 +74,19 @@ def partecipates(app, db):
                     if get_partecipates_in_schedule(schedule) >= activity.Posti:
                         return make_response(jsonify({'error': 'Posti esauriti'}), 400)
             else:
-                pass
                 # check if the Posti are full in the Ora of other partecipations at the same IdAttivita
+                if Participate.query.filter_by(IdAttivita=int(data['IdAttivita']), Ora=ora_partecipazione).count() >= activity.Posti:
+                    return make_response(jsonify({'error': 'Posti esauriti'}), 400)
+            
                 # check if the visitor has the right tariff subscription, include
+                if not Include.query.filter_by(IdCategoria=Category.query.filter_by(IdCategoria=activity.IdCategoria).first().IdCategoria, IdTariffa=Tariff.query.filter_by(NomeTariffa=check_active_subscription(data['CodiceFiscale'], data_partecipazione).NomeTariffa).first().IdTariffa).first():
+                    return make_response(jsonify({'error': 'Abbonamento non include la tariffa richiesta'}), 400)
+                
                 # check if the visitor has the right constraints
-            return make_response(jsonify({'error': 'Not implemented!'}), 501)
+                # for constraint in Constraint.query.filter_by(IdAttivita=int(data['IdAttivita'])).all():
+                #     if not constraint.check_constraint(data['CodiceFiscale']):
+                #         return make_response(jsonify({'error': 'Vincolo non rispettato'}), 400)
+            return make_response(jsonify({'message': 'Tutto OK!!'}), 200)
 
             # partecipate = Participate(IdIngresso=data['IdIngresso'], IdAttivita=data['IdAttivita'], Ora=data['Ora'])
             # db.session.add(partecipate)
@@ -85,44 +94,3 @@ def partecipates(app, db):
             # return make_response(jsonify({'message': 'Partecipate added'}), 200)
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
-
-    def get_schedule_between_time(IdAttivita, Data, Ore):
-        Data = Data.strftime("%Y-%m-%d").date() if type(Data) == str else Data
-        Ore = Ore.strftime("%H:%M").time() if type(Ore) == str else Ore
-        
-        schedule = Schedule.query.filter_by(IdAttivita=IdAttivita, Data=Data).all()
-        for s in schedule:
-            if check_schedule(s, Ore):
-                return s
-        return None
-
-    def check_schedule(schedule, Ore):
-        return schedule.Inizio <= Ore and schedule.Fine >= Ore
-
-    def get_partecipates_in_schedule(schedule):
-        count = 0
-        for partecipate in Participate.query.filter_by(IdAttivita=schedule.IdAttivita).all():
-            if check_schedule(schedule, partecipate.Ora):
-                count+=1
-        return count
-
-
-    def get_visitor_with_entries():
-        visitors = []
-        for visitor in Visitor.query.all():
-            if Entry.query.filter_by(CodiceFiscale=visitor.CodiceFiscale).first():
-                visitors.append({'CodiceFiscale': visitor.CodiceFiscale})
-        return visitors
-
-
-    def dict_activity(IdAttivita):
-        activity = Activity.query.filter_by(IdAttivita=IdAttivita).first()
-        return {
-            'IdAttivita': activity.IdAttivita,
-            'Nome': activity.Nome,
-            'Descrizione': activity.Descrizione,
-            'Posti': activity.Posti,
-            'IsEvent': activity.IsEvent,
-            'IdCategoria': activity.IdCategoria
-        }
-        
