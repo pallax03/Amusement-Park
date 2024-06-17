@@ -9,7 +9,7 @@ IMMAGINE SCHEMA RELAZIONALE!!!
 - [Prerequisites](#prerequisites)
 - [Running the project](#running-the-project)
 - [Pages](#pages)
-- [API documentation](#api)
+- [API documentation](#api-documentation)
 
 ![image](/app/static/img/SchemaRelazionale.png)
 
@@ -129,10 +129,12 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
 
 ### Activity
 #### Event
-- /activity/events [GET] -> return all the [events](#events-json)
-- /activity/events [POST] -> given a json add an event
+- /api/activity/events [GET] -> return all the [events](#events-json)
+- /api/activity/events [POST] -> given a json add an event
+- /api/activity/events [DELETE] + '?IdEvento=1' -> delete an event (if haven't any schedules or if the schedules are expired)
 
-##### Events Json
+
+##### Event Json
 ```json
 {
   "IdAttivita": int,
@@ -141,33 +143,65 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
   "Posti": int
 }
 ```
+#### Schedule
+- /api/activity/events/schedules [GET] + '?IdAttivita=1' -> return the schedule of the specified event.
+- /api/activity/events/schedules [POST] -> add a [schedule json](#schedule-json) of an event. 
 
-- /activity/event/schedules
-- /activity/event/schedule
+##### Schedule Json
+```json
+{
+  "IdAttivita": int,
+  "Data": date,
+  "Inizio": time,
+  "Fine": time
+}
+```
 
 
 #### Ride
-- /activity/rides
+- /api/activity/rides [GET] + '?category=Acqua&limit=1&tariff=Bronze'  -> return all the rides, can be filter by Category, Limit and included tariffs.
+- /api/activity/rides [POST] -> add a new [ride](#ride-json).
+- /api/activity/rides [DELETE] + '?IdAttivita=1' -> delete a ride.
 
+##### Ride Json
 ```json
 {
   "Nome": str,
   "Descrizione": str,
   "Posti": int,
   "NomeCategoria": str,
-  "Limiti": [[json](#limit-json)],
-  "Tariffe": [[json](#tariff-json)]
+  "Limiti": [[json](#limit-json)], // in add rides constrait a limit using Limiti: [IdLimite, ..., IdLimite]. 
+  "Tariffe": [[json](#tariff-json)] // in add rides, that doesnt need
 }
 ```
 
-#### Category
-- /activity/ride/categories
 
-- /activity/ride/categories
+#### Category
+- /api/activity/ride/categories [GET] -> return the all the [categories](#category-json).
+- for add a category it can be specified adding a ride.
+
+##### Category Json
+```json
+{
+  "IdCategoria": int,
+  "Nome": str
+}
+```
+
 
 #### Limit
-- /activity/ride/constraints
-- /activity/ride/limits
+- /api/activity/rides/limits [GET] -> return all the [limits](#limit-json) present in any ride.
+
+##### Limit Json
+```json
+{
+  "IdLimite": int,
+  "Attributo": str,
+  "Condizione": str,
+  "Descrizione": str,
+  "Valore": str
+}
+```
 
 
 ### Partecipate
@@ -176,8 +210,8 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
 
 
 ### Employee
-- /api/employee [POST] -> add a employee and if the role is not present, add it [json](#employee-json)
-- /api/employee + '?CodiceFiscale=RSSMRA85M01H501Z' [DELETE] -> delete a employee 
+- /api/employee [POST] -> add a employee and if the role is not present, add it [json](#employee-json).
+- /api/employee + '?CodiceFiscale=RSSMRA85M01H501Z' [DELETE] -> delete an employee.
 
 #### Employee Json
 ```json

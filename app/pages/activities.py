@@ -39,10 +39,12 @@ def activity(app, db):
             return make_response(jsonify({'error': str(e)}), 400)
 
     # delete a event
+    # (if haven't any schedules or if the schedules are expired)
     # /api/activity/events + '?IdEvento=1'
     @app.route('/api/activity/events', methods=['DELETE'])
     def delete_event():
         try:
+            delete_expired_schedules()
             event = Activity.query.filter_by(IdAttivita=int(request.args.get('IdAttivita'))).first()
             db.session.delete(event)
             db.session.commit()
@@ -153,7 +155,7 @@ def activity(app, db):
             return make_response(jsonify({'error': str(e)}), 400)
 
     # delete a ride
-    # /api/activity/rides + '?IdAttrazione=1'
+    # /api/activity/rides + '?IdAttivita=1'
     @app.route('/api/activity/rides', methods=['DELETE'])
     def delete_ride():
         try:
@@ -194,7 +196,7 @@ def activity(app, db):
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
         
-
+    # used to delete the orphan limits, if a limit is not constraint in any activity
     def delete_orphan_limits():
         for limit in Limit.query.all():
             if not Constraint.query.filter_by(IdLimite=limit.IdLimite).first():
@@ -231,3 +233,11 @@ def activity(app, db):
             }
             dict_schedules.append(dict_schedule)
         return dict_schedules
+    
+    # delete schedules if the today's date is greater than the schedule's date
+    def delete_expired_schedules():
+        for schedule in Schedule.query.all():
+            if schedule.Data < datetime.now().date():
+                db.session.delete(schedule)
+                db.session.commit()
+    
