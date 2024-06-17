@@ -8,29 +8,45 @@
 
 {% block content %}
     <script>
+        const url_for_get_entries = "{{ url_for_get_entries }}";
         const url_for_get_partecipates = "{{ url_for_get_partecipates }}";
     </script>
 
     <div id="content" class="container">
         <div class="center">
             <h1>Partecipazioni</h1>
-            <h3> Visitatore {{ codicefiscale }}, entrato il {{ dataingresso }}: </h3>
+            <h3>
+                <label for="entries-codicefiscale">
+                    Visitatore
+                    <select name="entries-codicefiscale" id="entries-codicefiscale">
+                        {% for visitor in visitors %}
+                            <option id="entry-{{ visitor.CodiceFiscale }}" value="{{ visitor.CodiceFiscale }}">{{ visitor.CodiceFiscale }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label for="entries-data">
+                    entrato il
+                    <select name="entries-data" id="entries-data">
+                        
+                    </select>:
+                </label>
+            </h3>
             
-            <table id="table_partecipates">
+            <table id="table-partecipates" style="display: none;">
                 <thead>
                     <tr>
                         <th></th>
-                        <th onclick="orderBy('time')">Ora</th>
+                        <th>Ora</th>
                         <th>Nome Attivita</th>
                         <th>Posti Occupati / Totali</th>
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>
-
+                <tbody id="table_body-partecipates">
+                    
                 </tbody>
             </table>
         </div>
     </div>
-    
+    <script src="js/partecipates.js"></script>    
 {% endblock content %}

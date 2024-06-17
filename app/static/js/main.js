@@ -1,4 +1,3 @@
-
 function acceptInteger(input) {
     input.value = input.value.replace(/[^0-9]/g, '');
 }
@@ -23,6 +22,21 @@ async function statusResponse(response) {
     setTimeout(function() {
         location.reload();
     }, 5000);
+}
+
+
+function emptyRow(body, colSpan, func) {
+    let row = document.createElement('tr');
+    row.className = 'empty_row';
+    let cell = document.createElement('td');
+    cell.colSpan = colSpan;
+    let button = document.createElement('button');
+    button.classList.add('add');
+    button.onclick = func;
+    button.innerHTML = '+';
+    cell.appendChild(button);
+    row.appendChild(cell);
+    body.appendChild(row);
 }
 
 

@@ -171,7 +171,8 @@ function addEntry(codicefiscale, data) {
     .then(response => statusResponse(response));
 }
 
-function createOptionEntry(empty_row, codicefiscale) {
+function createOptionEntry(codicefiscale) {
+    let empty_row = document.querySelector('#entries_'+codicefiscale+' .empty_row');
     empty_row.innerHTML = '';
     let cell = empty_row.insertCell();
     cell.colSpan = 2;
@@ -199,18 +200,7 @@ function showEntries(showTable, codicefiscale) {
     table.classList.add('entries');
     table.id = 'entries_' + codicefiscale;
     
-    let empty_row = table.insertRow();
-    empty_row.classList.add('empty_row');
-    let empty_row_td = empty_row.insertCell();
-    empty_row_td.colSpan = 8;
-    let button = document.createElement('button');
-    button.classList.add('add');
-    button.id = 'add_entry';
-    button.onclick = function() {createOptionEntry(empty_row, codicefiscale)};
-    button.innerHTML = '+';
-
-    empty_row_td.appendChild(button);
-    empty_row.appendChild(empty_row_td);
+    emptyRow(table, 8, function() {createOptionEntry(codicefiscale)});
 
     fetch(url_for_get_entries + '?CodiceFiscale=' + codicefiscale)
     .then(response => response.json())

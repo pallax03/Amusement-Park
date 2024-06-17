@@ -15,7 +15,8 @@ function addEvent(id) {
     .then(response => statusResponse(response));
 }
 
-function createOptionEvent(empty_row) {
+function createOptionEvent() {
+    let empty_row = document.querySelector('#table-body_events .empty_row');
     let id = 'new-event_';
     empty_row.innerHTML = '';
     empty_row.className = '';
@@ -148,18 +149,8 @@ function calendarProgrammazioni(id, nome) {
 
 function getEvents() {
     document.getElementById('table-body_events').innerHTML = '';
-    // addEmptyRow('#table-body_events', addEvent, 'event');
-    let empty_row = document.createElement('tr');
-    empty_row.className = 'empty_row';
-    let cell = document.createElement('td');
-    cell.colSpan = 5;
-    let button = document.createElement('button');
-    button.classList.add('add');
-    button.onclick = function() {createOptionEvent(empty_row)};
-    button.innerHTML = '+';
-    cell.appendChild(button);
-    empty_row.appendChild(cell);
-    document.getElementById('table-body_events').appendChild(empty_row);
+
+    emptyRow(document.getElementById('table-body_events'), 5, function() {createOptionEvent()});
 
     fetch(url_for_get_events)
     .then(response => response.json())
@@ -285,19 +276,7 @@ function getRides() {
     url += 'limit=' + limit_id + '&';
     url += 'tariff=' + document.getElementById('filter_tariffe').value;
     
-    
-    document.getElementById('table-body_rides').innerHTML = '';
-    let empty_row = document.createElement('tr');
-    empty_row.className = 'empty_row';
-    let cell = document.createElement('td');
-    cell.colSpan = 6;
-    let button = document.createElement('button');
-    button.classList.add('add');
-    button.onclick = function() {modalRide()};
-    button.innerHTML = '+';
-    cell.appendChild(button);
-    empty_row.appendChild(cell);
-    document.getElementById('table-body_rides').appendChild(empty_row);
+    emptyRow(document.getElementById('table-body_rides'), 6, function() {modalRide()});
 
     fetch(url)
     .then(response => response.json())

@@ -24,7 +24,7 @@ def visitor(app, db):
                                 url_for_get_tariffs=url_for('get_tariffs'),
                                 url_for_get_subscription_cost=url_for('get_subscription_cost'),
                                 url_for_get_entries=url_for('get_entries'),
-                                url_for_partecipates=url_for('get_partecipates'))
+                                url_for_partecipates=url_for('page_partecipates'))
 
     # get visitor by CodiceFiscale
     # /api/visitor + '?CodiceFiscale=MNNGPP99A01H501A'
