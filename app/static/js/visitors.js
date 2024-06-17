@@ -31,7 +31,7 @@ async function getDurations(url) {
 }
 
 async function getCost(url) {
-    fetch(url + '?NomeTariffa=' + document.getElementById('tariffa').value + '&Giorni=' + document.getElementById('durata').value)
+    fetch(url + '?NomeTariffa=' + encodeURIComponent(document.getElementById('tariffa').value) + '&Giorni=' + document.getElementById('durata').value)
     .then(response => response.json())
     .then(data => {
         document.getElementById('cost').value = data.Costo;

@@ -1,5 +1,6 @@
 from flask import render_template, url_for, request, make_response, jsonify
 import json
+import urllib.parse
 from datetime import datetime, timedelta
 from models import Activity, Schedule, Category, Limit, Constraint, Include, Tariff, Require
 
@@ -15,6 +16,18 @@ def activity(app, db):
                                 url_for_get_limits=url_for('get_limits'))
 
 #APIs
+    # get all the activities (events and rides).
+    # /api/activities 
+    @app.route('/api/activities', methods=['GET'])
+    def get_activities():
+        try:
+            activities = Activity.query.all()
+            for activity in activities:
+                activity.IsEvent = bool(activity.IsEvent)
+            return make_response(jsonify(activities), 200)
+        except Exception as e:
+            return make_response(jsonify({'error': str(e)}), 400)
+
 
     # get all the events
     # /api/activity/events
@@ -102,8 +115,9 @@ def activity(app, db):
                 activities.append(dict_activity)
 
             # filter by selected filters
-            if request.args.get('category'):
-                activities = [activity for activity in activities if activity['NomeCategoria'] == request.args.get('category')]
+            category = urllib.parse.unquote(request.args.get('category'))
+            if category:
+                activities = [activity for activity in activities if activity['NomeCategoria'] == category]
 
             if request.args.get('limit')!='':
                 if request.args.get('limit')=='0':
@@ -113,9 +127,9 @@ def activity(app, db):
                     # filter activities by limit IdLimite
                     activities = [activity for activity in activities if int(request.args.get('limit')) in [limit.IdLimite for limit in activity['Limiti']]]    
 
-    
-            if request.args.get('tariff'):
-                activities = [activity for activity in activities if request.args.get('tariff') in [tariff.NomeTariffa for tariff in activity['Tariffe']]]
+            tariff_name = urllib.parse.unquote(request.args.get('tariff'))
+            if tariff_name:
+                activities = [activity for activity in activities if tariff_name in [tariff.NomeTariffa for tariff in activity['Tariffe']]]
 
             return make_response(jsonify(activities), 200)
         except Exception as e:

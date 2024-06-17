@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from sqlalchemy import UniqueConstraint
+from sqlalchemy.dialects.mysql import BIT
 from app import db
 
 # Define database models
@@ -115,7 +116,7 @@ class Activity(db.Model):
     Nome = db.Column(db.String(50), nullable=False)
     Descrizione = db.Column(db.String(255), nullable=False)
     Posti = db.Column(db.Integer, nullable=False)
-    IsEvent = db.Column(db.Boolean, nullable=False)
+    IsEvent = db.Column(BIT(1), nullable=False)
     IdCategoria = db.Column(db.Integer, db.ForeignKey('CATEGORIE.IdCategoria'), nullable=True)
 
 @dataclass

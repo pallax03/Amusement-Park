@@ -272,10 +272,12 @@ function deleteRide(id) {
 function getRides() {
     let limit_id = document.getElementById('filter_limiti').value.split('_')[1] === undefined ? '' : document.getElementById('filter_limiti').value.split('_')[1];
     let url = url_for_get_rides + '?';
-    url += 'category=' + document.getElementById('filter_categorie').value + '&';
+    url += 'category=' + encodeURIComponent(document.getElementById('filter_categorie').value) + '&';
     url += 'limit=' + limit_id + '&';
-    url += 'tariff=' + document.getElementById('filter_tariffe').value;
+    url += 'tariff=' + encodeURIComponent(document.getElementById('filter_tariffe').value);
     
+    document.querySelector('#table-body_rides').innerHTML = '';
+
     emptyRow(document.getElementById('table-body_rides'), 6, function() {modalRide()});
 
     fetch(url)

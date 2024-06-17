@@ -208,7 +208,7 @@ function changeAPIButton(query, func, args, text) {
 }
 
 function deleteService(nomeservizio) {
-    fetch(url_for_add_service + "?Nome="+nomeservizio, {
+    fetch(url_for_add_service + "?Nome="+encodeURIComponent(nomeservizio), {
         method: 'DELETE'
     })
     .then(response => statusResponse(response))

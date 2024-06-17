@@ -128,6 +128,19 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
   ```
 
 ### Activity
+- /api/activities [GET] -> get all the [activities](#activity-json) (events and rides).
+
+#### Activity Json
+```json
+{
+  "IdAttivita": int,
+  "Nome": str,
+  "Descrizione": str,
+  "Posti": int,
+  "IsEvent": boolean
+}
+```
+
 #### Event
 - /api/activity/events [GET] -> return all the [events](#events-json)
 - /api/activity/events [POST] -> given a json add an event

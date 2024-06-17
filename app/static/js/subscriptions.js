@@ -83,7 +83,7 @@ async function addTariff(id) {
 }
 
 function deleteTariff(id) {
-    fetch(url_for_add_tariff + '?NomeTariffa=' + id, {
+    fetch(url_for_add_tariff + '?NomeTariffa=' + encodeURIComponent(id), {
         method: 'DELETE'
     })
     .then(response => statusResponse(response))

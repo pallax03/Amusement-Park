@@ -14,41 +14,62 @@ function getEntries(codicefiscale) {
     })
 }
 
-function createOptionPartecipate(empty_row) {
+function addPartecipate(codicefiscale, dataingresso, ora, attivita) {
+    
+    console.log(JSON.stringify({CodiceFiscale: codicefiscale.value,DataIngresso: dataingresso.value,Ora: orae.value,NomeAttivita: attivita.value}));
+    
+    fetch(url_for_add_partecipate, {
+        method: 'POST',
+        body: JSON.stringify({
+            CodiceFiscale: codicefiscale.value,
+            DataIngresso: dataingresso.value,
+            Ora: ora.value,
+            IdAttivita: attivita.value
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => statusResponse(response))
+}
+
+function createOptionPartecipate() {
+    let empty_row = document.querySelector('#table_body-partecipates .empty_row');
     empty_row.innerHTML = '';
-    // let cell = empty_row.insertCell();
-    // cell.colSpan = 2;
-    // let select = document.createElement('select');
-    // select.id = 'select-attivita';
-    // cell.appendChild(select);
-    // fetch(url_for_get_activities)
-    // .then(response => response.json())
-    // .then(data => {
-    //     data.forEach(function(activity) {
-    //         let option = document.createElement('option');
-    //         option.value = activity.Id;
-    //         option.innerHTML = activity.Nome;
-    //         select.appendChild(option);
-    //     });
-    // });
+    empty_row.insertCell();
+    
+    let cell = empty_row.insertCell();   
+    let ora = document.createElement('input');
+    ora.type = 'time';
+    ora.id = 'new-partecipate_ora';
+    cell.appendChild(ora);
 
-    // cell = empty_row.insertCell();
-    // cell.colSpan = 2;
-    // let input = document.createElement('input');
-    // input.type = 'number';
-    // input.min = 1;
-    // input.max = 10;
-    // input.id = 'input-posti';
-    // cell.appendChild(input);
+    cell = empty_row.insertCell();
+    cell.colSpan = 2;
+    let attivita = document.createElement('select');
+    attivita.id = 'new-partecipate_attivita';
+    cell.appendChild(attivita);
 
-    // cell = empty_row.insertCell();
-    // cell.colSpan = 2;
-    // let button = document.createElement('button');
-    // button.classList.add('save');
-    // button.onclick = function() {addPartecipate(document.querySelector('#entries-codicefiscale').value, document.querySelector('#entries-data').value, select, input)};
-    // button.innerHTML = 's';
-    // cell.appendChild(button);
-
+    fetch(url_for_get_activities)
+    .then(response => response.json())
+    .then(data => {
+        data.forEach(function(activity) {
+            let option = document.createElement('option');
+            option.value = activity.IdAttivita;
+            option.setAttribute('posti', activity.Posti);
+            option.setAttribute('IsEvent', activity.IsEvent);
+            option.innerHTML = activity.IsEvent ? 'E' : 'A';
+            option.innerHTML += ' | ' + activity.Nome;
+            attivita.appendChild(option);
+        });
+    });
+    
+    cell = empty_row.insertCell();
+    let save = document.createElement('button');
+    save.classList.add('save');
+    save.onclick = function() {addPartecipate(document.querySelector('#entries-codicefiscale'), document.querySelector('#entries-data'), document.querySelector('#new-partecipate_ora'), document.querySelector('#new-partecipate_attivita'))};
+    save.innerHTML = 's';
+    cell.appendChild(save);
 }
 
 function getPartecipates(codicefiscale, dataingresso) {

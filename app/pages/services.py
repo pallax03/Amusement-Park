@@ -1,4 +1,5 @@
 from flask import render_template, url_for, request, jsonify, make_response
+import urllib.parse
 from datetime import datetime, timedelta
 from models import Service, Timetable, Employee
 
@@ -77,7 +78,8 @@ def service(app, db):
     @app.route('/api/service', methods=['DELETE'])
     def delete_service():
         try:
-            service = Service.query.filter_by(Nome=request.args.get('Nome')).first()
+            
+            service = Service.query.filter_by(Nome=urllib.parse.unquote(request.args.get('Nome'))).first()
             # before deleting the service, modify the people that are assigned to it
             for employee in Employee.query.filter_by(IdServizio=service.IdServizio).all():
                 employee.IdServizio = None

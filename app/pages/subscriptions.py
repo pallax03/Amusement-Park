@@ -1,5 +1,6 @@
 from flask import render_template, url_for, request, make_response, jsonify
 from datetime import datetime, timedelta
+import urllib.parse
 from models import Subscription, Duration, Tariff, Include, Category
 
 from pages.activities import activity
@@ -148,7 +149,8 @@ def subscription(app, db):
     def delete_tariff():
         try:
             delete_non_active_subscriptions()
-            tariff = Tariff.query.filter_by(NomeTariffa=request.args.get('NomeTariffa')).first()
+            tariff_name = urllib.parse.unquote(request.args.get('NomeTariffa'))
+            tariff = Tariff.query.filter_by(NomeTariffa=tariff_name).first()
             includes = Include.query.filter_by(IdTariffa=tariff.IdTariffa).all()
             for include in includes:
                 db.session.delete(include)
@@ -163,7 +165,8 @@ def subscription(app, db):
     @app.route('/api/subscription/cost', methods=['GET'])
     def get_subscription_cost():
         try:
-            tariff = Tariff.query.filter_by(NomeTariffa=request.args.get('NomeTariffa')).first()
+            tariff_name = urllib.parse.unquote(request.args.get('NomeTariffa'))
+            tariff = Tariff.query.filter_by(NomeTariffa=tariff_name).first()
             duration = Duration.query.filter_by(Giorni=request.args.get('Giorni')).first()
             costo_totale = (tariff.CostoGiornaliero * duration.Giorni)
             sconto = (costo_totale * (duration.Sconto/100))
