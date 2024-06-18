@@ -105,7 +105,7 @@
                             <td>{{ visitor.DataDiNascita }}</td>
                             <td>{{ visitor.Altezza }}</td>
                             <td>{{ visitor.Peso }}</td>
-                            {% if visitor.subscription.CodiceFiscale == None %}
+                            {% if visitor.subscription == None %}
                                 <td><button onclick='modalSubscription("{{ visitor.CodiceFiscale }}", "POST", "{{ url_for_get_tariffs }}", "{{ url_for_get_durations }}", "{{ url_for_get_subscription_cost }}")'>+</button></td>    
                             {% else %}
                                 <td><button onclick='modalSubscription({{ visitor.subscription|tojson }}, "DELETE")'>Active</button></td>

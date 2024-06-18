@@ -1,8 +1,9 @@
 from flask import render_template, url_for, request, jsonify, make_response
 from datetime import datetime
-from models import Participate, Entry, Activity, Include, Category, Tariff
+from models import Participate, Entry, Activity, Include, Category, Tariff, Visitor, Limit, Constraint, Schedule
+from sqlalchemy import text
 
-from utilities import get_visitor_with_entries, get_schedule_between_time, get_partecipates_in_schedule, check_active_subscription
+from utilities import get_visitor_with_entries, get_schedule_between_time, get_partecipates_in_schedule, check_partecipate_in_schedule, check_active_subscription, apply_constraint
 
 def partecipates(app, db):
     # return the partecipates
@@ -33,11 +34,12 @@ def partecipates(app, db):
             partecipates = []
             for entry in Entry.query.filter_by(CodiceFiscale=codicefiscale, Data=dataingresso).all():
                 for partecipate in Participate.query.filter_by(IdIngresso=entry.IdIngresso).all():
+                    activity = Activity.query.filter_by(IdAttivita=partecipate.IdAttivita).first()
                     partecipates.append({
                         'IdIngresso': partecipate.IdIngresso,
                         'Ora': str(partecipate.Ora),
-                        'Attivita': Activity.query.filter_by(IdAttivita=partecipate.IdAttivita).first(),
-                        'PostiOccupati': Participate.query.filter_by(IdAttivita=partecipate.IdAttivita, Ora=partecipate.Ora).count()
+                        'Attivita': activity,
+                        'PostiOccupati': get_partecipates_in_schedule(get_schedule_between_time(activity.IdAttivita, entry.Data, partecipate.Ora)) if bool(activity.IsEvent) else Participate.query.filter_by(IdAttivita=partecipate.IdAttivita, Ora=partecipate.Ora).count()
                     })
             return make_response(jsonify(partecipates), 200)
         except Exception as e:
@@ -57,7 +59,8 @@ def partecipates(app, db):
             dict_partecipate = {}
             data = request.get_json()
             # # check if the visitor has an entry
-            if not Entry.query.filter_by(CodiceFiscale=data['CodiceFiscale'], Data=data['DataIngresso']).first():
+            entry = Entry.query.filter_by(CodiceFiscale=data['CodiceFiscale'], Data=data['DataIngresso']).first()
+            if not entry:
                 return make_response(jsonify({'error': 'Ingresso non presente'}), 400)
             
             data_partecipazione = datetime.strptime(data['DataIngresso'], "%Y-%m-%d").date()
@@ -71,6 +74,8 @@ def partecipates(app, db):
                 if not schedule:
                     return make_response(jsonify({'error': 'Evento non progrmmato in quell\'orario'}), 400)
                 else:
+                    if check_partecipate_in_schedule(data['CodiceFiscale'], schedule):
+                        return make_response(jsonify({'error': 'Partecipazione all\'evento già presente'}), 400)
                     if get_partecipates_in_schedule(schedule) >= activity.Posti:
                         return make_response(jsonify({'error': 'Posti esauriti'}), 400)
             else:
@@ -83,14 +88,31 @@ def partecipates(app, db):
                     return make_response(jsonify({'error': 'Abbonamento non include la tariffa richiesta'}), 400)
                 
                 # check if the visitor has the right constraints
-                # for constraint in Constraint.query.filter_by(IdAttivita=int(data['IdAttivita'])).all():
-                #     if not constraint.check_constraint(data['CodiceFiscale']):
-                #         return make_response(jsonify({'error': 'Vincolo non rispettato'}), 400)
-            return make_response(jsonify({'message': 'Tutto OK!!'}), 200)
-
-            # partecipate = Participate(IdIngresso=data['IdIngresso'], IdAttivita=data['IdAttivita'], Ora=data['Ora'])
-            # db.session.add(partecipate)
-            # db.session.commit()
-            # return make_response(jsonify({'message': 'Partecipate added'}), 200)
+                visitor = Visitor.query.filter_by(CodiceFiscale=data['CodiceFiscale']).first()
+                for constraint in Constraint.query.filter_by(IdAttivita=int(data['IdAttivita'])).all():
+                    limit = Limit.query.filter_by(IdLimite=constraint.IdLimite).first()
+                    if not db.engine.execute(text(apply_constraint(visitor, limit, data_partecipazione)), visitor_codice_fiscale=visitor.CodiceFiscale, limit_valore=limit.Valore).fetchone():
+                        return make_response(jsonify({'error': f'Vincolo {limit.Attributo} {limit.Condizione} {limit.Valore} non rispettato'}), 400)
+            
+            partecipate = Participate(IdIngresso=entry.IdIngresso, IdAttivita=data['IdAttivita'], Ora=ora_partecipazione)
+            db.session.add(partecipate)
+            db.session.commit()
+            return make_response(jsonify({'message': f'Partecipazione di {entry.CodiceFiscale} il {data_partecipazione},a {activity.Nome} inserita'}), 200)
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
+        
+    # delete a partecipate
+    # /api/partecipate + '?IdIngresso=1&Ora=10:00'
+    @app.route('/api/partecipate', methods=['DELETE'])
+    def delete_partecipate():
+        try:
+            partecipate = Participate.query.filter_by(IdIngresso=request.args.get('IdIngresso'), Ora=request.args.get('Ora')).first()
+            if partecipate:
+                db.session.delete(partecipate)
+                db.session.commit()
+                return make_response(jsonify({'message': f'Partecipazione eliminata'}), 200)
+            else:
+                return make_response(jsonify({'error': 'Partecipazione non trovata'}), 404)
+        except Exception as e:
+            return make_response(jsonify({'error': str(e)}), 400)
+

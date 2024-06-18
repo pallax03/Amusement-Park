@@ -1,21 +1,18 @@
 from flask import render_template, url_for, request, jsonify, make_response
 from datetime import datetime, timedelta
-from models import Visitor, Subscription, Tariff, Entry
+from models import Visitor, Subscription, Entry, Participate
 from sqlalchemy import func
 
-from utilities import check_active_subscription
+from utilities import check_active_subscription, delete_non_active_subscriptions
 
 def visitor(app, db):
     @app.route('/visitors', methods=['GET'])
     def get_visitors():
         visitors = Visitor.query.all()
-        for visitor in visitors: #take all the active subscription per visitor
-            subscriptions = Subscription.query.filter_by(CodiceFiscale=visitor.CodiceFiscale).all()
-            active = Subscription()
-            for subscription in subscriptions:
-                active = Subscription.query.filter_by(CodiceFiscale=subscription.CodiceFiscale).filter(datetime.strptime(str(subscription.DataInizio),'%Y-%m-%d') + timedelta(days=float(subscription.Giorni)) > datetime.now()).first()
+        # memorize the active subscription for each visitor, None otherwise
+        for visitor in visitors:
+            visitor.subscription = check_active_subscription(visitor.CodiceFiscale, datetime.now().date())
             
-            visitor.subscription = active if active is not None else Subscription()
         return render_template('visitors.j2', visitors=visitors,
                                 url_for_add_visitor=url_for('add_visitor'),
                                 url_add_subscription=url_for('add_subscription'),
@@ -63,7 +60,14 @@ def visitor(app, db):
     def delete_visitor():
         try:
             visitor = Visitor.query.filter_by(CodiceFiscale=request.args.get('CodiceFiscale')).first()
+            delete_non_active_subscriptions(codicefiscale=visitor.CodiceFiscale)
+            if check_active_subscription(visitor.CodiceFiscale, datetime.now().date()):
+                return make_response(jsonify({'error': 'Visitatore con abbonamento attivo'}), 400)
             if visitor:
+                for e in Entry.query.filter_by(CodiceFiscale=visitor.CodiceFiscale).all():
+                    for p in Participate.query.filter_by(IdIngresso=e.IdIngresso).all():
+                        db.session.delete(p)
+                    db.session.delete(e)
                 db.session.delete(visitor)
                 db.session.commit()
                 return make_response(jsonify({'message': f'Visitatore {visitor.CodiceFiscale} eliminato'}), 200)

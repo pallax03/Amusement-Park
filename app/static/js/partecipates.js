@@ -1,4 +1,4 @@
-function getEntries(codicefiscale) {
+function getEntries(codicefiscale, dataingresso) {
     document.querySelector('#entries-data').innerHTML = '';
     fetch( url_for_get_entries + '?CodiceFiscale=' + codicefiscale)
     .then(response => response.json())
@@ -10,7 +10,10 @@ function getEntries(codicefiscale) {
             option.innerHTML = date;
             document.querySelector('#entries-data').appendChild(option);
         });
-        getPartecipates(codicefiscale, document.querySelector('#entries-data').value);
+        if (dataingresso) {
+            document.querySelector('#entries-data').value = new Date(dataingresso).toLocaleDateString('en-CA');
+        }
+        getPartecipates(document.querySelector('#entries-codicefiscale').value, document.querySelector('#entries-data').value);
     })
 }
 
@@ -50,6 +53,7 @@ function createOptionPartecipate() {
     fetch(url_for_get_activities)
     .then(response => response.json())
     .then(data => {
+        console.log(data);
         data.forEach(function(activity) {
             let option = document.createElement('option');
             option.value = activity.IdAttivita;
@@ -57,6 +61,9 @@ function createOptionPartecipate() {
             option.setAttribute('IsEvent', activity.IsEvent);
             option.innerHTML = activity.IsEvent ? 'E' : 'A';
             option.innerHTML += ' | ' + activity.Nome;
+            // if (activity.IsEvent) {
+                   
+            // }
             attivita.appendChild(option);
         });
     });
@@ -67,6 +74,13 @@ function createOptionPartecipate() {
     save.onclick = function() {addPartecipate(document.querySelector('#entries-codicefiscale'), document.querySelector('#entries-data'), document.querySelector('#new-partecipate_ora'), document.querySelector('#new-partecipate_attivita'))};
     save.innerHTML = 's';
     cell.appendChild(save);
+}
+
+function deletePartecipate(idingresso, ora) {
+    fetch(url_for_add_partecipate + '?IdIngresso='+idingresso+'&Ora='+ora, {
+        method: 'DELETE',
+    })
+    .then(response => statusResponse(response))
 }
 
 function getPartecipates(codicefiscale, dataingresso) {
@@ -82,7 +96,7 @@ function getPartecipates(codicefiscale, dataingresso) {
             let row = document.querySelector('#table_body-partecipates').insertRow();
             
             let cell = row.insertCell();
-            cell.innerHTML = '<button class="delete" onclick="deletePartecipate('+partecipate.IdIngresso+', '+partecipate.Ora+')" >x</button>'; //button delete
+            cell.innerHTML = '<button class="delete" onclick="deletePartecipate(\''+partecipate.IdIngresso+'\', \''+partecipate.Ora+'\')" >x</button>'; //button delete
 
             cell = row.insertCell();
             cell.innerHTML = partecipate.Ora;
@@ -101,9 +115,11 @@ function getPartecipates(codicefiscale, dataingresso) {
 
 function Ajax() {
     let codicefiscale = new URL(window.location.href).searchParams.get('CodiceFiscale');
+    let dataingresso = new URL(window.location.href).searchParams.get('DataIngresso');
+   
     if(codicefiscale) {
         document.querySelector('#entries-codicefiscale').value = codicefiscale;
-        getEntries(codicefiscale);
+        getEntries(codicefiscale, dataingresso);
     }
     document.querySelector('#entries-codicefiscale').addEventListener('change', function() {
         getEntries(this.value);

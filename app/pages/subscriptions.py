@@ -4,7 +4,7 @@ import urllib.parse
 from models import Subscription, Duration, Tariff, Include, Category
 
 
-from utilities import delete_non_active_subscriptions
+from utilities import delete_non_active_subscriptions, check_active_subscription
 
 # SUBSCRIPTION
 def subscription(app, db):
@@ -48,6 +48,9 @@ def subscription(app, db):
     def add_subscription():
         try:
             data = request.get_json()
+            # se la data di inizio è presente in un altro abbonamento nel range data di inizio + giorni, non si può aggiungere l'abbonamento
+            if check_active_subscription(data['CodiceFiscale'], data['DataInizio']):
+                return make_response(jsonify({'error': 'Abbonamento già esistente in questo range di durate'}), 400)
             subscription = Subscription(
                 CodiceFiscale=data['CodiceFiscale'],
                 DataInizio=data['DataInizio'],
@@ -88,8 +91,8 @@ def subscription(app, db):
     @app.route('/api/subscription/duration', methods=['DELETE'])
     def delete_duration():
         try:
-            delete_non_active_subscriptions()
             duration = Duration.query.filter_by(Giorni=request.args.get('Giorni')).first()
+            delete_non_active_subscriptions(durata=duration)
             db.session.delete(duration)
             db.session.commit()
             return make_response(jsonify({'message': 'Durata eliminata'}), 200)
@@ -150,9 +153,9 @@ def subscription(app, db):
     @app.route('/api/subscription/tariff', methods=['DELETE'])
     def delete_tariff():
         try:
-            delete_non_active_subscriptions()
             tariff_name = urllib.parse.unquote(request.args.get('NomeTariffa'))
             tariff = Tariff.query.filter_by(NomeTariffa=tariff_name).first()
+            delete_non_active_subscriptions(tariffa=tariff)
             includes = Include.query.filter_by(IdTariffa=tariff.IdTariffa).all()
             for include in includes:
                 db.session.delete(include)

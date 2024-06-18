@@ -1,6 +1,8 @@
-# queries for index (stats)
 from datetime import datetime, timedelta
 from models import *
+
+# DASHBOARD
+
 
 
 # VISITORS
@@ -19,9 +21,17 @@ def check_active_subscription(CodiceFiscale, Data):
 
 # SUBSCRIPTIONS
 
-# delete all the subscriptions that are not active anymore
-def delete_non_active_subscriptions():
+# delete all the subscriptions that are not active anymore,
+# filter by CodiceFiscale or Tariffa or Durata
+def delete_non_active_subscriptions(codicefiscale=None, tariffa=None, durata=None):
     subscriptions = Subscription.query.all()
+    if codicefiscale:
+        subscriptions = Subscription.query.filter_by(CodiceFiscale=codicefiscale).all()
+    if tariffa:
+        subscriptions = Subscription.query.filter_by(NomeTariffa=tariffa.NomeTariffa).all()
+    if durata:
+        subscriptions = Subscription.query.filter_by(Giorni=durata.Giorni).all()
+    
     for subscription in subscriptions:
         if datetime.strptime(str(subscription.DataInizio),'%Y-%m-%d') + timedelta(days=float(subscription.Giorni)) < datetime.now():
             db.session.delete(subscription)
@@ -48,6 +58,16 @@ def check_schedule(schedule, Ora):
     return schedule.Inizio <= Ora and schedule.Fine >= Ora
 
 
+# check if the visitor has already a participation in a schedule
+def check_partecipate_in_schedule(codicefiscale, schedule):
+    for entry in Entry.query.filter_by(CodiceFiscale=codicefiscale).all():
+        for partecipate in Participate.query.filter_by(IdIngresso=entry.IdIngresso, IdAttivita=schedule.IdAttivita).all():
+            if get_schedule_between_time(partecipate.IdAttivita, entry.Data, partecipate.Ora).IdProgrammazione == schedule.IdProgrammazione:
+                return True
+    return False
+
+
+
 # return the number of partecipates in a schedule checking the range of Inizio<<Fine
 def get_partecipates_in_schedule(schedule):
     count = 0
@@ -57,9 +77,13 @@ def get_partecipates_in_schedule(schedule):
     return count
 
 
-# apply contraints to a visitor
-# def apply_constraints(visitor, limit):
-#     return db.session.execute('SELECT * FROM Constraint WHERE CodiceFiscale = :CodiceFiscale AND :limit', {'CodiceFiscale': visitor.CodiceFiscale, 'limit': limit}).fetchall()
+# check if the visitor respect the limit
+def apply_constraint(visitor, limit, data_partecipazione):
+    if limit.Attributo == 'DataDiNascita':
+        age = (data_partecipazione - visitor.DataDiNascita).days // 365.25
+        return f'SELECT * FROM VISITATORI WHERE CodiceFiscale = :visitor_codice_fiscale AND {age} {limit.Condizione} :limit_valore'
+    return f'SELECT * FROM VISITATORI WHERE CodiceFiscale = :visitor_codice_fiscale AND {limit.Attributo} {limit.Condizione} :limit_valore'
+    
 
 
 # return the visitors CodiceFiscale with entries

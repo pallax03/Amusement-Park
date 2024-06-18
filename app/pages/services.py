@@ -1,6 +1,5 @@
 from flask import render_template, url_for, request, jsonify, make_response
 import urllib.parse
-from datetime import datetime, timedelta
 from models import Service, Timetable, Employee
 
 from utilities import dict_services
