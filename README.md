@@ -4,14 +4,13 @@ Progetto finale per il corso (8615) in Basi Di Dati.
 L'obiettivo del progetto è quello di realizzare un sistema per la gestione di un parco divertimenti.
 
 IMMAGINE SCHEMA RELAZIONALE!!!
+![image](/app/static/img/SchemaRelazionale.png)
 
 ### Table Of Contents
 - [Prerequisites](#prerequisites)
 - [Running the project](#running-the-project)
 - [Pages](#pages)
 - [API documentation](#api-documentation)
-
-![image](/app/static/img/SchemaRelazionale.png)
 
 ## Prerequisites
 - Make sure that you have Docker and Docker Compose installed
