@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from sqlalchemy import UniqueConstraint
 from sqlalchemy.dialects.mysql import BIT
+from sqlalchemy import text
 from app import db
 
 # Define database models

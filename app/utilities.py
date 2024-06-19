@@ -1,9 +1,38 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
+import calendar
+
 from models import *
+
 
 # DASHBOARD
 
+# raw queries
+def query_N13_highest_entries_days(DataInizio, DataFine):
+    DataInizio = datetime.now().replace(day=1) if DataInizio == None else datetime.strptime(DataInizio, '%Y-%m-%d') if type(DataInizio) is not date else DataInizio
+    DataFine =  DataInizio.replace(day=calendar.monthrange(DataInizio.year, DataInizio.month)[1]) if DataFine == None else datetime.strptime(DataFine, '%Y-%m-%d') if type(DataFine) is not date else DataFine
+    query = text(f'SELECT Data, COUNT(*) AS NumeroIngressi FROM INGRESSI WHERE Data BETWEEN \'{DataInizio}\' AND \'{DataFine}\' GROUP BY Data ORDER BY NumeroIngressi DESC')
+    dict = []
+    for result in db.session.execute(query):
+        dict.append({'Data': datetime.strftime(result[0], '%Y-%m-%d'), 'NumeroIngressi': result[1]})
+    return dict
 
+# WARNING: SQL INJECTION, so pass a Category.Nome as a parameter   
+def query_N14_most_partecipated_rides(categoryname = None):
+    categoryname = '' if categoryname==None else 'WHERE c.Nome = ' + categoryname
+    query = text(f'SELECT a.Nome as NomeCategoria, COUNT(p.IdAttivita) as PartecipazioniTotali FROM ATTIVITA as a, CATEGORIE as c, PARTECIPA as p WHERE a.IsEvent=false AND a.IdCategoria = c.IdCategoria AND a.IdAttivita = p.IdAttivita { categoryname } GROUP BY a.Nome, c.Nome ORDER BY PartecipazioniTotali')
+    dict = []
+    for result in db.session.execute(query):
+        dict.append({'NomeCategoria': result[0], 'PartecipazioniTotali': result[1]})
+    return dict
+
+# WARNING: SQL INJECTION, so pass a Tariff.NomeTariffa as a parameter
+def query_N15_highest_shopped_subscriptions(tariffname = None):
+    tariffname = '' if tariffname==None else 'WHERE NomeTariffa = ' + tariffname
+    query = text(f'SELECT NomeTariffa, Giorni, COUNT(*) as NumeroAbbonamenti FROM ABBONAMENTI {tariffname} GROUP BY NomeTariffa, Giorni ORDER BY Giorni')
+    dict = []
+    for result in db.session.execute(query):
+        dict.append({'NomeTariffa': result[0], 'Giorni': result[1], 'NumeroAbbonamenti': result[2]})
+    return dict
 
 # VISITORS
 
