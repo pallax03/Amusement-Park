@@ -96,15 +96,19 @@ def check_partecipate_in_schedule(codicefiscale, schedule):
     return False
 
 
-
 # return the number of partecipates in a schedule checking the range of Inizio<<Fine
-def get_partecipates_in_schedule(schedule):
+def count_partecipates_in_schedule(schedule):
     count = 0
     for partecipate in Participate.query.filter_by(IdAttivita=schedule.IdAttivita).all():
         if check_schedule(schedule, partecipate.Ora):
             count+=1
     return count
 
+def count_partecipates_in_ride(IdAttivita, Data, Ora):
+    count = 0
+    for entry in Entry.query.filter_by(Data=Data).all():
+        count += Participate.query.filter_by(IdIngresso=entry.IdIngresso, IdAttivita=IdAttivita, Ora=Ora).count()
+    return count
 
 # check if the visitor respect the limit
 def apply_constraint(visitor, limit, data_partecipazione):

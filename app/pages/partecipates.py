@@ -3,7 +3,7 @@ from datetime import datetime
 from models import Participate, Entry, Activity, Include, Category, Tariff, Visitor, Limit, Constraint, Schedule
 from sqlalchemy import text
 
-from utilities import get_visitor_with_entries, get_schedule_between_time, get_partecipates_in_schedule, check_partecipate_in_schedule, check_active_subscription, apply_constraint
+from utilities import get_visitor_with_entries, get_schedule_between_time, count_partecipates_in_schedule, check_partecipate_in_schedule, check_active_subscription, apply_constraint, count_partecipates_in_ride
 
 def partecipates(app, db):
     # return the partecipates
@@ -37,9 +37,9 @@ def partecipates(app, db):
                     activity = Activity.query.filter_by(IdAttivita=partecipate.IdAttivita).first()
                     partecipates.append({
                         'IdIngresso': partecipate.IdIngresso,
-                        'Ora': str(partecipate.Ora),
+                        'Ora': partecipate.Ora.strftime("%H:%M"),
                         'Attivita': activity,
-                        'PostiOccupati': get_partecipates_in_schedule(get_schedule_between_time(activity.IdAttivita, entry.Data, partecipate.Ora)) if bool(activity.IsEvent) else Participate.query.filter_by(IdAttivita=partecipate.IdAttivita, Ora=partecipate.Ora).count()
+                        'PostiOccupati': count_partecipates_in_schedule(get_schedule_between_time(activity.IdAttivita, entry.Data, partecipate.Ora)) if bool(activity.IsEvent) else count_partecipates_in_ride(activity.IdAttivita, entry.Data, partecipate.Ora)
                     })
             return make_response(jsonify(partecipates), 200)
         except Exception as e:
@@ -76,11 +76,11 @@ def partecipates(app, db):
                 else:
                     if check_partecipate_in_schedule(data['CodiceFiscale'], schedule):
                         return make_response(jsonify({'error': 'Partecipazione all\'evento già presente'}), 400)
-                    if get_partecipates_in_schedule(schedule) >= activity.Posti:
+                    if count_partecipates_in_schedule(schedule) >= activity.Posti:
                         return make_response(jsonify({'error': 'Posti esauriti'}), 400)
             else:
                 # check if the Posti are full in the Ora of other partecipations at the same IdAttivita
-                if Participate.query.filter_by(IdAttivita=int(data['IdAttivita']), Ora=ora_partecipazione).count() >= activity.Posti:
+                if count_partecipates_in_ride(activity.IdAttivita, data_partecipazione, ora_partecipazione) >= activity.Posti:
                     return make_response(jsonify({'error': 'Posti esauriti'}), 400)
             
                 # check if the visitor has the right tariff subscription, include

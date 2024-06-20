@@ -95,6 +95,7 @@ def visitor(app, db):
     def add_entry():
         try:
             data = request.get_json()
+            data['Data'] = datetime.strptime(data['Data'], '%Y-%m-%d').date()
             visitor = Visitor.query.filter_by(CodiceFiscale=data['CodiceFiscale']).first()
             if visitor is None:
                 return make_response(jsonify({'error': 'Visitatore non trovato'}), 404)
@@ -102,8 +103,8 @@ def visitor(app, db):
             if check_active_subscription(visitor.CodiceFiscale, data['Data']) is None:
                 return make_response(jsonify({'error': 'Abbonamento non attivo'}), 404)
             entry = Entry(
-                CodiceFiscale=data['CodiceFiscale'],
-                Data=data['Data']
+                CodiceFiscale = data['CodiceFiscale'],
+                Data = data['Data'] 
             )
             db.session.add(entry)
             db.session.commit()

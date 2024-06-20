@@ -1,101 +1,14 @@
-@font-face {
-  font-family: "Consolas", monospace;
-  src: url("/fonts/Consolas.ttf") format("truetype");
-}
-* {
-  font-family: Consolas;
-  scroll-behavior: smooth;
-}
-
-body {
-  position: relative;
-  z-index: 1;
-  background: #18181b;
-  overflow-x: hidden;
-  overflow-y: auto;
-  white-space: nowrap;
-  margin: 0;
-  padding: 0;
-}
-
-a {
-  text-decoration: none;
-}
-
-p {
-  white-space: normal;
-  word-break: break-word;
-}
-
-nav ul {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-nav ul li {
-  display: block;
-  width: 100%;
-}
-nav ul li a {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  background-color: #f1f1f1;
-  color: #333;
-  text-decoration: none;
-}
-nav ul li a:hover {
-  background-color: #ddd;
-}
-nav ul li ul {
-  display: none;
-}
-nav ul li ul li a {
-  padding-left: 30px;
-}
-
-footer {
-  background-color: black;
-  width: 100%;
-}
-footer #github {
-  color: white;
-  text-align: center;
-  padding: 1em;
-  font-size: 3em;
-}
-@media screen and (max-width: 600px) {
-  footer #github {
-    font-size: 1.2em;
-  }
-}
-footer #github a {
-  color: white;
-  text-decoration: none;
-}
-
 .modal {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   left: 0;
   top: 0;
-  z-index: 1; /* Sit on top */
+  z-index: 11; /* Sit on top */
   width: 100%; /* Full width */
   height: 100%; /* Full height */
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0, 0, 0); /* Fallback color */
   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-  /* The Close Button */
 }
 .modal .modal-container {
   position: absolute;
@@ -105,8 +18,7 @@ footer #github a {
 }
 .modal .modal-container form {
   height: 60%;
-  width: 80%;
-  padding: 20px;
+  padding: 60px;
   background-color: #fff;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -115,22 +27,70 @@ footer #github a {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  -ms-flex-wrap: nowrap;
-      flex-wrap: nowrap;
-  -ms-flex-line-pack: center;
-      align-content: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+.modal .modal-container form label {
+  font-size: 1.5em;
+  margin: 10px;
+  margin: 20px;
+}
+.modal .modal-container form label input {
+  border: 0;
+  background-color: rgba(0, 0, 0, 0);
+  font-size: 1.2em;
+  color: #000;
+  text-decoration: none;
+  border-bottom: 2px solid black;
+}
+.modal .modal-container form label input:focus, .modal .modal-container form label inputhover {
+  border-bottom: 2px solid #4ADE80;
+}
+.modal .modal-container form label select {
+  height: 50px;
+  font-size: 1.5em;
+  margin: 10px;
+  border: 2px solid #18181b;
+  color: #000;
+  cursor: pointer;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+.modal .modal-container form label select:hover, .modal .modal-container form label select:focus {
+  border-color: #4ADE80;
+}
+.modal .modal-container form label input:disabled, .modal .modal-container form label select:disabled {
+  background-color: rgba(0, 0, 0, 0.3490196078) !important;
+  border: 2px solid #ff0000 !important;
+  cursor: not-allowed;
+}
+.modal .modal-container form input[type=button] {
+  width: 100%;
+  height: 50px;
+  font-size: 1.5em;
+  margin: 10px;
+  background-color: #18181b;
+  color: #4ADE80;
+  border: 2px solid #4ADE80;
+  cursor: pointer;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+.modal .modal-container form input[type=button]:hover {
+  border-color: #18181b;
+  background-color: #4ADE80;
+  color: #18181b;
 }
 .modal .close {
-  color: #aaa;
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #000;
   float: right;
-  font-size: 28px;
+  padding-right: 20px;
+  font-size: 3em;
   font-weight: bold;
+  z-index: 11;
 }
 .modal .close:hover, .modal .close:focus {
   color: black;
@@ -139,11 +99,17 @@ footer #github a {
 }
 
 img.status {
-  height: 200px;
-  width: 200px;
+  height: 400px;
+  width: 400px;
 }
 
 .container {
+  isolation: isolate;
+  background-color: #ffffff;
+  position: relative;
+  z-index: 1;
+  padding-top: calc(1.2 * (clamp(5px, 80%, 50px) + 4vh));
+  padding-bottom: calc(0.8 * (clamp(5px, 80%, 50px) + 4vh));
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -151,27 +117,42 @@ img.status {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 .container .center {
-  max-width: 800px;
-  margin-top: 50px;
-  padding: 20px;
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 10px;
-  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  color: #fff;
+  background-color: #ffffff;
+  border-radius: 25px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.55) 0px 20px 68px;
+          box-shadow: rgba(0, 0, 0, 0.55) 0px 20px 68px;
+  padding: 2.5em;
+  padding-top: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.container .center .container {
+  padding: 0;
+  margin: 0;
 }
 
 button.delete {
   background-color: rgba(255, 255, 255, 0);
-  font-size: 2.5em;
+  font-size: 3em;
   vertical-align: super;
   text-align: center;
   color: red;
@@ -184,17 +165,18 @@ button.add {
   height: 50px;
   font-size: 1.5em;
   margin: 10px;
-  background-color: #581C87;
+  background-color: #18181b;
   color: #4ADE80;
   border: 2px solid #4ADE80;
   cursor: pointer;
+  text-decoration: none;
   -webkit-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
 }
 button.add:hover {
-  border-color: #581C87;
+  border-color: #18181b;
   background-color: #4ADE80;
-  color: #581C87;
+  color: #18181b;
 }
 
 span.arrow {
@@ -223,7 +205,7 @@ span.arrow.up {
   margin-right: 10px;
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
-  border-bottom: 10px solid #4ADE80;
+  border-bottom: 10px solid #cb6ce6;
 }
 span.arrow.down {
   display: inline-block;
@@ -233,7 +215,28 @@ span.arrow.down {
   margin-right: 10px;
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
-  border-top: 10px solid #4ADE80;
+  border-top: 10px solid #cb6ce6;
+}
+
+#filter_menu {
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 table {
@@ -241,22 +244,86 @@ table {
   width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
+  text-align: center;
+}
+table.visitors tbody tr.empty_row td button {
+  background-color: white;
+  color: black;
+}
+table.visitors tbody tr.empty_row td button:hover {
+  background-color: #cb6ce6;
+}
+table.visitors tbody tr td[colspan="8"] {
+  background-color: #000000;
+}
+table.visitors tbody tr td[colspan="8"] table tr {
+  background-color: #fff;
+}
+table.visitors tbody tr td[colspan="8"] table tr:nth-child(even) {
+  background-color: #cb6ce6;
+}
+table.visitors tbody tr td[colspan="8"] table tr.empty_row td button {
+  font-size: 1em;
+  border: 0;
+}
+table.visitors tbody tr td[colspan="8"] table tr.empty_row td button:hover {
+  background-color: #ffa8e9;
+  font-size: 2em;
+}
+table.visitors tbody tr:nth-child(even) {
+  background-color: #ffa8e9;
+}
+table.events tbody tr.empty_row td button {
+  background-color: white;
+  color: black;
+}
+table.events tbody tr.empty_row td button:hover {
+  background-color: #ffbd59;
+}
+table.events tbody tr:nth-child(even) {
+  background-color: #fdf9b4;
+}
+table.rides tbody tr.empty_row td button {
+  background-color: white;
+  color: black;
+}
+table.rides tbody tr.empty_row td button:hover {
+  background-color: #ffbd59;
+}
+table.rides tbody tr:nth-child(even) {
+  background-color: #fdf9b4;
+}
+table.employees tbody tr.empty_row td button {
+  background-color: white;
+  color: black;
+}
+table.employees tbody tr.empty_row td button:hover {
+  background-color: #5271ff;
+}
+table.employees tbody tr:nth-child(even) {
+  background-color: #5ce1e6;
+}
+table.partecipates tbody tr.empty_row td button {
+  background-color: white;
+  color: black;
+}
+table.partecipates tbody tr.empty_row td button:hover {
+  background-color: #ffbd59;
+}
+table.partecipates tbody tr:nth-child(even) {
+  background-color: #fdf9b4;
 }
 table thead {
-  background-color: #581C87;
+  background-color: #18181b;
 }
 table thead th {
-  padding: 10px;
-  text-align: left;
-  color: #FAF5FF;
-  border-bottom: 1px solid #6B21A8;
-  font-size: 0.5em;
+  font-size: 1.2em;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  color: #fff;
 }
 table tbody {
   overflow-y: auto;
-}
-table tbody tr {
-  background-color: #581C87;
 }
 table tbody tr.empty_row {
   margin: 0;
@@ -266,24 +333,50 @@ table tbody tr.empty_row td {
   margin: 0;
   padding: 0;
 }
-table tbody tr.empty_row td button.add {
+table tbody tr.empty_row td button {
   margin: 0;
   padding: 10px;
   height: auto;
   width: 100%;
   border-radius: 0;
+  border: 6px solid black;
   font-size: 2em;
+  cursor: pointer;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
-table tbody tr.empty_row td button.add:hover {
-  font-size: 4em;
+table tbody tr.empty_row td button:hover {
+  font-size: 3em;
 }
 table tbody tr td {
   padding: 10px;
-  text-align: left;
-  color: #FAF5FF;
-  border-bottom: 1px solid #6B21A8;
-  font-size: 0.5em;
-  text-wrap: balance;
+  overflow: hidden;
+  font-size: 1.2em;
+  text-overflow: clip;
+  white-space: pre-line;
+  word-break: break-word;
+}
+table tbody tr td input {
+  width: 100%;
+  border: 0;
+  background-color: rgba(0, 0, 0, 0);
+  font-size: 1.2em;
+  color: #000;
+  text-align: center;
+}
+table tbody tr td button {
+  background-color: rgba(0, 0, 0, 0);
+  padding: 10px;
+  margin: 0;
+  font-size: 1.6em;
+  border: 0;
+  cursor: pointer;
+  color: #000000;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+table tbody tr td button:hover {
+  scale: 1.6;
 }
 
 .choices {
@@ -295,6 +388,7 @@ table tbody tr td {
       -ms-flex-direction: column;
           flex-direction: column;
   width: 100%;
+  height: auto;
   -ms-flex-wrap: nowrap;
       flex-wrap: nowrap;
   -ms-flex-line-pack: center;
@@ -305,8 +399,11 @@ table tbody tr td {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  margin: 0;
+  padding: 0;
 }
 .choices .container {
+  padding: 0;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -324,6 +421,7 @@ table tbody tr td {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  background-color: rgba(0, 0, 0, 0);
 }
 .choices .container .options {
   display: -webkit-box;
@@ -355,22 +453,56 @@ table tbody tr td {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  border: 2px solid #581C87;
+  border: 2px solid #000;
   padding: 10px;
   margin: 10px;
-  color: #FAF5FF;
   cursor: pointer;
 }
+.choices .container .options input[type=radio] + label div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.choices .container .options input[type=radio] + label div input {
+  width: 20px !important;
+}
 .choices .container .options input[type=radio] + label input {
-  color: #FAF5FF;
   background-color: rgba(0, 0, 0, 0);
-  background-color: #581C87;
   border: 0;
   font-size: 1em;
   cursor: text;
 }
 .choices .container .options input[type=radio]:checked + label {
   border-color: #4ADE80;
+}
+.choices .container button.save {
+  width: 60%;
+  height: 50px;
+  font-size: 1.5em;
+  margin: 10px;
+  background-color: #000;
+  color: #4ADE80;
+  border: 2px solid #4ADE80;
+  cursor: pointer;
+}
+.choices .container button.save:hover {
+  border-color: #000;
+  background-color: #4ADE80;
+  color: #000;
 }
 .choices .tariffs {
   display: -webkit-box;
@@ -404,7 +536,43 @@ table tbody tr td {
 }
 .choices .tariffs input[type=radio]:checked + label {
   background-color: #4ADE80;
-  color: #FAF5FF;
+  color: #fff;
+}
+.choices .cost {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin-top: 20px;
+}
+.choices .cost label {
+  font-size: 1.5em;
+  margin: 10px;
+  margin: 20px;
+}
+.choices .cost label input {
+  border: 0;
+  background-color: rgba(0, 0, 0, 0);
+  font-size: 1.2em;
+  color: #000;
+  text-decoration: none;
+  border-bottom: 2px solid black;
+}
+.choices .cost label input:focus, .choices .cost label inputhover {
+  border-bottom: 2px solid #4ADE80;
 }
 .choices .durations {
   display: -webkit-box;
@@ -435,7 +603,7 @@ table tbody tr td {
 }
 .choices .durations input[type=radio]:checked + label {
   background-color: #4ADE80;
-  color: #FAF5FF;
+  color: #fff;
 }
 .choices .durations input[type=button] ~ button {
   border-radius: 25px;
@@ -443,15 +611,15 @@ table tbody tr td {
   height: 50px;
   font-size: 1.5em;
   margin: 10px;
-  background-color: #581C87;
+  background-color: #000;
   color: #4ADE80;
   border: 2px solid #4ADE80;
   cursor: pointer;
 }
 .choices .durations input[type=button] ~ button:hover {
-  border-color: #581C87;
+  border-color: #000;
   background-color: #4ADE80;
-  color: #581C87;
+  color: #000;
 }
 
 .cards {
@@ -493,17 +661,17 @@ table tbody tr td {
           align-items: center;
   margin: 10px;
   padding: 10px;
-  background-color: #581C87;
-  border: 2px solid #4ADE80;
+  background-color: #5271ff;
+  border: 2px solid #5ce1e6;
   border-radius: 10px;
   -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
           box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  color: #FAF5FF;
+  color: #fff;
   cursor: pointer;
   -webkit-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
 }
 .cards .card:hover {
-  background-color: #4ADE80;
-  color: #581C87;
+  background-color: #5ce1e6;
+  color: #5271ff;
 }

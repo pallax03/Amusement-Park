@@ -76,11 +76,8 @@
     </div>
     <div id="content" class="container">
         <div class="center">
-            <h1>Visitors</h1>
-            
-            
-
-            <table>
+            <h1>VISITATORI</h1>
+            <table class="visitors">
                 <thead>
                     <tr>
                         <th></th>
@@ -95,7 +92,7 @@
                 </thead>
                 <tbody>
                     <tr class="empty_row">
-                        <td colspan="8"><button class="add" id="add_visitor" onclick='modalVisitor()'>+</button></td>
+                        <td colspan="8"><button id="add_visitor" onclick='modalVisitor()'>+</button></td>
                     </tr>
                     {% for visitor in visitors %}
                         <tr id="{{ visitor.CodiceFiscale }}">

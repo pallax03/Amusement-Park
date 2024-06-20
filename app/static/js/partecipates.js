@@ -22,8 +22,8 @@ function addPartecipate(codicefiscale, dataingresso, ora, attivita) {
         method: 'POST',
         body: JSON.stringify({
             CodiceFiscale: codicefiscale.value,
-            DataIngresso: dataingresso.value,
-            Ora: ora.value,
+            DataIngresso: convertDateToStringFromat(new Date(dataingresso.value)),
+            Ora: ora.value == '' || ora.value === undefined ? convertTimeToStringFromat(new Date()) : ora.value,
             IdAttivita: attivita.value
         }),
         headers: {
@@ -89,7 +89,7 @@ function getPartecipates(codicefiscale, dataingresso) {
 
     emptyRow(document.querySelector('#table_body-partecipates'), 5, function() {createOptionPartecipate()});
 
-    fetch(url_for_get_partecipates + '?CodiceFiscale=' + codicefiscale + '&DataIngresso=' + dataingresso)
+    fetch(url_for_get_partecipates + '?CodiceFiscale=' + codicefiscale + '&DataIngresso=' + convertDateToStringFromat(new Date(dataingresso)))
     .then(response => response.json())
     .then(data => {
         data.forEach(function(partecipate) {

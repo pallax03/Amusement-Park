@@ -1,11 +1,11 @@
-@import 'layout.scss';
+@import 'variables';
 
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     left: 0;
     top: 0;
-    z-index: 1; /* Sit on top */
+    z-index: 11; /* Sit on top */
     width: 100%; /* Full width */
     height: 100%; /* Full height */
     overflow: auto; /* Enable scroll if needed */
@@ -19,24 +19,75 @@
         width: 60%;
         form {
             height: 60%;
-            width: 80%;
-            padding: 20px;
+            padding: 60px;
             background-color: #fff;
             display: flex;
             flex-direction: column;
-            flex-wrap: nowrap;
-            align-content: center;
-            justify-content: center;
-            align-items: center;
+            flex-wrap: wrap;
+
+            label {
+                font-size: 1.5em;
+                margin: 10px;
+                margin: 20px;
+
+                input {
+                    border: 0;
+                    background-color: #00000000;
+                    font-size: 1.2em;
+                    color: #000;
+                    // text-align: center;
+                    text-decoration: none;
+                    border-bottom: 2px solid black;
+                    &:focus, &hover {
+                        border-bottom: 2px solid $constrast-color;
+                    }
+                }
+                select {
+                    height: 50px;
+                    font-size: 1.5em;
+                    margin: 10px;
+                    border: 2px solid $background2-color;
+                    color: #000;
+                    cursor: pointer;
+                    transition: all 0.2s ease-in-out;
+                    &:hover, &:focus {
+                        border-color: $constrast-color;
+                    }
+                }
+                input:disabled, select:disabled {
+                    background-color: $disabled_background !important;
+                    border: 2px solid $disabled !important;
+                    cursor: not-allowed;
+                }
+            }
+            input[type=button] {
+                width: 100%;
+                height: 50px;
+                font-size: 1.5em;
+                margin: 10px;
+                background-color: $background2-color;
+                color: $constrast-color;
+                border: 2px solid $constrast-color;
+                cursor: pointer;
+                transition: all 0.2s ease-in-out;
+                &:hover {
+                    border-color: $background2-color;
+                    background-color: $constrast-color;
+                    color: $background2-color;
+                }
+            }
         }
     }
-
-    /* The Close Button */
     .close {
-        color: #aaa;
+        position: absolute;
+        top: 0;
+        right: 0;
+        color: #000;
         float: right;
-        font-size: 28px;
+        padding-right: 20px;
+        font-size: 3em;
         font-weight: bold;
+        z-index: 11;
         &:hover, &:focus {
             color: black;
             text-decoration: none;
@@ -46,38 +97,49 @@
 }
 
 img.status {
-    height: 200px;
-    width: 200px;
+    height: 400px;
+    width: 400px;
 }
 
 .container {
+    isolation: isolate;
+    background-color: $background-color;
+    position: relative;
+    z-index: 1;
+    padding-top: calc(1.2*$nav-height);
+    padding-bottom: calc(.8*$nav-height);
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+
     .center {
-        max-width: 800px;
-        margin-top: 50px;
-        padding: 20px;
-        background-color: rgba(255, 255, 255, 0.5);
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.5);
-        color: #fff;
+        background-color: $background-color;
+        border-radius: $curve * 1px;
+        box-shadow: $box-shadow;
+        padding: 2.5em;
+        padding-top: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .container {
+            padding: 0;
+            margin: 0;
+        }
     }
 }
 
 button {
     &.delete {
         background-color: #ffffff00;
-        font-size: 2.5em;
+        font-size: 3em;
         vertical-align: super;
         text-align: center;
         color: red;
         cursor: pointer;
         border: 0px solid black;
-        &:hover {
-                     
-        }
     }
 
     &.add {
@@ -86,15 +148,16 @@ button {
         height: 50px;
         font-size: 1.5em;
         margin: 10px;
-        background-color: $background_box-color;
+        background-color: $background2-color;
         color: $constrast-color;
         border: 2px solid $constrast-color;
         cursor: pointer;
+        text-decoration: none;
         transition: all 0.2s ease-in-out;
         &:hover {
-            border-color: $background_box-color;
+            border-color: $background2-color;
             background-color: $constrast-color;
-            color: $background_box-color;
+            color: $background2-color;
         }
     }
 }
@@ -114,7 +177,7 @@ span.arrow {
         margin-right: 10px;
         border-left: 10px solid transparent;
         border-right: 10px solid transparent;
-        border-bottom: 10px solid $constrast-color;
+        border-bottom: 10px solid $visitatore-relation-color;
     }
     &.down {
         display: inline-block;
@@ -124,8 +187,18 @@ span.arrow {
         margin-right: 10px;
         border-left: 10px solid transparent;
         border-right: 10px solid transparent;
-        border-top: 10px solid $constrast-color;
+        border-top: 10px solid $visitatore-relation-color;
     }
+}
+
+#filter_menu {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: space-between;
+    align-items: center;
 }
 
 table{
@@ -133,15 +206,123 @@ table{
     width: 100%;
     table-layout: fixed;
     border-collapse: collapse;
+    text-align: center;
+
+    &.visitors {
+        tbody {
+            tr.empty_row {
+                td button {
+                    background-color: white;
+                    color: black;
+                    
+                    &:hover {
+                        background-color: $visitatore-relation-color;
+                    }
+                }
+            }
+            tr td[colspan='8'] {
+                background-color: #000000;
+                table {
+                    tr {
+                        background-color: #fff;
+                    }
+                    tr:nth-child(even) {
+                        background-color: $visitatore-relation-color;
+                    }
+                    tr.empty_row {
+                        
+                        td button {
+                            font-size: 1em;
+                            border: 0;
+                            &:hover {
+                                background-color: $visitatore-entity-color;
+                                font-size: 2em;
+                            }
+                        }
+                    }
+                }
+            }
+            tr:nth-child(even) {
+                background-color: $visitatore-entity-color;
+            }
+        }
+    }
+    &.events {
+        tbody {
+            tr.empty_row {
+                td button {
+                    background-color: white;
+                    color: black;
+                    
+                    &:hover {
+                        background-color: $attivita-relation-color;
+                    }
+                }
+            }
+            tr:nth-child(even) {
+                background-color: $attivita-entity-color;
+            }
+        }
+    }
+    &.rides {
+        tbody {
+            tr.empty_row {
+                td button {
+                    background-color: white;
+                    color: black;
+                    
+                    &:hover {
+                        background-color: $attivita-relation-color;
+                    }
+                }
+            }
+            tr:nth-child(even) {
+                background-color: $attivita-entity-color;
+            }
+        }
+    }
+    &.employees {
+        tbody {
+            tr.empty_row {
+                td button {
+                    background-color: white;
+                    color: black;
+                    
+                    &:hover {
+                        background-color: $personale-relation-color;
+                    }
+                }
+            }
+            tr:nth-child(even) {
+                background-color: $personale-entity-color;
+            }
+        }
+    }
+    &.partecipates {
+        tbody {
+            tr.empty_row {
+                td button {
+                    background-color: white;
+                    color: black;
+                    
+                    &:hover {
+                        background-color: $attivita-relation-color;
+                    }
+                }
+            }
+            tr:nth-child(even) {
+                background-color: $attivita-entity-color;
+            }
+        }
+    }
 
     thead {
-        background-color: $background_box-color;
+        background-color: $background2-color;
         th {
-            padding: 10px;
-            text-align: left;
-            color: $text-color;
-            border-bottom: 1px solid $border-color;
-            font-size: .5em;
+            font-size: 1.2em;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            color: #fff;
         }
     }
 
@@ -149,35 +330,59 @@ table{
         // height: 300px;
         overflow-y: auto;        
         tr {
-            background-color: $background_box-color;
-
             &.empty_row {
                 margin: 0;
                 padding: 0;
                 td {
                     margin: 0;
                     padding: 0;
-                    button.add {
+                    button {
                         margin: 0;
                         padding: 10px;
                         height: auto;
                         width: 100%;
                         border-radius: 0;
+                        border: 6px solid black;
                         font-size: 2em;
+                        cursor: pointer;
+                        transition: all 0.2s ease-in-out;
                         &:hover {
-                            font-size: 4em;
+                            font-size: 3em;
                         }
+                        
                     }
                 }
             }
 
             td {
                 padding: 10px;
-                text-align: left;
-                color: $text-color;
-                border-bottom: 1px solid $border-color;
-                font-size: .5em;
-                text-wrap: balance;
+                overflow: hidden;
+                font-size: 1.2em;
+                text-overflow: clip;
+                white-space: pre-line;
+                word-break: break-word;
+
+                input {
+                    width: 100%;
+                    border: 0;
+                    background-color: #00000000;
+                    font-size: 1.2em;
+                    color: #000;
+                    text-align: center;
+                }
+                button {
+                    background-color: #00000000;
+                    padding: 10px;
+                    margin: 0;
+                    font-size: 1.6em;
+                    border: 0;
+                    cursor: pointer;
+                    color: #000000;
+                    transition: all 0.2s ease-in-out;
+                    &:hover {
+                        scale: 1.6;
+                    }
+                }
             }
         }
     }
@@ -187,19 +392,22 @@ table{
     display: flex;
     flex-direction: column;
     width: 100%;
+    height: auto;
     flex-wrap: nowrap;
     align-content: center;
     justify-content: center;
     align-items: center;
-
+    margin: 0;
+    padding: 0;
     .container {
+        padding: 0;
         display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
         align-content: center;
         justify-content: center;
         align-items: center;
-        
+        background-color: #00000000;
         .options {
             display: flex;
             flex-direction: row;
@@ -208,22 +416,33 @@ table{
             justify-content: center;
             align-items: center;
 
+
+
             input[type="radio"] {
                 display: none;
 
                 & + label {
                     display: flex;
                     flex-direction: column;
-                    border: 2px solid $background_box-color;
+                    border: 2px solid #000;
                     padding: 10px;
                     margin: 10px;
-                    color: $text-color;
                     cursor: pointer;
-                    
+
+                    div {
+                        display: flex;
+                        flex-direction: column;
+                        flex-wrap: wrap;
+                        align-content: center;
+                        justify-content: center;
+                        align-items: center;
+                        input {
+                            width: 20px !important;
+                        }
+                    }
+
                     input {
-                        color: $text-color;
                         background-color: #00000000;
-                        background-color: $background_box-color;
                         border: 0;
                         font-size: 1em;
                         cursor: text;
@@ -235,6 +454,22 @@ table{
                     
                 }
             }
+        }
+        button.save {
+            width: 60%;
+            height: 50px;
+            font-size: 1.5em;
+            margin: 10px;
+            background-color: #000;
+            color: $constrast-color;
+            border: 2px solid $constrast-color;
+            cursor: pointer;
+            &:hover {
+                border-color: #000;
+                background-color: $constrast-color;
+                color: #000;
+            }
+        
         }
     }
 
@@ -253,7 +488,7 @@ table{
                 border: 2px solid white;
                 padding: 10px;
                 margin: 10px;
-                
+
                 input {
                     width: 20px !important;
                 }
@@ -262,7 +497,7 @@ table{
 
             &:checked + label {
                 background-color: $constrast-color;
-                color: $text-color;
+                color: #fff;
             }
         }
         button {
@@ -271,8 +506,30 @@ table{
     }
     
     .cost {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-content: center;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
         label {
+            font-size: 1.5em;
+            margin: 10px;
+            margin: 20px;
 
+            input {
+                border: 0;
+                background-color: #00000000;
+                font-size: 1.2em;
+                color: #000;
+                // text-align: center;
+                text-decoration: none;
+                border-bottom: 2px solid black;
+                &:focus, &hover {
+                    border-bottom: 2px solid $constrast-color;
+                }
+            }
         }
     }
 
@@ -295,7 +552,7 @@ table{
 
             &:checked + label {
                 background-color: $constrast-color;
-                color: $text-color;
+                color: #fff;
             }
         }
         input[type=button]~button {
@@ -304,14 +561,14 @@ table{
             height: 50px;
             font-size: 1.5em;
             margin: 10px;
-            background-color: $background_box-color;
+            background-color: #000;
             color: $constrast-color;
             border: 2px solid $constrast-color;
             cursor: pointer;
             &:hover {
-                border-color: $background_box-color;
+                border-color: #000;
                 background-color: $constrast-color;
-                color: $background_box-color;
+                color: #000;
             }
         }
     }
@@ -334,16 +591,16 @@ table{
         align-items: center;
         margin: 10px;
         padding: 10px;
-        background-color: $background_box-color;
-        border: 2px solid $constrast-color;
+        background-color: $personale-relation-color;
+        border: 2px solid $personale-entity-color;
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0,0,0,0.5);
-        color: $text-color;
+        color: #fff;
         cursor: pointer;
         transition: all 0.2s ease-in-out;
         &:hover {
-            background-color: $constrast-color;
-            color: $background_box-color;
+            background-color: $personale-entity-color;
+            color: $personale-relation-color;
         }
     }
 }

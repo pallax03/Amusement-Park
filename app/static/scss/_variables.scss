@@ -1,0 +1,39 @@
+$font: 'Consolas', monospace;
+$curve: 25;
+
+$font: 'Consolas', monospace;
+$curve: 25;
+$mobile:854px;
+
+
+// SIZES
+
+// NAVBAR
+$island-height: clamp(5px, 80%, 50px);
+$island-width: clamp(300px, 60%, 1200px);
+$nav-height: calc($island-height + 4vh);
+
+// PAGE
+$page-height: clamp(600px, 60vh, 700px);
+$page-width: clamp(300px, 60%, 1200px);
+$window-width: clamp(300px, 60%, 1200px);
+
+
+// COLORS
+$personale-entity-color: #5ce1e6;
+$personale-relation-color: #5271ff;
+$visitatore-entity-color: #ffa8e9;
+$visitatore-relation-color: #cb6ce6;
+$attivita-entity-color: #fdf9b4;
+$attivita-relation-color:#ffbd59;
+
+
+$background-color:#ffffff;
+$background2-color:#18181b;
+$constrast-color: #4ADE80;
+
+$disabled:#ff0000;
+$disabled_background:#00000059;
+
+
+$box-shadow: rgba(0, 0, 0, 0.55) 0px 20px 68px;

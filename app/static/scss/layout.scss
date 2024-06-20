@@ -1,32 +1,4 @@
-$font: 'Consolas', monospace;
-$curve: 25;
-
-// COLORS
-$personale-entity-color: #5ce1e6;
-$personale-relation-color: #5271ff;
-$visitatore-entity-color: #ffa8e9;
-$visitatore-relation-color: #cb6ce6;
-$attivita-entity-color:#ffbd59;
-$attivita-relation-color: #fdf9b4;
-
-
-$background-color:#18181b;
-$constrast-color: #4ADE80;
-
-$text-color:#FAF5FF;
-$disable_text-color:#7E22CE;
-$text2-color:#F3E8FF;
-$highlight-color:#C084FC;
-
-$border_box-color:#E9D5FF;
-$background_box-color:#581C87;
-
-$undefined1:#D8B4FE;
-$undefined2:#A855F7;
-
-$background_button-color:#9333EA;
-$border-color:#6B21A8;
-$disable_border-color10:#581C87;
+@import 'variables';
 
 @font-face {
     font-family: $font;
@@ -40,7 +12,6 @@ $disable_border-color10:#581C87;
 
 body {
     position: relative; 
-    z-index: 1;
     background: $background-color;
     overflow-x: hidden;
     overflow-y: auto;
@@ -53,44 +24,63 @@ a {
     text-decoration: none;
 }
 
+h1 {
+    user-select: none;
+}
+
 p {
     white-space: normal;
     word-break: break-word;
 }
 
 nav {
+    position: fixed;
+    width: 100%;
+    height: $nav-height;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    scale: 1;
+    z-index: 10;
     ul {
-        display: flex;
-        justify-content: space-between;
-        flex-direction: row;
-
-        list-style-type: none;
+        background-color: rgba(0, 0, 0, 0.92);
+        color: #fff;
+        position: relative;
         padding: 0;
-        margin: 0;
+        // width: $island-width;
+        height: $island-height;
+        border-radius: $curve * 1px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        list-style-type: none;
+        border: 2px solid black;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+        transition: all 0.3s ease-in-out;
+
         li {
-            display: block;
-            width: 100%;
+            user-select: none;
+            font-size: 1.8em;
+            padding: 2rem;
+            transition: all 0.3s ease-in-out;
+            text-align: center;
             a {
-                display: block;
-                width: 100%;
-                padding: 10px;
-                background-color: #f1f1f1;
-                color: #333;
                 text-decoration: none;
+                color: #fff;
+                transition: all 0.3s ease-in-out;
                 &:hover {
-                    background-color: #ddd;
-                }
-            }
-        }
-        li {
-            ul {
-                display: none;
-                li {
-                    a {
-                        padding-left: 30px;
+                    font-size: 1.6em;
+                    &.color-pink {
+                        color: $visitatore-entity-color;
                     }
-                }
-            }
+                    &.color-yellow {
+                        color: $attivita-entity-color;
+                    }
+                    &.color-blue {
+                        color: $personale-entity-color;
+                    }
+                }   
+            } 
         }
     }
 }
@@ -102,7 +92,7 @@ footer {
         color: white;
         text-align: center;
         padding: 1em;
-        font-size: 3em;
+        font-size: 2em;
         @media screen and (max-width: 600px){
             font-size: 1.2em;
         }

@@ -7,7 +7,7 @@ function getCategories() {
     .then(data => {
         document.getElementById('options_category').innerHTML = '';
         data.forEach(category => {
-            document.getElementById('options_category').innerHTML += '<input type="checkbox" name="category" id="'+category.IdCategoria+'"><label for="'+category.IdCategoria+'">'+category.Nome+'</label>';
+            document.getElementById('options_category').innerHTML += '<label for="'+category.IdCategoria+'"><input type="checkbox" name="category" id="'+category.IdCategoria+'">'+category.Nome+'</label>';
         });
     });
 }

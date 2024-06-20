@@ -95,7 +95,7 @@ function modalVisitor(visitor = {CodiceFiscale: '', Nome: '', Cognome: '', DataD
     document.getElementById('visitor_codicefiscale').value = visitor.CodiceFiscale;
     document.getElementById('nome').value = visitor.Nome;
     document.getElementById('cognome').value = visitor.Cognome;
-    document.getElementById('birthday').value = visitor.DataDiNascita== '' ? '' : new Date(visitor.DataDiNascita).toLocaleDateString('en-CA'); 
+    document.getElementById('birthday').value = visitor.DataDiNascita== '' ? '' : new Date(visitor.DataDiNascita); 
     document.getElementById('altezza').value = visitor.Altezza;
     document.getElementById('peso').value = visitor.Peso; 
     document.querySelector('#visitor').style.display = 'block';
@@ -132,7 +132,7 @@ function deleteVisitor(visitor = {CodiceFiscale: '', Nome: '', Cognome: '', Data
 
 
 function deleteSubscription(subscription = {CodiceFiscale: '', DataInizio: '', Costo: '', NomeTariffa: '', Costo: ''}) {
-    fetch(document.querySelector('#subscription form').action + '?CodiceFiscale=' + subscription.CodiceFiscale + '&DataInizio=' + new Date(subscription.DataInizio).toLocaleDateString('en-CA'), {
+    fetch(document.querySelector('#subscription form').action + '?CodiceFiscale=' + subscription.CodiceFiscale + '&DataInizio=' + convertDateToStringFromat(new Date(subscription.DataInizio)), {
         method: 'DELETE'
     })
     .then(response => statusResponse(response));
@@ -160,13 +160,13 @@ function addSubscription() {
 
 
 function addEntry(codicefiscale, data) {
-    let data_value = data.value == '' || data.value == undefined ? new Date().toLocaleDateString('en-CA') : new Date(data.value).toLocaleDateString('en-CA');
+    let data_value = data.value == '' || data.value == undefined ? new Date() : new Date(data.value);
     fetch(url_for_get_entries , {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({CodiceFiscale: codicefiscale, Data: data_value})
+        body: JSON.stringify({CodiceFiscale: codicefiscale, Data: convertDateToStringFromat(data_value)})
     })
     .then(response => statusResponse(response));
 }
@@ -207,7 +207,7 @@ function showEntries(showTable, codicefiscale) {
     .then(data => {
         count=0;
         data.forEach(function(entry) {
-            let date = new Date(entry.Data).toLocaleDateString('en-CA') 
+            let date = convertDateToStringFromat(new Date(entry.Data));
             let row = table.insertRow();
             cell = row.insertCell();
             cell.innerHTML = ++count;

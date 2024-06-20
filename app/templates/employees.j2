@@ -52,7 +52,7 @@
         <div class="center" id="container_employees">
             <h1>Personale</h1>
             
-            <table>
+            <table class="employees">
                 <thead>
                     <tr>
                         <th></th>
@@ -66,7 +66,7 @@
                 <tbody>  
                     <tr class="empty_row">
                         <td colspan="6">
-                            <button class="add" id="add_employee" onclick="modalEmployee()">+</button>
+                            <button id="add_employee" onclick="modalEmployee()">+</button>
                         </td>
                     </tr>
                     {% for employee in employees %}
