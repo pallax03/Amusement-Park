@@ -17,6 +17,8 @@ def routes(app, db):
     def index():
         # dashboard
         return render_template('index.j2',
+                                url_for_get_categories=url_for('get_categories'),
+                                url_for_get_tariffs=url_for('get_tariffs'),
                                 url_for_stats_entries = url_for('get_entries_stats'),
                                 url_for_stats_partecipates = url_for('get_partecipates_stats'),
                                 url_for_stats_subscriptions = url_for('get_subscriptions_stats'))

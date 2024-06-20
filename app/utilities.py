@@ -8,17 +8,30 @@ from models import *
 
 # raw queries
 def query_N13_highest_entries_days(DataInizio, DataFine):
-    DataInizio = datetime.now().replace(day=1) if DataInizio == None else datetime.strptime(DataInizio, '%Y-%m-%d') if type(DataInizio) is not date else DataInizio
-    DataFine =  DataInizio.replace(day=calendar.monthrange(DataInizio.year, DataInizio.month)[1]) if DataFine == None else datetime.strptime(DataFine, '%Y-%m-%d') if type(DataFine) is not date else DataFine
+    DataInizio = datetime.now().replace(day=1) if DataInizio == None or DataInizio == '' else datetime.strptime(DataInizio, '%Y-%m-%d') if type(DataInizio) is not date else DataInizio
+    DataFine =  DataInizio.replace(day=calendar.monthrange(DataInizio.year, DataInizio.month)[1]) if DataFine == None or DataFine == '' else datetime.strptime(DataFine, '%Y-%m-%d') if type(DataFine) is not date else DataFine
+    dict = generate_date_list(DataInizio, DataFine)
     query = text(f'SELECT Data, COUNT(*) AS NumeroIngressi FROM INGRESSI WHERE Data BETWEEN \'{DataInizio}\' AND \'{DataFine}\' GROUP BY Data ORDER BY NumeroIngressi DESC')
-    dict = []
-    for result in db.session.execute(query):
-        dict.append({'Data': datetime.strftime(result[0], '%Y-%m-%d'), 'NumeroIngressi': result[1]})
+    # update the dict with the NumeroIngressi if the date is present in the query/
+    results = db.session.execute(query)
+    ingressi_map = {result['Data'].strftime('%Y-%m-%d'): result['NumeroIngressi'] for result in results}
+    for entry in dict:
+        if entry['Data'] in ingressi_map:
+            entry['NumeroIngressi'] = ingressi_map[entry['Data']]
     return dict
+
+# generate a dict of dates between start_date and end_date with NumeroIngressi = 0
+def generate_date_list(start_date: date, end_date: date):
+    date_list = []
+    current_date = start_date
+    while current_date <= end_date:
+        date_list.append({'Data': current_date.strftime("%Y-%m-%d"), 'NumeroIngressi': 0})
+        current_date += timedelta(days=1)
+    return date_list
 
 # WARNING: SQL INJECTION, so pass a Category.Nome as a parameter   
 def query_N14_most_partecipated_rides(categoryname = None):
-    categoryname = '' if categoryname==None else 'WHERE c.Nome = ' + categoryname
+    categoryname = '' if categoryname==None or categoryname == '' else f'AND c.Nome = \'{categoryname}\''
     query = text(f'SELECT a.Nome as NomeCategoria, COUNT(p.IdAttivita) as PartecipazioniTotali FROM ATTIVITA as a, CATEGORIE as c, PARTECIPA as p WHERE a.IsEvent=false AND a.IdCategoria = c.IdCategoria AND a.IdAttivita = p.IdAttivita { categoryname } GROUP BY a.Nome, c.Nome ORDER BY PartecipazioniTotali')
     dict = []
     for result in db.session.execute(query):
@@ -27,12 +40,14 @@ def query_N14_most_partecipated_rides(categoryname = None):
 
 # WARNING: SQL INJECTION, so pass a Tariff.NomeTariffa as a parameter
 def query_N15_highest_shopped_subscriptions(tariffname = None):
-    tariffname = '' if tariffname==None else 'WHERE NomeTariffa = ' + tariffname
+    tariffname = '' if tariffname==None or tariffname == '' else f'WHERE NomeTariffa = \'{tariffname}\''
     query = text(f'SELECT NomeTariffa, Giorni, COUNT(*) as NumeroAbbonamenti FROM ABBONAMENTI {tariffname} GROUP BY NomeTariffa, Giorni ORDER BY Giorni')
     dict = []
     for result in db.session.execute(query):
         dict.append({'NomeTariffa': result[0], 'Giorni': result[1], 'NumeroAbbonamenti': result[2]})
     return dict
+
+
 
 # VISITORS
 

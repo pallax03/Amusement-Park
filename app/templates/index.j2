@@ -10,17 +10,33 @@
 
 {% block content %}
     <script>
-        const url_for_stats_entries = {{ url_for_stats_entries }};
-        const url_for_stats_partecipates = {{ url_for_stats_partecipates }};
-        const url_for_stats_subscriptions = {{ url_for_stats_subscriptions }};
+        const url_for_get_categories = '{{ url_for_get_categories }}'
+        const url_for_get_tariffs = '{{ url_for_get_tariffs }}'
+        const url_for_stats_entries = '{{ url_for_stats_entries }}';
+        const url_for_stats_partecipates = '{{ url_for_stats_partecipates }}';
+        const url_for_stats_subscriptions = '{{ url_for_stats_subscriptions }}';
     </script>
     
     <div class="container">
         <div class="center">
             <h1>DASHBOARD</h1>
-            <div id="stats_entries"></div>
-            <div id="stats_partecipates"></div>
-            <div id="stats_subscriptions"></div>
+            <div id="stats_entries">
+                <label for="datainizio">Da:</label>
+                <input type="date" name="datainizio" id="stats_entries-datainizio">
+                <label for="datafine">A:</label>
+                <input type="date" name="datafine" id="stats_entries-datafine">
+                <canvas id="entries_chart"></canvas>
+            </div>
+            <div id="stats_partecipates">
+                <label for="filter_categorie">categoria:</label>
+                <select id="filter_categorie"></select>
+                <canvas id="partecipates_chart"></canvas>
+            </div>
+            <div id="stats_subscriptions">
+                <label for="filter_tariffe">tariffa:</label>
+                <select id="filter_tariffe"></select>
+                <canvas id="subscriptions_chart"></canvas>
+            </div>
         </div>
     </div>
 
