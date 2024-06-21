@@ -21,20 +21,27 @@
         <div class="center">
             <h1>DASHBOARD</h1>
             <div id="stats_entries">
-                <label for="datainizio">Da:</label>
-                <input type="date" name="datainizio" id="stats_entries-datainizio">
-                <label for="datafine">A:</label>
-                <input type="date" name="datafine" id="stats_entries-datafine">
+                <h3>Statistica dei giorni con il maggior numero di ingressi</h3>
+                <label for="datainizio">Da:
+                    <input type="date" name="datainizio" id="stats_entries-datainizio">
+                </label>
+                <label for="datafine">A:
+                    <input type="date" name="datafine" id="stats_entries-datafine">
+                </label>
                 <canvas id="entries_chart"></canvas>
             </div>
             <div id="stats_partecipates">
-                <label for="filter_categorie">categoria:</label>
-                <select id="filter_categorie"></select>
+                <h3>Statistica attrazioni più frequentate con possibilità di filtrare per categoria</h3>
+                <label for="filter_categorie">categoria:
+                    <select id="filter_categorie"></select>
+                </label>
                 <canvas id="partecipates_chart"></canvas>
             </div>
             <div id="stats_subscriptions">
-                <label for="filter_tariffe">tariffa:</label>
-                <select id="filter_tariffe"></select>
+                <h3>Statistica abbonamenti più acquistati con la possibilità di filtrare per tariffa e durata</h3>
+                <label for="filter_tariffe">tariffa:
+                    <select id="filter_tariffe"></select>
+                </label>
                 <canvas id="subscriptions_chart"></canvas>
             </div>
         </div>

@@ -457,6 +457,12 @@ table tbody tr td button:hover {
   padding: 10px;
   margin: 10px;
   cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 .choices .container .options input[type=radio] + label div {
   display: -webkit-box;
@@ -488,6 +494,7 @@ table tbody tr td button:hover {
 }
 .choices .container .options input[type=radio]:checked + label {
   border-color: #4ADE80;
+  font-size: 4em;
 }
 .choices .container button.save {
   width: 60%;

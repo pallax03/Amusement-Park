@@ -428,7 +428,8 @@ table{
                     padding: 10px;
                     margin: 10px;
                     cursor: pointer;
-
+                    user-select: none;
+                    transition: all 0.2s ease-in-out;
                     div {
                         display: flex;
                         flex-direction: column;
@@ -451,7 +452,7 @@ table{
 
                 &:checked + label {
                     border-color: $constrast-color;
-                    
+                    font-size: 4em;
                 }
             }
         }
