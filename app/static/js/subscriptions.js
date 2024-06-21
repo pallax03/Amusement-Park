@@ -7,7 +7,7 @@ function getCategories() {
     .then(data => {
         document.getElementById('options_category').innerHTML = '';
         data.forEach(category => {
-            document.getElementById('options_category').innerHTML += '<label for="'+category.IdCategoria+'"><input type="checkbox" name="category" id="'+category.IdCategoria+'">'+category.Nome+'</label>';
+            document.getElementById('options_category').innerHTML += '<label for="'+category.IdCategoria+'"><input type="checkbox" name="category" nomeCategoria="'+category.Nome+'" id="'+category.IdCategoria+'">'+category.Nome+'</label>';
         });
     });
 }
@@ -61,7 +61,7 @@ async function addTariff(id) {
     document.querySelectorAll('[name="category"]:checked').forEach(checkbox => {
         selectedCategories.push({
             IdCategoria: checkbox.id,
-            Nome: checkbox.nextElementSibling.textContent
+            Nome: checkbox.getAttribute('nomeCategoria')
         });
     });
 

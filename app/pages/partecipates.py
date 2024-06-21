@@ -97,7 +97,7 @@ def partecipates(app, db):
             partecipate = Participate(IdIngresso=entry.IdIngresso, IdAttivita=data['IdAttivita'], Ora=ora_partecipazione)
             db.session.add(partecipate)
             db.session.commit()
-            return make_response(jsonify({'message': f'Partecipazione di {entry.CodiceFiscale} il {data_partecipazione},a {activity.Nome} inserita'}), 200)
+            return make_response(jsonify({'message': f'Partecipazione di {entry.CodiceFiscale} il {data_partecipazione}, a {activity.Nome} inserita'}), 200)
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)
         

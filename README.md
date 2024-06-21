@@ -3,7 +3,6 @@ Progetto finale per il corso (8615) in Basi Di Dati.
 
 L'obiettivo del progetto è quello di realizzare un sistema per la gestione di un parco divertimenti.
 
-IMMAGINE SCHEMA RELAZIONALE!!!
 ![image](/app/static/img/SchemaRelazionale.png)
 
 ### Table Of Contents
@@ -59,7 +58,7 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
 ```
 
 #### Entry
-- /api/visitor/entries [GET] + "?CodiceFiscale=`codicefiscale`" -> return all the entries done by the given visitor
+- /api/visitor/entries [GET] + "?CodiceFiscale=`codicefiscale`" or "?Data=`dataingresso`" -> return all the entries done by the given visitor or date.
 - /api/visitor/entry [POST] -> add a entry of the given visitor ([json](#visitor-entry-json))
 - /api/visitor/entry [DELETE] + "?CodiceFiscale=`codicefiscale`&Data=`date`" -> delete the given entry 
 
@@ -217,9 +216,19 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
 
 
 ### Partecipate
-- /partecipates
-- /partecipates
+- /api/partecipates [GET] + '?CodiceFiscale=MNNGPP99A01H501A&DataIngresso=2021-01-01' -> get all the partecipations of a visitor's entry, can be filtered by the activity
+- /api/partecipate [POST] -> add a [partecpation](#partecipate-json)
+- /api/partecipate [DELETE] + '?IdIngresso=1&Ora=10:00' -> delete a partecipate.
 
+#### Partecipate Json
+```json
+{
+  'IdIngresso': int,
+  'Ora': time,
+  'Attivita': [[activity json](#activity-json)],
+  'PostiOccupati': int
+}
+```
 
 ### Employee
 - /api/employee [POST] -> add a employee and if the role is not present, add it [json](#employee-json).
