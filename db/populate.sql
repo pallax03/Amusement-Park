@@ -229,7 +229,21 @@ INSERT INTO `PROGRAMMAZIONI` (`IdAttivita`, `Data`, `Inizio`, `Fine`) VALUES
 (24, '2024-12-29', '10:00:00', '16:00:00');
 
 INSERT INTO `PARTECIPA` (`IdIngresso`, `Ora`, `IdAttivita`) VALUES
-(1, '10:00:00', 1);
+(1, '09:00:00', 20),
+(1, '10:00:00', 1),
+(1, '11:00:00', 3),
+(1, '12:00:00', 5),
+(1, '13:00:00', 2),
+(1, '14:00:00', 4),
+(1, '15:00:00', 6),
+(1, '16:00:00', 7),
+(1, '17:00:00', 9),
+(1, '18:00:00', 11),
+(1, '19:00:00', 12),
+(1, '20:00:00', 13),
+(1, '21:00:00', 15),
+(1, '22:00:00', 16),
+(1, '23:00:00', 17);
 
 INSERT INTO `INCLUDE` (`IdTariffa`, `IdCategoria`) VALUES 
 (1, 1),  -- Standard include Roller Coasters

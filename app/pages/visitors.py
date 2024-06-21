@@ -79,11 +79,14 @@ def visitor(app, db):
     ### ads Entry look README.md
 
     # get entries for a visitor
-    # /api/visitor/entries + '?CodiceFiscale=MNNGPP99A01H501A'
+    # /api/visitor/entries + '?CodiceFiscale=MNNGPP99A01H501A' or '?Data=2021-01-01' 
     @app.route('/api/visitor/entries', methods=['GET'])
     def get_entries():
         try:
-            entries = Entry.query.filter_by(CodiceFiscale=request.args.get('CodiceFiscale')).all() 
+            if request.args.get('Data'):
+                entries = Entry.query.filter_by(Data=request.args.get('Data')).all()
+            else:
+                entries = Entry.query.filter_by(CodiceFiscale=request.args.get('CodiceFiscale')).all() 
             return make_response(jsonify(entries), 200)
         except Exception as e:
             return make_response(jsonify({'error': str(e)}), 400)

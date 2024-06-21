@@ -108,7 +108,25 @@ function getPartecipates(codicefiscale, dataingresso) {
             cell.innerHTML = partecipate.PostiOccupati + ' / ' + partecipate.Attivita.Posti;
 
             cell = row.insertCell();
-            cell.innerHTML = ''; // padding
+            let select = document.createElement('select');
+            fetch(url_for_get_entries + '?Data=' + convertDateToStringFromat(new Date(dataingresso)))
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(function(entry) {
+                    let codicefiscale = entry.CodiceFiscale; 
+                    let option = document.createElement('option');
+                    option.value = codicefiscale;
+                    option.innerHTML = codicefiscale;
+                    select.appendChild(option);
+                });
+            })
+            select.selected = partecipate.CodiceFiscale;
+            select.onchange = function() {
+                if (select.value != codicefiscale) {
+                    addPartecipate(select, document.querySelector('#entries-data'), {value: partecipate.Ora}, {value: partecipate.Attivita.IdAttivita})
+                }
+            };
+            cell.appendChild(select);
         });
     });
 }
