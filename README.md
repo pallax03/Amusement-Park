@@ -223,10 +223,10 @@ now, you will be able to connect to [`http://localhost:4000`](http://localhost:4
 #### Partecipate Json
 ```json
 {
-  'IdIngresso': int,
-  'Ora': time,
-  'Attivita': [[activity json](#activity-json)],
-  'PostiOccupati': int
+  "IdIngresso": int,
+  "Ora": time,
+  "Attivita": [[activity json](#activity-json)],
+  "PostiOccupati": int
 }
 ```
 
