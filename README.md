@@ -1,7 +1,7 @@
 # Amusement-Park
-Progetto finale per il corso (8615) in Basi Di Dati.
+Final project of the course: Database 1 (Basi di Dati prof. Annalisa Franco)
 
-L'obiettivo del progetto è quello di realizzare un sistema per la gestione di un parco divertimenti.
+The goal of the project is to create a system for the management of an amusement park.
 
 ![image](/app/static/img/SchemaRelazionale.png)
 
